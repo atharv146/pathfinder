@@ -7,8 +7,19 @@ export const metadata = { title: "Roadmap — PathFinder" };
 
 export default function RoadmapIndex() {
   return (
-    <section className="texture-dots relative px-6 py-16 sm:px-10">
-      <div className="mx-auto max-w-4xl">
+    <section className="texture-dots relative overflow-hidden px-6 py-16 sm:px-10">
+      <span
+        className="drift-shape absolute right-[8%] top-[10%] h-14 w-14 rotate-12 rounded-2xl border border-glow-amber/30"
+        style={{ animationDelay: "0.5s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute bottom-[12%] left-[6%] h-9 w-9 rounded-full border border-signal/30"
+        style={{ animationDelay: "1.6s" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-4xl">
         <FadeIn>
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
             The roadmap

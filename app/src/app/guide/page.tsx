@@ -8,8 +8,14 @@ export const metadata = { title: "Guide — PathFinder" };
 
 export default function GuideIndex() {
   return (
-    <section className="texture-dots relative px-6 py-16 sm:px-10">
-      <div className="mx-auto max-w-3xl">
+    <section className="texture-dots relative overflow-hidden px-6 py-16 sm:px-10">
+      <span
+        className="drift-shape absolute right-[10%] top-[8%] h-12 w-12 rotate-45 rounded-xl border border-signal/30"
+        style={{ animationDelay: "0.9s" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-3xl">
         <FadeIn>
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
             Parent &amp; student guide

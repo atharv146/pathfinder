@@ -7,17 +7,39 @@ import { GradeRow } from "@/components/GradeRow";
 import { DotField } from "@/components/DotField";
 import { ArcLine } from "@/components/ArcLine";
 import { ArrowLink } from "@/components/ArrowLink";
+import { ScrollFade } from "@/components/ScrollFade";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <div className="texture-dots h-14 border-y border-border" aria-hidden />
+      <div className="texture-dots relative h-14 overflow-visible border-y border-border">
+        <ArcLine className="pointer-events-none absolute inset-x-0 top-0 h-24 w-full opacity-50" />
+      </div>
       <StatBreak />
       <ReadingModeSample />
+      <EditorialBeat />
       <RoadmapPreview />
       <ClosingCta />
     </>
+  );
+}
+
+/**
+ * A short editorial beat that fades in and back out as you scroll past it —
+ * distinct from RevealText's reveal-once behavior. Kept to one moment on the
+ * page rather than applied to everything, since fading text you're meant to
+ * read would hurt usability.
+ */
+function EditorialBeat() {
+  return (
+    <section className="flex min-h-[40vh] items-center justify-center border-y border-border px-6 py-16 sm:px-10">
+      <ScrollFade className="mx-auto max-w-xl text-center">
+        <p className="font-display text-2xl font-medium leading-snug text-text-soft sm:text-3xl">
+          Not another generic checklist. A roadmap that actually says something.
+        </p>
+      </ScrollFade>
+    </section>
   );
 }
 
@@ -25,7 +47,6 @@ function Hero() {
   return (
     <section className="relative isolate overflow-hidden px-6 pb-24 pt-14 sm:px-10 sm:pt-20">
       <DotField className="absolute inset-0 dot-field-hero-mask" />
-      <ArcLine className="pointer-events-none absolute inset-x-0 bottom-0 h-64 w-full opacity-40" />
 
       {/* Floating geometric markers — abstract "asteroid" motif, kept sparse and click-through */}
       <div
@@ -91,23 +112,63 @@ function Hero() {
 }
 
 /**
- * A single large editorial stat, not a card grid — the kind of callout you'd
- * see mid-article in the New York Times, not a SaaS landing page.
+ * A bold full-color break in the otherwise dark chrome — the "commit to the
+ * brand color" move from plusanton.com, not just an accent pop. Two real,
+ * sourced statistics (the gap, then the scale) instead of one, with
+ * geometric shapes drifting behind them.
  */
 function StatBreak() {
   return (
-    <section className="border-y border-border px-6 py-20 sm:px-10">
-      <div className="mx-auto max-w-3xl text-center">
+    <section className="relative isolate overflow-hidden bg-gradient-to-br from-glow-ember via-glow-ember to-glow-amber px-6 py-24 sm:px-10">
+      <span
+        className="drift-shape absolute left-[6%] top-[10%] h-24 w-24 rotate-12 rounded-3xl border border-void/20 bg-void/10"
+        style={{ animationDelay: "0.2s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute right-[10%] top-[18%] h-14 w-14 rotate-45 rounded-xl border border-void/20 bg-void/10"
+        style={{ animationDelay: "1.2s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute bottom-[14%] left-[16%] h-10 w-10 rounded-full border border-void/25"
+        style={{ animationDelay: "2s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute bottom-[20%] right-[20%] h-20 w-20 rotate-[20deg] rounded-2xl border border-void/20 bg-void/10"
+        style={{ animationDelay: "0.8s" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-3xl text-center text-void">
         <RevealText
           as="h2"
           text="School counselors have about 1.5 hours a year to spend on college guidance, per student."
-          className="font-display text-3xl font-medium leading-snug sm:text-4xl"
+          className="font-display text-3xl font-semibold leading-snug sm:text-4xl"
         />
-        <FadeIn delay={0.4}>
-          <p className="mt-5 font-mono text-xs uppercase tracking-widest text-text-faint">
+        <FadeIn delay={0.35}>
+          <p className="mt-4 font-mono text-xs uppercase tracking-widest text-void/70">
             National Association for College Admission Counseling · 2019 estimate
           </p>
         </FadeIn>
+
+        <FadeIn delay={0.5}>
+          <div className="mx-auto mt-14 h-px w-16 bg-void/30" />
+        </FadeIn>
+
+        <div className="mt-14">
+          <RevealText
+            as="h2"
+            text="Nearly 6 million immigrant-origin students are in U.S. higher ed today — 32% of the total."
+            className="font-display text-2xl font-semibold leading-snug sm:text-3xl"
+          />
+          <FadeIn delay={0.35}>
+            <p className="mt-4 font-mono text-xs uppercase tracking-widest text-void/70">
+              Presidents&rsquo; Alliance on Higher Education &amp; Immigration · 2023
+            </p>
+          </FadeIn>
+        </div>
       </div>
     </section>
   );
@@ -167,6 +228,11 @@ function RoadmapPreview() {
       >
         06–12
       </span>
+      <span
+        className="drift-shape absolute bottom-[10%] left-[4%] h-12 w-12 rotate-[15deg] rounded-xl border border-signal/30"
+        style={{ animationDelay: "1.4s" }}
+        aria-hidden
+      />
 
       <div className="relative mx-auto max-w-3xl">
         <FadeIn>
@@ -192,8 +258,19 @@ function RoadmapPreview() {
 
 function ClosingCta() {
   return (
-    <section className="px-6 py-28 sm:px-10">
-      <div className="mx-auto max-w-2xl text-center">
+    <section className="relative overflow-hidden px-6 py-28 sm:px-10">
+      <span
+        className="drift-shape absolute right-[10%] top-[16%] h-16 w-16 rotate-[30deg] rounded-2xl border border-glow-amber/30"
+        style={{ animationDelay: "0.6s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute bottom-[18%] left-[12%] h-9 w-9 rounded-full border border-signal/30"
+        style={{ animationDelay: "1.9s" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-2xl text-center">
         <RevealText
           as="h2"
           text="No waitlist. No paywall. Start now."

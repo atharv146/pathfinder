@@ -5,8 +5,19 @@ export const metadata = { title: "Ask AI — PathFinder" };
 
 export default function AskAiPage() {
   return (
-    <section className="texture-dots relative flex flex-1 items-center justify-center px-6 py-16 sm:px-10">
-      <div className="w-full max-w-lg">
+    <section className="texture-dots relative flex flex-1 items-center justify-center overflow-hidden px-6 py-16 sm:px-10">
+      <span
+        className="drift-shape absolute left-[10%] top-[14%] h-16 w-16 rotate-12 rounded-2xl border border-glow-amber/30"
+        style={{ animationDelay: "0.3s" }}
+        aria-hidden
+      />
+      <span
+        className="drift-shape absolute bottom-[16%] right-[12%] h-10 w-10 rounded-full border border-signal/30"
+        style={{ animationDelay: "1.3s" }}
+        aria-hidden
+      />
+
+      <div className="relative w-full max-w-lg">
         <FadeIn>
           <p className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-faint">
             <span className="h-1.5 w-1.5 rounded-full bg-text-faint" />
