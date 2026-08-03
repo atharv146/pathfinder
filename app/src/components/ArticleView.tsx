@@ -38,14 +38,14 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
 
       {quickAnswer && quickAnswer.length > 0 && (
         <FadeIn delay={0.15}>
-          <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
-            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-faint">
+          <div className="mt-8 rounded-2xl border border-line bg-panel p-6">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-smoke">
               Quick answer
             </p>
             <ul className="space-y-2.5">
               {quickAnswer.map((point, i) => (
-                <li key={i} className="flex gap-3 text-sm leading-relaxed text-text-soft">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-glow-amber to-glow-ember" />
+                <li key={i} className="flex gap-3 text-sm leading-relaxed text-ash">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-ember to-ember" />
                   {point}
                 </li>
               ))}
@@ -58,13 +58,13 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
         {sections.map((section, i) => (
           <FadeIn key={i} delay={Math.min(i * 0.05, 0.3)}>
             {section.heading && (
-              <h2 className="font-display text-xl font-semibold text-text">
+              <h2 className="font-display text-xl font-semibold text-chalk">
                 {section.heading}
               </h2>
             )}
             <div className={section.heading ? "mt-3 space-y-4" : "space-y-4"}>
               {section.paragraphs.map((p, j) => (
-                <p key={j} className="text-base leading-relaxed text-text-soft">
+                <p key={j} className="text-base leading-relaxed text-ash">
                   {p}
                 </p>
               ))}
@@ -74,8 +74,8 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
       </div>
 
       {keyTerms && keyTerms.length > 0 && (
-        <FadeIn className="mt-12 border-t border-border pt-8">
-          <p className="mb-4 font-mono text-xs uppercase tracking-widest text-text-faint">
+        <FadeIn className="mt-12 border-t border-line pt-8">
+          <p className="mb-4 font-mono text-xs uppercase tracking-widest text-smoke">
             Key terms
           </p>
           <dl className="space-y-4">
@@ -84,7 +84,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
                 <dt className="font-display text-sm font-semibold text-signal">
                   {kt.term}
                 </dt>
-                <dd className="mt-1 text-sm leading-relaxed text-text-soft">
+                <dd className="mt-1 text-sm leading-relaxed text-ash">
                   {kt.definition}
                 </dd>
               </div>

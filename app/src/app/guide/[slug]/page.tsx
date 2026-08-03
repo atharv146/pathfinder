@@ -19,12 +19,12 @@ export default async function GuideArticlePage({
 
   return (
     <>
-      <div className="texture-dots h-10 border-b border-border" aria-hidden />
+      <div className="texture-dots h-10 border-b border-line" aria-hidden />
       <section className="px-6 py-4 sm:px-10">
         <div className="mx-auto max-w-2xl pt-8">
           <Link
             href="/guide"
-            className="font-mono text-xs uppercase tracking-widest text-text-faint hover:text-text-soft"
+            className="font-mono text-xs uppercase tracking-widest text-smoke hover:text-ash"
           >
             ← All guide articles
           </Link>

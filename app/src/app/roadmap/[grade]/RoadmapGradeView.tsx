@@ -68,24 +68,24 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                     viewport={{ once: true, amount: 0.15 }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     className={`relative border-l-2 pl-6 transition-colors sm:pl-8 ${
-                      isDone ? "border-glow-amber/50" : "border-border"
+                      isDone ? "border-ember/50" : "border-line"
                     }`}
                   >
                     <button
                       onClick={() => toggleDone(item.id)}
-                      className="absolute -left-[11px] top-1 flex h-5 w-5 items-center justify-center rounded-full border bg-void transition-colors"
+                      className="absolute -left-[11px] top-1 flex h-5 w-5 items-center justify-center rounded-full border bg-ink transition-colors"
                       style={{
-                        borderColor: isDone ? "var(--color-glow-amber)" : "var(--color-border)",
-                        backgroundColor: isDone ? "var(--color-glow-amber)" : "var(--color-void)",
+                        borderColor: isDone ? "var(--color-ember)" : "var(--color-line)",
+                        backgroundColor: isDone ? "var(--color-ember)" : "var(--color-ink)",
                       }}
                       aria-label={isDone ? "Mark as not done" : "Mark as done"}
                     >
-                      <Check size={11} strokeWidth={3} className={isDone ? "text-void" : "text-transparent"} />
+                      <Check size={11} strokeWidth={3} className={isDone ? "text-ink" : "text-transparent"} />
                     </button>
 
                     <h3
                       className={`font-display text-xl font-semibold sm:text-2xl ${
-                        isDone ? "text-text-soft" : "text-text"
+                        isDone ? "text-ash" : "text-chalk"
                       }`}
                     >
                       {item.title}
@@ -95,13 +95,13 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                       {item.sections.map((section, i) => (
                         <div key={i}>
                           {section.heading && (
-                            <h4 className="font-display text-base font-semibold text-text">
+                            <h4 className="font-display text-base font-semibold text-chalk">
                               {section.heading}
                             </h4>
                           )}
                           <div className={section.heading ? "mt-2 space-y-3" : "space-y-3"}>
                             {section.paragraphs.map((p, j) => (
-                              <p key={j} className="text-[15px] leading-relaxed text-text-soft sm:text-base">
+                              <p key={j} className="text-[15px] leading-relaxed text-ash sm:text-base">
                                 {p}
                               </p>
                             ))}
@@ -112,7 +112,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
 
                     <button
                       onClick={() => toggleDone(item.id)}
-                      className="mt-4 font-mono text-[11px] uppercase tracking-widest text-text-faint transition-colors hover:text-signal"
+                      className="mt-4 font-mono text-[11px] uppercase tracking-widest text-smoke transition-colors hover:text-signal"
                     >
                       {isDone ? "✓ Done — mark as not done" : "Mark as done"}
                     </button>

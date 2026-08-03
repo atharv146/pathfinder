@@ -27,27 +27,27 @@ export default function GuideIndex() {
           className="font-display text-4xl font-semibold leading-tight sm:text-5xl"
         />
 
-        <div className="mt-14 divide-y divide-border border-y border-border">
+        <div className="mt-14 divide-y divide-line border-y border-line">
           {guideArticles.map((article, i) => (
             <FadeIn key={article.title} delay={Math.min(i * 0.06, 0.3)}>
               <Link
                 href={`/guide/${slugify(article.title)}`}
                 className="group flex items-start gap-5 py-6 sm:gap-8"
               >
-                <span className="font-mono text-xs text-text-faint">
+                <span className="font-mono text-xs text-smoke">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="flex-1">
-                  <span className="font-display block text-lg font-semibold transition-colors group-hover:text-glow-amber sm:text-xl">
+                  <span className="font-display block text-lg font-semibold transition-colors group-hover:text-ember sm:text-xl">
                     {article.title}
                   </span>
-                  <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-text-soft">
+                  <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-ash">
                     {article.teaser}
                   </span>
                 </span>
                 <ArrowUpRight
                   size={18}
-                  className="mt-1 shrink-0 -translate-x-1 translate-y-1 text-text-faint opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-glow-amber group-hover:opacity-100"
+                  className="mt-1 shrink-0 -translate-x-1 translate-y-1 text-smoke opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-ember group-hover:opacity-100"
                 />
               </Link>
             </FadeIn>

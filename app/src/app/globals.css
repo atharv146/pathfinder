@@ -1,94 +1,100 @@
 @import "tailwindcss";
 
+/*
+  Palette rebuilt (Aug 3, 2026) against the reference videos the user supplied
+  — DOSS ARP, SHAGA, and the Vine/Winner wine site — plus the luxury-residence
+  screenshot. What those share, and what the previous orange-gradient system
+  got wrong: they are near-monochrome. True black grounds, off-white type,
+  hairline rules, and colour used as a rare accent (a hover, a single node)
+  rather than as full-bleed gradient sections.
+*/
 :root {
-  /* Canvas */
-  --color-void: #08080c;
-  --color-void-soft: #0f0f16;
-  --color-surface: #14141d;
-  --color-border: #24242f;
+  /* Grounds — true black, not the previous blue-leaning #08080c */
+  --color-ink: #000000;
+  --color-ink-2: #060607;
+  --color-panel: #0b0b0d;
+  --color-panel-2: #101013;
 
-  /* Text */
-  --color-text: #f3f2ef;
-  --color-text-soft: #9a98a8;
-  --color-text-faint: #5c5a6b;
+  /* Hairlines */
+  --color-line: #1c1c20;
+  --color-line-bright: #2e2e34;
 
-  /* Accent: warm glow (nebula/sun) + cool digital (signal/interactive) */
-  --color-glow-amber: #f5a623;
-  --color-glow-ember: #e8562c;
-  --color-signal: #5ee0d0;
-  --color-signal-soft: #2a5f5a;
+  /* Type — raised contrast. The old --text-faint (#5c5a6b) on near-black was
+     the "text sinking into the screen" complaint: it was too dim to read. */
+  --color-chalk: #f4f3f0;
+  --color-ash: #a8a7b0;
+  --color-smoke: #78777f;
 
-  --font-display: var(--font-space-grotesk);
+  /* Accent — used sparingly: hover states, a single active node, one rule. */
+  --color-ember: #d46438;
+  --color-signal: #7fd4c6;
+
+  --font-display: var(--font-instrument-serif);
   --font-mono: var(--font-ibm-plex-mono);
   --font-body: var(--font-inter);
 }
 
 @theme inline {
-  --color-void: var(--color-void);
-  --color-void-soft: var(--color-void-soft);
-  --color-surface: var(--color-surface);
-  --color-border: var(--color-border);
-  --color-text: var(--color-text);
-  --color-text-soft: var(--color-text-soft);
-  --color-text-faint: var(--color-text-faint);
-  --color-glow-amber: var(--color-glow-amber);
-  --color-glow-ember: var(--color-glow-ember);
+  --color-ink: var(--color-ink);
+  --color-ink-2: var(--color-ink-2);
+  --color-panel: var(--color-panel);
+  --color-panel-2: var(--color-panel-2);
+  --color-line: var(--color-line);
+  --color-line-bright: var(--color-line-bright);
+  --color-chalk: var(--color-chalk);
+  --color-ash: var(--color-ash);
+  --color-smoke: var(--color-smoke);
+  --color-ember: var(--color-ember);
   --color-signal: var(--color-signal);
-  --color-signal-soft: var(--color-signal-soft);
   --font-display: var(--font-display);
   --font-mono: var(--font-mono);
   --font-body: var(--font-body);
 }
 
 body {
-  background: var(--color-void);
-  color: var(--color-text);
+  background: var(--color-ink);
+  color: var(--color-chalk);
   font-family: var(--font-body), sans-serif;
 }
 
 ::selection {
-  background: var(--color-glow-amber);
-  color: var(--color-void);
+  background: var(--color-chalk);
+  color: var(--color-ink);
 }
 
-/* Floating geometric marker — the "asteroid/crystal" motif, kept abstract,
-   sparse, and explicitly click-through so it can never sit on top of a
-   real control. */
-.drift-shape {
-  animation: float-shape 9s ease-in-out infinite;
-  pointer-events: none;
+:focus-visible {
+  outline: 1px solid var(--color-signal);
+  outline-offset: 3px;
 }
 
-@keyframes float-shape {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-14px) rotate(4deg); }
+/* Mono micro-label — the corner-pinned technical caption used across all
+   three reference videos (DOSS's "ERP EVOLVED", SHAGA's ":PRODUCT"). */
+.micro {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.5;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .drift-shape {
-    animation: none;
-  }
-}
-
-/* Underline-reveals-arrow link — the pattern seen across the higher-craft
-   reference sites (an underline that's always there, an arrow that
-   animates in on hover), used in place of a plain text link. */
+/* Underline + arrow that resolves on hover. */
 .arrow-link {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.35em;
+  gap: 0.4em;
   text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-underline-offset: 4px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 5px;
   text-decoration-thickness: 1px;
+  transition: color 0.25s ease;
 }
 
 .arrow-link .arrow-link-icon {
   display: inline-block;
-  transform: translate(-2px, 2px);
+  transform: translate(-3px, 3px);
   opacity: 0;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
 .arrow-link:hover .arrow-link-icon {
@@ -96,18 +102,56 @@ body {
   opacity: 1;
 }
 
-/* Fades the generative dot canvas out behind the headline column so large
-   foreground type always sits on clean negative space, instead of fighting
-   dots/lines for legibility. */
-.dot-field-hero-mask {
-  mask-image: linear-gradient(115deg, transparent 0%, transparent 38%, black 62%);
-  -webkit-mask-image: linear-gradient(115deg, transparent 0%, transparent 38%, black 62%);
+/* Very faint dot grid. Kept far dimmer than the previous amber version so it
+   reads as paper texture, never as competing content. */
+.texture-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
-/* Static, lightweight dot texture for sections that don't need the animated
-   canvas — keeps every section from reading as flat plain black next to the
-   hero, without a canvas element on every page. */
-.texture-dots {
-  background-image: radial-gradient(rgba(245, 166, 35, 0.16) 1px, transparent 1px);
-  background-size: 28px 28px;
+/* Hairline grid, from the technical/blueprint feel in the DOSS reference. */
+.texture-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+
+/* Slow drift for hairline geometry. */
+.drift-shape {
+  animation: float-shape 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes float-shape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(4deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 46s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow-reverse {
+  animation: spin-slow-reverse 62s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes spin-slow-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift-shape,
+  .spin-slow,
+  .spin-slow-reverse {
+    animation: none;
+  }
 }

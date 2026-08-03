@@ -39,7 +39,7 @@ export const categoryOrder = [
 ];
 
 export const accentClasses: Record<CategoryMeta["accent"], { text: string; bg: string; border: string }> = {
-  amber: { text: "text-glow-amber", bg: "bg-glow-amber/10", border: "border-glow-amber/30" },
+  amber: { text: "text-ember", bg: "bg-ember/10", border: "border-ember/30" },
   signal: { text: "text-signal", bg: "bg-signal/10", border: "border-signal/30" },
   violet: { text: "text-[#a89cf0]", bg: "bg-[#a89cf0]/10", border: "border-[#a89cf0]/30" },
 };

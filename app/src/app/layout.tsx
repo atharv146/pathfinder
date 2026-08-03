@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Instrument_Serif, IBM_Plex_Mono, Inter } from "next/font/google";
 import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { MotionProvider } from "@/components/MotionProvider";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+// High-contrast editorial serif — the display face in the wine-site and
+// luxury-residence references, used for headlines only.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -19,7 +22,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -36,9 +39,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${inter.variable} h-full antialiased`}
+      className={`${instrumentSerif.variable} ${ibmPlexMono.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-void text-text">
+      <body className="min-h-full flex flex-col bg-ink text-chalk">
         <MotionProvider>
           <SiteNav />
           {children}

@@ -4,8 +4,8 @@ import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
 import { Magnetic } from "@/components/Magnetic";
 import { GradeRow } from "@/components/GradeRow";
-import { DotField } from "@/components/DotField";
-import { ArcLine } from "@/components/ArcLine";
+import { OrbitField } from "@/components/OrbitField";
+import { CornerLabels } from "@/components/CornerLabels";
 import { ArrowLink } from "@/components/ArrowLink";
 import { ScrollFade } from "@/components/ScrollFade";
 
@@ -13,9 +13,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <div className="texture-dots relative h-14 overflow-visible border-y border-border">
-        <ArcLine className="pointer-events-none absolute inset-x-0 top-0 h-24 w-full opacity-50" />
-      </div>
       <StatBreak />
       <ReadingModeSample />
       <EditorialBeat />
@@ -25,77 +22,59 @@ export default function Home() {
   );
 }
 
-/**
- * A short editorial beat that fades in and back out as you scroll past it —
- * distinct from RevealText's reveal-once behavior. Kept to one moment on the
- * page rather than applied to everything, since fading text you're meant to
- * read would hurt usability.
- */
-function EditorialBeat() {
-  return (
-    <section className="flex min-h-[40vh] items-center justify-center border-y border-border px-6 py-16 sm:px-10">
-      <ScrollFade className="mx-auto max-w-xl text-center">
-        <p className="font-display text-2xl font-medium leading-snug text-text-soft sm:text-3xl">
-          Not another generic checklist. A roadmap that actually says something.
-        </p>
-      </ScrollFade>
-    </section>
-  );
-}
-
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden px-6 pb-24 pt-14 sm:px-10 sm:pt-20">
-      <DotField className="absolute inset-0 dot-field-hero-mask" />
-
-      {/* Floating geometric markers — abstract "asteroid" motif, kept sparse and click-through */}
-      <div
-        className="drift-shape absolute right-[8%] top-[14%] h-20 w-20 rotate-12 rounded-2xl border border-border/80 bg-gradient-to-br from-surface to-void-soft shadow-[0_0_60px_-15px_var(--color-glow-amber)]"
-        style={{ animationDelay: "0.4s" }}
-        aria-hidden
-      />
-      <div
-        className="drift-shape absolute right-[16%] top-[46%] h-10 w-10 rotate-45 rounded-lg border border-signal/40 bg-void-soft"
-        style={{ animationDelay: "1.8s" }}
-        aria-hidden
+    <section className="texture-grid relative isolate min-h-[86vh] overflow-hidden px-6 pb-20 pt-10 sm:px-10">
+      <CornerLabels
+        topLeft="PathFinder / 001"
+        topRight="Grades 06 — 12"
+        bottomLeft="Free · Always"
+        bottomRight="Est. 2026"
       />
 
-      <div className="relative grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      {/* Orbital graphic sits right of centre so it never sits under the headline */}
+      <OrbitField className="pointer-events-none absolute -right-[18%] top-1/2 h-[46rem] w-[46rem] -translate-y-1/2 opacity-70 lg:-right-[6%]" />
+
+      <div className="relative mx-auto grid max-w-6xl gap-14 pt-16 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:pt-24">
         <div>
           <FadeIn>
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-signal">
-              Free · Student-owned · Grades 6–12
-            </p>
+            <p className="micro mb-8 text-signal">(01) &nbsp;The roadmap you were never given</p>
           </FadeIn>
 
           <RevealText
             as="h1"
-            text="Your path to college, mapped out for real."
-            className="font-display text-6xl font-semibold leading-[0.98] tracking-tight sm:text-8xl"
+            text="Your path to college,"
+            className="font-display text-6xl font-normal leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
+          />
+          <RevealText
+            as="h1"
+            delay={0.18}
+            text="mapped out for real."
+            className="font-display text-6xl font-normal italic leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
           />
         </div>
 
-        <div className="lg:pb-2">
-          <FadeIn delay={0.35}>
-            <p className="max-w-sm text-base leading-relaxed text-text-soft">
+        <div className="lg:pb-3">
+          <FadeIn delay={0.4}>
+            <p className="max-w-sm text-[0.95rem] leading-relaxed text-ash">
               Honest, specific guidance for immigrant and first-generation students
               and their families — from 6th grade through decision day. No school
               counselor waitlist required.
             </p>
           </FadeIn>
 
-          <FadeIn delay={0.5}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+          <FadeIn delay={0.55}>
+            <div className="mt-10 flex flex-wrap items-center gap-7">
               <Magnetic>
                 <Link
                   href="/roadmap"
-                  className="inline-block rounded-full bg-gradient-to-r from-glow-amber to-glow-ember px-7 py-3 font-medium text-void"
+                  className="inline-block rounded-full bg-chalk px-8 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-white"
                 >
                   Start your roadmap
                 </Link>
               </Magnetic>
               <Magnetic>
-                <ArrowLink href="/guide" className="text-text-soft hover:text-text">
+                <ArrowLink href="/guide" className="text-sm text-ash hover:text-chalk">
                   See how it works
                 </ArrowLink>
               </Magnetic>
@@ -104,70 +83,61 @@ function Hero() {
         </div>
       </div>
 
-      <p className="relative mt-20 font-mono text-xs uppercase tracking-widest text-text-faint">
-        ↓ Scroll to explore
-      </p>
+      <p className="micro relative mt-24 text-smoke">↓ &nbsp;Scroll to explore</p>
     </section>
   );
 }
 
 /**
- * A bold full-color break in the otherwise dark chrome — the "commit to the
- * brand color" move from plusanton.com, not just an accent pop. Two real,
- * sourced statistics (the gap, then the scale) instead of one, with
- * geometric shapes drifting behind them.
+ * Two sourced statistics, set as a numbered technical index rather than a
+ * full-bleed colour block — matching how the reference sites present data
+ * (mono labels, hairline rules, huge light numerals, near-monochrome).
  */
 function StatBreak() {
+  const stats = [
+    {
+      index: "01",
+      figure: "1.5",
+      unit: "hrs / year",
+      claim:
+        "That is roughly all the college guidance a school counselor can give a single student, once caseloads are accounted for.",
+      source: "NACAC · 2019 estimate",
+    },
+    {
+      index: "02",
+      figure: "5.9",
+      unit: "million",
+      claim:
+        "Immigrant-origin students now in U.S. higher education — about 32% of everyone enrolled.",
+      source: "Presidents' Alliance · 2023",
+    },
+  ];
+
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-br from-glow-ember via-glow-ember to-glow-amber px-6 py-24 sm:px-10">
-      <span
-        className="drift-shape absolute left-[6%] top-[10%] h-24 w-24 rotate-12 rounded-3xl border border-void/20 bg-void/10"
-        style={{ animationDelay: "0.2s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute right-[10%] top-[18%] h-14 w-14 rotate-45 rounded-xl border border-void/20 bg-void/10"
-        style={{ animationDelay: "1.2s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute bottom-[14%] left-[16%] h-10 w-10 rounded-full border border-void/25"
-        style={{ animationDelay: "2s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute bottom-[20%] right-[20%] h-20 w-20 rotate-[20deg] rounded-2xl border border-void/20 bg-void/10"
-        style={{ animationDelay: "0.8s" }}
-        aria-hidden
-      />
-
-      <div className="relative mx-auto max-w-3xl text-center text-void">
-        <RevealText
-          as="h2"
-          text="School counselors have about 1.5 hours a year to spend on college guidance, per student."
-          className="font-display text-3xl font-semibold leading-snug sm:text-4xl"
-        />
-        <FadeIn delay={0.35}>
-          <p className="mt-4 font-mono text-xs uppercase tracking-widest text-void/70">
-            National Association for College Admission Counseling · 2019 estimate
-          </p>
+    <section className="relative border-y border-line bg-ink-2 px-6 py-24 sm:px-10">
+      <div className="mx-auto max-w-5xl">
+        <FadeIn>
+          <p className="micro mb-14 text-smoke">(02) &nbsp;Why this exists</p>
         </FadeIn>
 
-        <FadeIn delay={0.5}>
-          <div className="mx-auto mt-14 h-px w-16 bg-void/30" />
-        </FadeIn>
-
-        <div className="mt-14">
-          <RevealText
-            as="h2"
-            text="Nearly 6 million immigrant-origin students are in U.S. higher ed today — 32% of the total."
-            className="font-display text-2xl font-semibold leading-snug sm:text-3xl"
-          />
-          <FadeIn delay={0.35}>
-            <p className="mt-4 font-mono text-xs uppercase tracking-widest text-void/70">
-              Presidents&rsquo; Alliance on Higher Education &amp; Immigration · 2023
-            </p>
-          </FadeIn>
+        <div className="grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2">
+          {stats.map((s, i) => (
+            <FadeIn key={s.index} delay={i * 0.12} className="bg-ink-2">
+              <div className="flex h-full flex-col p-8 sm:p-10">
+                <span className="micro text-smoke">{s.index}</span>
+                <div className="mt-8 flex items-baseline gap-3">
+                  <span className="font-display text-7xl leading-none text-chalk sm:text-8xl">
+                    {s.figure}
+                  </span>
+                  <span className="micro text-ash">{s.unit}</span>
+                </div>
+                <p className="mt-8 max-w-sm text-[0.95rem] leading-relaxed text-ash">
+                  {s.claim}
+                </p>
+                <p className="micro mt-auto pt-10 text-smoke">{s.source}</p>
+              </div>
+            </FadeIn>
+          ))}
         </div>
       </div>
     </section>
@@ -176,20 +146,18 @@ function StatBreak() {
 
 function ReadingModeSample() {
   return (
-    <section className="relative bg-void-soft px-6 py-24 sm:px-10">
+    <section className="relative px-6 py-28 sm:px-10">
       <div className="mx-auto max-w-2xl">
         <FadeIn>
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
-            From the guide
-          </p>
+          <p className="micro mb-8 text-smoke">(03) &nbsp;From the guide</p>
         </FadeIn>
         <RevealText
           as="h2"
-          text="How the U.S. College System Works"
-          className="font-display text-2xl font-semibold sm:text-3xl"
+          text="How the U.S. college system actually works"
+          className="font-display text-4xl font-normal leading-[1.1] text-chalk sm:text-5xl"
         />
         <FadeIn delay={0.2}>
-          <p className="mt-5 text-base leading-relaxed text-text-soft sm:text-lg">
+          <p className="mt-8 text-base leading-relaxed text-ash">
             If this system feels confusing or backwards compared to what you knew
             growing up, that&rsquo;s completely normal. This isn&rsquo;t something anyone is
             expected to already know — this guide walks through the parts that trip up
@@ -197,7 +165,7 @@ function ReadingModeSample() {
           </p>
           <ArrowLink
             href={`/guide/${slugify("How the U.S. College System Works")}`}
-            className="mt-6 font-mono text-sm text-signal hover:text-text"
+            className="micro mt-10 text-chalk hover:text-signal"
           >
             Read the full guide
           </ArrowLink>
@@ -207,11 +175,18 @@ function ReadingModeSample() {
   );
 }
 
-/**
- * Deliberately not a uniform card grid — a stacked, numbered list with each
- * row revealing on scroll, closer to an editorial table of contents than a
- * template pricing-tier layout.
- */
+function EditorialBeat() {
+  return (
+    <section className="flex min-h-[44vh] items-center justify-center border-y border-line px-6 py-20 sm:px-10">
+      <ScrollFade className="mx-auto max-w-2xl text-center">
+        <p className="font-display text-3xl font-normal italic leading-snug text-ash sm:text-4xl">
+          Not another generic checklist. A roadmap that actually says something.
+        </p>
+      </ScrollFade>
+    </section>
+  );
+}
+
 function RoadmapPreview() {
   const grades = [
     { grade: 6, label: "Middle School", note: "Explore. Nothing here is evaluated by any college, ever." },
@@ -221,32 +196,25 @@ function RoadmapPreview() {
   ];
 
   return (
-    <section className="texture-dots relative overflow-hidden px-6 py-24 sm:px-10">
+    <section className="texture-dots relative overflow-hidden px-6 py-28 sm:px-10">
       <span
-        className="font-display pointer-events-none absolute -right-6 top-4 select-none text-[9rem] font-bold leading-none text-void-soft sm:text-[13rem]"
+        className="font-display pointer-events-none absolute -right-4 top-10 select-none text-[10rem] leading-none text-panel-2 sm:text-[15rem]"
         aria-hidden
       >
-        06–12
+        06/12
       </span>
-      <span
-        className="drift-shape absolute bottom-[10%] left-[4%] h-12 w-12 rotate-[15deg] rounded-xl border border-signal/30"
-        style={{ animationDelay: "1.4s" }}
-        aria-hidden
-      />
 
       <div className="relative mx-auto max-w-3xl">
         <FadeIn>
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-faint">
-            The roadmap
-          </p>
+          <p className="micro mb-8 text-smoke">(04) &nbsp;The roadmap</p>
         </FadeIn>
         <RevealText
           as="h2"
           text="Every grade, mapped."
-          className="font-display text-3xl font-semibold sm:text-4xl"
+          className="font-display text-4xl font-normal text-chalk sm:text-5xl"
         />
 
-        <div className="mt-12 divide-y divide-border border-y border-border">
+        <div className="mt-14 divide-y divide-line border-y border-line">
           {grades.map((g, i) => (
             <GradeRow key={g.grade} grade={g.grade} label={g.label} note={g.note} index={i} />
           ))}
@@ -258,30 +226,27 @@ function RoadmapPreview() {
 
 function ClosingCta() {
   return (
-    <section className="relative overflow-hidden px-6 py-28 sm:px-10">
-      <span
-        className="drift-shape absolute right-[10%] top-[16%] h-16 w-16 rotate-[30deg] rounded-2xl border border-glow-amber/30"
-        style={{ animationDelay: "0.6s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute bottom-[18%] left-[12%] h-9 w-9 rounded-full border border-signal/30"
-        style={{ animationDelay: "1.9s" }}
-        aria-hidden
-      />
+    <section className="relative overflow-hidden border-t border-line px-6 py-32 sm:px-10">
+      <OrbitField className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 opacity-30" />
 
       <div className="relative mx-auto max-w-2xl text-center">
         <RevealText
           as="h2"
-          text="No waitlist. No paywall. Start now."
-          className="font-display text-4xl font-semibold sm:text-5xl"
+          text="No waitlist. No paywall."
+          className="font-display text-5xl font-normal leading-[1.05] text-chalk sm:text-6xl"
         />
-        <FadeIn delay={0.3}>
-          <div className="mt-8">
+        <RevealText
+          as="h2"
+          delay={0.15}
+          text="Start now."
+          className="font-display text-5xl font-normal italic leading-[1.05] text-chalk sm:text-6xl"
+        />
+        <FadeIn delay={0.4}>
+          <div className="mt-12">
             <Magnetic>
               <Link
                 href="/roadmap"
-                className="inline-block rounded-full bg-gradient-to-r from-glow-amber to-glow-ember px-8 py-3.5 font-medium text-void"
+                className="inline-block rounded-full bg-chalk px-9 py-4 text-sm font-medium text-ink transition-colors hover:bg-white"
               >
                 Start your roadmap
               </Link>

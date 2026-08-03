@@ -9,7 +9,7 @@ export default function RoadmapIndex() {
   return (
     <section className="texture-dots relative overflow-hidden px-6 py-16 sm:px-10">
       <span
-        className="drift-shape absolute right-[8%] top-[10%] h-14 w-14 rotate-12 rounded-2xl border border-glow-amber/30"
+        className="drift-shape absolute right-[8%] top-[10%] h-14 w-14 rotate-12 rounded-2xl border border-ember/30"
         style={{ animationDelay: "0.5s" }}
         aria-hidden
       />
@@ -31,7 +31,7 @@ export default function RoadmapIndex() {
           className="font-display text-4xl font-semibold sm:text-5xl"
         />
         <FadeIn delay={0.2}>
-          <p className="mt-4 max-w-xl text-text-soft">
+          <p className="mt-4 max-w-xl text-ash">
             Every grade has its own guidance. There&rsquo;s no such thing as falling
             behind — start wherever you actually are.
           </p>
@@ -41,7 +41,7 @@ export default function RoadmapIndex() {
           {gradeGroups.map((group, gi) => (
             <div key={group.label}>
               <FadeIn delay={gi * 0.1}>
-                <p className="mb-4 font-mono text-xs uppercase tracking-widest text-text-faint">
+                <p className="mb-4 font-mono text-xs uppercase tracking-widest text-smoke">
                   {group.label}
                 </p>
               </FadeIn>
@@ -50,15 +50,15 @@ export default function RoadmapIndex() {
                   <FadeIn key={grade} delay={gi * 0.1 + i * 0.05}>
                     <Link
                       href={`/roadmap/${grade}`}
-                      className="group relative block overflow-hidden rounded-2xl border border-border bg-surface px-6 py-8 text-center transition-colors hover:border-glow-amber/60"
+                      className="group relative block overflow-hidden rounded-2xl border border-line bg-panel px-6 py-8 text-center transition-colors hover:border-ember/60"
                     >
-                      <span className="font-display block text-3xl font-semibold transition-colors group-hover:text-glow-amber">
+                      <span className="font-display block text-3xl font-semibold transition-colors group-hover:text-ember">
                         {grade}
                       </span>
-                      <span className="mt-1 block font-mono text-xs uppercase tracking-widest text-text-faint">
+                      <span className="mt-1 block font-mono text-xs uppercase tracking-widest text-smoke">
                         Grade
                       </span>
-                      <span className="absolute -bottom-6 -right-6 h-20 w-20 rounded-full bg-glow-amber/0 blur-2xl transition-colors group-hover:bg-glow-amber/20" />
+                      <span className="absolute -bottom-6 -right-6 h-20 w-20 rounded-full bg-ember/0 blur-2xl transition-colors group-hover:bg-ember/20" />
                     </Link>
                   </FadeIn>
                 ))}

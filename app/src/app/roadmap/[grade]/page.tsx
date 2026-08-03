@@ -23,12 +23,12 @@ export default async function RoadmapGradePage({
 
   return (
     <>
-      <div className="texture-dots h-10 border-b border-border" aria-hidden />
+      <div className="texture-dots h-10 border-b border-line" aria-hidden />
       <section className="px-6 py-16 sm:px-10">
         <div className="mx-auto max-w-3xl">
           <Link
             href="/roadmap"
-            className="font-mono text-xs uppercase tracking-widest text-text-faint hover:text-text-soft"
+            className="font-mono text-xs uppercase tracking-widest text-smoke hover:text-ash"
           >
             ← All grades
           </Link>
