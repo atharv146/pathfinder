@@ -27,8 +27,13 @@ type RevealTextProps = {
 
 /**
  * Splits text into words that fade/slide up in a stagger as the element
- * enters the viewport. Respects prefers-reduced-motion via CSS (see
- * .reveal-word rule in globals.css) rather than duplicating logic in JS.
+ * enters the viewport.
+ *
+ * Spacing note: the gap between words is a real `margin-right`, not a
+ * literal space character inside the overflow-hidden wrapper — a plain
+ * trailing space there gets trimmed when the browser computes the
+ * inline-block's shrink-to-fit width, which is what caused words to
+ * visually run together. Margin can't be collapsed away like that.
  */
 export function RevealText({ text, as = "p", className = "", delay = 0 }: RevealTextProps) {
   const words = text.split(" ");
@@ -42,13 +47,19 @@ export function RevealText({ text, as = "p", className = "", delay = 0 }: Reveal
       whileInView="show"
       viewport={{ once: true, amount: 0.6 }}
       transition={{ delayChildren: delay }}
-      style={{ overflow: "visible" }}
     >
       {words.map((w, i) => (
-        <span key={i} style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top" }}>
+        <span
+          key={i}
+          style={{
+            display: "inline-block",
+            overflow: "hidden",
+            verticalAlign: "top",
+            marginRight: i < words.length - 1 ? "0.27em" : 0,
+          }}
+        >
           <motion.span variants={word} style={{ display: "inline-block" }}>
             {w}
-            {i < words.length - 1 ? " " : ""}
           </motion.span>
         </span>
       ))}

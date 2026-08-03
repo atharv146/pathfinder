@@ -95,3 +95,19 @@ body {
   transform: translate(0, 0);
   opacity: 1;
 }
+
+/* Fades the generative dot canvas out behind the headline column so large
+   foreground type always sits on clean negative space, instead of fighting
+   dots/lines for legibility. */
+.dot-field-hero-mask {
+  mask-image: linear-gradient(115deg, transparent 0%, transparent 38%, black 62%);
+  -webkit-mask-image: linear-gradient(115deg, transparent 0%, transparent 38%, black 62%);
+}
+
+/* Static, lightweight dot texture for sections that don't need the animated
+   canvas — keeps every section from reading as flat plain black next to the
+   hero, without a canvas element on every page. */
+.texture-dots {
+  background-image: radial-gradient(rgba(245, 166, 35, 0.16) 1px, transparent 1px);
+  background-size: 28px 28px;
+}

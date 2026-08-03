@@ -18,22 +18,25 @@ export default async function GuideArticlePage({
   if (!article) notFound();
 
   return (
-    <section className="px-6 py-4 sm:px-10">
-      <div className="mx-auto max-w-2xl pt-8">
-        <Link
-          href="/guide"
-          className="font-mono text-xs uppercase tracking-widest text-text-faint hover:text-text-soft"
-        >
-          ← All guide articles
-        </Link>
-      </div>
-      <ArticleView
-        eyebrow="Parent & student guide"
-        title={article.title}
-        quickAnswer={article.quickAnswer}
-        sections={article.sections}
-        keyTerms={article.keyTerms}
-      />
-    </section>
+    <>
+      <div className="texture-dots h-10 border-b border-border" aria-hidden />
+      <section className="px-6 py-4 sm:px-10">
+        <div className="mx-auto max-w-2xl pt-8">
+          <Link
+            href="/guide"
+            className="font-mono text-xs uppercase tracking-widest text-text-faint hover:text-text-soft"
+          >
+            ← All guide articles
+          </Link>
+        </div>
+        <ArticleView
+          eyebrow="Parent & student guide"
+          title={article.title}
+          quickAnswer={article.quickAnswer}
+          sections={article.sections}
+          keyTerms={article.keyTerms}
+        />
+      </section>
+    </>
   );
 }

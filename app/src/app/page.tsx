@@ -12,6 +12,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <div className="texture-dots h-14 border-y border-border" aria-hidden />
       <StatBreak />
       <ReadingModeSample />
       <RoadmapPreview />
@@ -23,8 +24,8 @@ export default function Home() {
 function Hero() {
   return (
     <section className="relative isolate overflow-hidden px-6 pb-24 pt-14 sm:px-10 sm:pt-20">
-      <DotField className="absolute inset-0" />
-      <ArcLine className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] w-full opacity-70" />
+      <DotField className="absolute inset-0 dot-field-hero-mask" />
+      <ArcLine className="pointer-events-none absolute inset-x-0 bottom-0 h-64 w-full opacity-40" />
 
       {/* Floating geometric markers — abstract "asteroid" motif, kept sparse and click-through */}
       <div
@@ -159,8 +160,15 @@ function RoadmapPreview() {
   ];
 
   return (
-    <section className="px-6 py-24 sm:px-10">
-      <div className="mx-auto max-w-3xl">
+    <section className="texture-dots relative overflow-hidden px-6 py-24 sm:px-10">
+      <span
+        className="font-display pointer-events-none absolute -right-6 top-4 select-none text-[9rem] font-bold leading-none text-void-soft sm:text-[13rem]"
+        aria-hidden
+      >
+        06–12
+      </span>
+
+      <div className="relative mx-auto max-w-3xl">
         <FadeIn>
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-faint">
             The roadmap
