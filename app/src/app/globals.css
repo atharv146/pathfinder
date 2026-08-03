@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+:root {
+  /* Canvas */
+  --color-void: #08080c;
+  --color-void-soft: #0f0f16;
+  --color-surface: #14141d;
+  --color-border: #24242f;
+
+  /* Text */
+  --color-text: #f3f2ef;
+  --color-text-soft: #9a98a8;
+  --color-text-faint: #5c5a6b;
+
+  /* Accent: warm glow (nebula/sun) + cool digital (signal/interactive) */
+  --color-glow-amber: #f5a623;
+  --color-glow-ember: #e8562c;
+  --color-signal: #5ee0d0;
+  --color-signal-soft: #2a5f5a;
+
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-ibm-plex-mono);
+  --font-body: var(--font-inter);
+}
+
+@theme inline {
+  --color-void: var(--color-void);
+  --color-void-soft: var(--color-void-soft);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-soft: var(--color-text-soft);
+  --color-text-faint: var(--color-text-faint);
+  --color-glow-amber: var(--color-glow-amber);
+  --color-glow-ember: var(--color-glow-ember);
+  --color-signal: var(--color-signal);
+  --color-signal-soft: var(--color-signal-soft);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --font-body: var(--font-body);
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: var(--color-glow-amber);
+  color: var(--color-void);
+}
+
+/* Ambient glow field — used behind hero/nav chrome, never behind long-form reading */
+.glow-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glow-field::before,
+.glow-field::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.55;
+}
+
+.glow-field::before {
+  width: 46rem;
+  height: 46rem;
+  left: -12rem;
+  bottom: -18rem;
+  background: radial-gradient(circle at 30% 30%, var(--color-glow-amber), var(--color-glow-ember) 55%, transparent 75%);
+  animation: drift-a 22s ease-in-out infinite alternate;
+}
+
+.glow-field::after {
+  width: 30rem;
+  height: 30rem;
+  right: -8rem;
+  top: -6rem;
+  background: radial-gradient(circle at 50% 50%, var(--color-signal), transparent 70%);
+  opacity: 0.25;
+  animation: drift-b 26s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(3rem, -2rem) scale(1.08); }
+}
+
+@keyframes drift-b {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-2rem, 2rem) scale(0.94); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-field::before,
+  .glow-field::after {
+    animation: none;
+  }
+}
+
+/* Floating geometric marker — the "asteroid/crystal" motif, kept abstract and sparse */
+.drift-shape {
+  animation: float-shape 9s ease-in-out infinite;
+}
+
+@keyframes float-shape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift-shape {
+    animation: none;
+  }
+}

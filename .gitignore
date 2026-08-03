@@ -1,0 +1,11 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Claude Code local session settings (personal, not shared)
+.claude/settings.local.json
+
+# Env files anywhere in the repo
+.env
+.env.local
+.env*.local
