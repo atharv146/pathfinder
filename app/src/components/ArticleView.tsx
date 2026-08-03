@@ -1,3 +1,6 @@
+import { RevealText } from "@/components/RevealText";
+import { FadeIn } from "@/components/FadeIn";
+
 type Section = {
   heading?: string;
   paragraphs: string[];
@@ -15,37 +18,45 @@ type ArticleViewProps = {
 
 /**
  * Reading-mode component: deliberately calm relative to the hero/nav chrome.
- * Glow/motion stays out of long-form text per the design system's two registers.
+ * Glow stays out of long-form text per the design system's two registers —
+ * but sections still reveal in as you scroll, so it doesn't feel static
+ * next to the rest of the site.
  */
 export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }: ArticleViewProps) {
   return (
     <article className="mx-auto max-w-2xl px-6 py-16 sm:px-0">
-      <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
-        {eyebrow}
-      </p>
-      <h1 className="font-display text-3xl font-semibold leading-tight sm:text-4xl">
-        {title}
-      </h1>
+      <FadeIn>
+        <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
+          {eyebrow}
+        </p>
+      </FadeIn>
+      <RevealText
+        as="h1"
+        text={title}
+        className="font-display text-3xl font-semibold leading-tight sm:text-4xl"
+      />
 
       {quickAnswer && quickAnswer.length > 0 && (
-        <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-faint">
-            Quick answer
-          </p>
-          <ul className="space-y-2.5">
-            {quickAnswer.map((point, i) => (
-              <li key={i} className="flex gap-3 text-sm leading-relaxed text-text-soft">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-glow-amber to-glow-ember" />
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FadeIn delay={0.15}>
+          <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-faint">
+              Quick answer
+            </p>
+            <ul className="space-y-2.5">
+              {quickAnswer.map((point, i) => (
+                <li key={i} className="flex gap-3 text-sm leading-relaxed text-text-soft">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-glow-amber to-glow-ember" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </FadeIn>
       )}
 
       <div className="mt-10 space-y-8">
         {sections.map((section, i) => (
-          <div key={i}>
+          <FadeIn key={i} delay={Math.min(i * 0.05, 0.3)}>
             {section.heading && (
               <h2 className="font-display text-xl font-semibold text-text">
                 {section.heading}
@@ -58,12 +69,12 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
                 </p>
               ))}
             </div>
-          </div>
+          </FadeIn>
         ))}
       </div>
 
       {keyTerms && keyTerms.length > 0 && (
-        <div className="mt-12 border-t border-border pt-8">
+        <FadeIn className="mt-12 border-t border-border pt-8">
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-text-faint">
             Key terms
           </p>
@@ -79,7 +90,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
               </div>
             ))}
           </dl>
-        </div>
+        </FadeIn>
       )}
     </article>
   );

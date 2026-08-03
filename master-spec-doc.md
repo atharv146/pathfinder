@@ -225,15 +225,14 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 - **Live pages:** `/` (home), `/roadmap` (grade picker), `/roadmap/[grade]` (all 7 grades, expandable items with a localStorage-backed "mark as done" — real interactivity, not a mock), `/guide` (article index), `/guide/[slug]` (all 6 articles, quick-answer box + key-term glossary intact), `/ask-ai` (honest placeholder — explicitly says the backend isn't wired yet, does not repeat the old broken API call). All verified rendering with no console or server errors via a live dev-server check.
 - **Chatbot:** still not functional, by design — the `/ask-ai` page is a clearly-labeled placeholder rather than a repeat of the old broken client-side Anthropic call. Real backend work is Next Steps Sequence step 6.
 - **Supabase:** existing project, URL `https://kvnmydvsffjvrsndnawd.supabase.co`, contains real signups from earlier testing — do not recreate. Still not wired into the new Next.js build (deliberately deferred, not an oversight).
-- **GitHub:** repo is `atharv146/pathfinder` (public, https://github.com/atharv146/pathfinder). **Not yet connected.** `create-next-app` auto-ran `git init` *inside* `app/`, so there's currently a nested git repo scoped to just the Next.js project, separate from the rest of this working directory (docs, content file) — this needs a decision (flatten into one repo at the working-directory root vs. treat `app/` as the actual repo root) before connecting to the real remote. Nothing has been pushed anywhere.
+- **GitHub:** repo is `atharv146/pathfinder` (public, https://github.com/atharv146/pathfinder) — **connected and pushed.** User chose to flatten (option confirmed Aug 2, 2026): removed the nested `.git` that `create-next-app` had auto-created inside `app/`, initialized git at the working-directory root instead, so docs + `content/` + `app/` all live in one repo. Confirmed via `git ls-remote` that the GitHub repo was genuinely empty before pushing (no risk of overwriting anything). Initial commit pushed to `master`.
 - Two smaller fixes carried over from Lovable-era testing, not yet implemented in the new build: (1) immigration status field optional/separate from required onboarding, (2) show user's email (not just name) in the account/logout menu — both blocked on the accounts/backend step (Next Steps Sequence step 6), since there's no auth/profile UI yet.
 
 **Known open issues (not yet fixed):**
 1. Some facts in the ported content (state-by-state aid eligibility, org details) should still be spot-checked before public launch, since they can change over time — flagged in the content itself, not silently assumed correct.
 2. Chatbot is a placeholder, not functional — real backend needed (Next Steps Sequence step 6).
-3. Nested-git-repo decision (see GitHub note above) needs resolving before any push.
-4. Not yet mobile-first in practice — built and checked at desktop viewport only this session; responsive/mobile pass still needed.
-5. No Supabase wiring, no auth, no deployment yet — all deliberately deferred to later steps, not bugs.
+3. Not yet mobile-first in practice — built and checked at desktop viewport only this session; responsive/mobile pass still needed.
+4. No Supabase wiring, no auth, no deployment yet — all deliberately deferred to later steps, not bugs.
 
 **Immediate next action for whoever picks this up:** continue the "Next Steps Sequence" below — steps 1 (content) and roughly step 2 (design) both got real first passes this session; a second content depth pass (step 3) and a fuller design/responsive pass (step 4) are the natural next moves. Resolve the nested-git-repo question before touching GitHub.
 

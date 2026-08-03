@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, IBM_Plex_Mono, Inter } from "next/font/google";
 import { SiteNav, SiteFooter } from "@/components/SiteNav";
+import { MotionProvider } from "@/components/MotionProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -38,9 +39,11 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-void text-text">
-        <SiteNav />
-        {children}
-        <SiteFooter />
+        <MotionProvider>
+          <SiteNav />
+          {children}
+          <SiteFooter />
+        </MotionProvider>
       </body>
     </html>
   );

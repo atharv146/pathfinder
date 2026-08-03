@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import type { RoadmapItem } from "@/data/roadmap";
 import { categoryMeta, categoryOrder, accentClasses } from "@/data/categories";
+import { FadeIn } from "@/components/FadeIn";
 
 export function RoadmapGradeView({ grade, items }: { grade: number; items: RoadmapItem[] }) {
-  const [openId, setOpenId] = useState<string | null>(null);
   const [done, setDone] = useState<Record<string, boolean>>({});
-
   const storageKey = `pathfinder:done:grade-${grade}`;
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
-      // One-time sync from an external store (localStorage) on mount — not
-      // derivable from props/state, so this is the documented exception to
-      // "don't setState in an effect."
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from localStorage on mount
       if (raw) setDone(JSON.parse(raw));
     } catch {
       // localStorage unavailable — mark-as-done just won't persist this session
@@ -39,7 +36,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
   const categories = categoryOrder.filter((c) => items.some((i) => i.category === c));
 
   return (
-    <div className="mt-10 space-y-10">
+    <div className="mt-14 space-y-20">
       {categories.map((category) => {
         const meta = categoryMeta[category];
         const Icon = meta?.icon;
@@ -48,70 +45,78 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
 
         return (
           <div key={category}>
-            <div className="mb-4 flex items-center gap-2.5">
-              {Icon && (
-                <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${accent.bg}`}>
-                  <Icon size={15} className={accent.text} />
-                </span>
-              )}
-              <h2 className="font-display text-lg font-semibold">{category}</h2>
-            </div>
+            <FadeIn className="mb-8 flex items-center gap-3">
+              <div className="flex items-center gap-3">
+                {Icon && (
+                  <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${accent.bg}`}>
+                    <Icon size={16} className={accent.text} />
+                  </span>
+                )}
+                <h2 className="font-display text-2xl font-semibold">{category}</h2>
+              </div>
+            </FadeIn>
 
-            <div className="space-y-3">
+            <div className="space-y-14">
               {categoryItems.map((item) => {
-                const isOpen = openId === item.id;
                 const isDone = !!done[item.id];
 
                 return (
-                  <div
+                  <motion.article
                     key={item.id}
-                    className={`overflow-hidden rounded-2xl border bg-surface transition-colors ${
-                      isOpen ? accent.border : "border-border"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className={`relative border-l-2 pl-6 transition-colors sm:pl-8 ${
+                      isDone ? "border-glow-amber/50" : "border-border"
                     }`}
                   >
-                    <div className="flex items-center gap-3 px-5 py-4">
-                      <button
-                        onClick={() => toggleDone(item.id)}
-                        aria-label={isDone ? "Mark as not done" : "Mark as done"}
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                          isDone
-                            ? "border-glow-amber bg-glow-amber text-void"
-                            : "border-border text-transparent hover:border-text-soft"
-                        }`}
-                      >
-                        <Check size={12} strokeWidth={3} />
-                      </button>
-                      <button
-                        onClick={() => setOpenId(isOpen ? null : item.id)}
-                        className={`flex-1 text-left text-sm font-medium sm:text-base ${
-                          isDone ? "text-text-faint line-through" : "text-text"
-                        }`}
-                      >
-                        {item.title}
-                      </button>
+                    <button
+                      onClick={() => toggleDone(item.id)}
+                      className="absolute -left-[11px] top-1 flex h-5 w-5 items-center justify-center rounded-full border bg-void transition-colors"
+                      style={{
+                        borderColor: isDone ? "var(--color-glow-amber)" : "var(--color-border)",
+                        backgroundColor: isDone ? "var(--color-glow-amber)" : "var(--color-void)",
+                      }}
+                      aria-label={isDone ? "Mark as not done" : "Mark as done"}
+                    >
+                      <Check size={11} strokeWidth={3} className={isDone ? "text-void" : "text-transparent"} />
+                    </button>
+
+                    <h3
+                      className={`font-display text-xl font-semibold sm:text-2xl ${
+                        isDone ? "text-text-soft" : "text-text"
+                      }`}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <div className="mt-4 space-y-4">
+                      {item.sections.map((section, i) => (
+                        <div key={i}>
+                          {section.heading && (
+                            <h4 className="font-display text-base font-semibold text-text">
+                              {section.heading}
+                            </h4>
+                          )}
+                          <div className={section.heading ? "mt-2 space-y-3" : "space-y-3"}>
+                            {section.paragraphs.map((p, j) => (
+                              <p key={j} className="text-[15px] leading-relaxed text-text-soft sm:text-base">
+                                {p}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
 
-                    {isOpen && (
-                      <div className="border-t border-border px-5 py-5 sm:px-6">
-                        {item.sections.map((section, i) => (
-                          <div key={i} className={i > 0 ? "mt-4" : ""}>
-                            {section.heading && (
-                              <h3 className="font-display text-sm font-semibold text-text">
-                                {section.heading}
-                              </h3>
-                            )}
-                            <div className="mt-2 space-y-3">
-                              {section.paragraphs.map((p, j) => (
-                                <p key={j} className="text-sm leading-relaxed text-text-soft">
-                                  {p}
-                                </p>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                    <button
+                      onClick={() => toggleDone(item.id)}
+                      className="mt-4 font-mono text-[11px] uppercase tracking-widest text-text-faint transition-colors hover:text-signal"
+                    >
+                      {isDone ? "✓ Done — mark as not done" : "Mark as done"}
+                    </button>
+                  </motion.article>
                 );
               })}
             </div>
