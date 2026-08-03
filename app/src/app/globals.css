@@ -51,62 +51,12 @@ body {
   color: var(--color-void);
 }
 
-/* Ambient glow field — used behind hero/nav chrome, never behind long-form reading */
-.glow-field {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glow-field::before,
-.glow-field::after {
-  content: "";
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.55;
-}
-
-.glow-field::before {
-  width: 46rem;
-  height: 46rem;
-  left: -12rem;
-  bottom: -18rem;
-  background: radial-gradient(circle at 30% 30%, var(--color-glow-amber), var(--color-glow-ember) 55%, transparent 75%);
-  animation: drift-a 22s ease-in-out infinite alternate;
-}
-
-.glow-field::after {
-  width: 30rem;
-  height: 30rem;
-  right: -8rem;
-  top: -6rem;
-  background: radial-gradient(circle at 50% 50%, var(--color-signal), transparent 70%);
-  opacity: 0.25;
-  animation: drift-b 26s ease-in-out infinite alternate;
-}
-
-@keyframes drift-a {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(3rem, -2rem) scale(1.08); }
-}
-
-@keyframes drift-b {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(-2rem, 2rem) scale(0.94); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glow-field::before,
-  .glow-field::after {
-    animation: none;
-  }
-}
-
-/* Floating geometric marker — the "asteroid/crystal" motif, kept abstract and sparse */
+/* Floating geometric marker — the "asteroid/crystal" motif, kept abstract,
+   sparse, and explicitly click-through so it can never sit on top of a
+   real control. */
 .drift-shape {
   animation: float-shape 9s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes float-shape {
@@ -118,4 +68,30 @@ body {
   .drift-shape {
     animation: none;
   }
+}
+
+/* Underline-reveals-arrow link — the pattern seen across the higher-craft
+   reference sites (an underline that's always there, an arrow that
+   animates in on hover), used in place of a plain text link. */
+.arrow-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.arrow-link .arrow-link-icon {
+  display: inline-block;
+  transform: translate(-2px, 2px);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.arrow-link:hover .arrow-link-icon {
+  transform: translate(0, 0);
+  opacity: 1;
 }

@@ -4,6 +4,9 @@ import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
 import { Magnetic } from "@/components/Magnetic";
 import { GradeRow } from "@/components/GradeRow";
+import { DotField } from "@/components/DotField";
+import { ArcLine } from "@/components/ArcLine";
+import { ArrowLink } from "@/components/ArrowLink";
 
 export default function Home() {
   return (
@@ -19,72 +22,69 @@ export default function Home() {
 
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden px-6 pb-28 pt-16 sm:px-10 sm:pt-24">
-      <div className="glow-field" />
+    <section className="relative isolate overflow-hidden px-6 pb-24 pt-14 sm:px-10 sm:pt-20">
+      <DotField className="absolute inset-0" />
+      <ArcLine className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] w-full opacity-70" />
 
-      {/* Floating geometric markers — abstract "asteroid" motif, kept sparse and out of the reading path */}
+      {/* Floating geometric markers — abstract "asteroid" motif, kept sparse and click-through */}
       <div
-        className="drift-shape absolute right-[8%] top-[18%] h-20 w-20 rotate-12 rounded-2xl border border-border/80 bg-gradient-to-br from-surface to-void-soft shadow-[0_0_60px_-15px_var(--color-glow-amber)]"
+        className="drift-shape absolute right-[8%] top-[14%] h-20 w-20 rotate-12 rounded-2xl border border-border/80 bg-gradient-to-br from-surface to-void-soft shadow-[0_0_60px_-15px_var(--color-glow-amber)]"
         style={{ animationDelay: "0.4s" }}
         aria-hidden
       />
       <div
-        className="drift-shape absolute right-[22%] top-[52%] h-10 w-10 rotate-45 rounded-lg border border-signal/40 bg-void-soft"
+        className="drift-shape absolute right-[16%] top-[46%] h-10 w-10 rotate-45 rounded-lg border border-signal/40 bg-void-soft"
         style={{ animationDelay: "1.8s" }}
         aria-hidden
       />
-      <div
-        className="drift-shape absolute left-[6%] top-[62%] h-14 w-14 rounded-full border border-glow-amber/40"
-        style={{ animationDelay: "1s" }}
-        aria-hidden
-      />
 
-      <div className="relative mx-auto max-w-3xl text-center">
-        <FadeIn>
-          <p className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-signal">
-            Free · Student-owned · Grades 6–12
-          </p>
-        </FadeIn>
+      <div className="relative grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+        <div>
+          <FadeIn>
+            <p className="mb-5 font-mono text-xs uppercase tracking-[0.25em] text-signal">
+              Free · Student-owned · Grades 6–12
+            </p>
+          </FadeIn>
 
-        <RevealText
-          as="h1"
-          text="Your path to college, mapped out for real."
-          className="font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl"
-        />
+          <RevealText
+            as="h1"
+            text="Your path to college, mapped out for real."
+            className="font-display text-6xl font-semibold leading-[0.98] tracking-tight sm:text-8xl"
+          />
+        </div>
 
-        <FadeIn delay={0.3}>
-          <p className="mx-auto mt-6 max-w-xl text-base text-text-soft sm:text-lg">
-            Honest, specific guidance for immigrant and first-generation students and
-            their families — from 6th grade through decision day. No school counselor
-            waitlist required.
-          </p>
-        </FadeIn>
+        <div className="lg:pb-2">
+          <FadeIn delay={0.35}>
+            <p className="max-w-sm text-base leading-relaxed text-text-soft">
+              Honest, specific guidance for immigrant and first-generation students
+              and their families — from 6th grade through decision day. No school
+              counselor waitlist required.
+            </p>
+          </FadeIn>
 
-        <FadeIn delay={0.45}>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Magnetic>
-              <Link
-                href="/roadmap"
-                className="inline-block rounded-full bg-gradient-to-r from-glow-amber to-glow-ember px-7 py-3 font-medium text-void"
-              >
-                Start your roadmap
-              </Link>
-            </Magnetic>
-            <Magnetic>
-              <Link
-                href="/guide"
-                className="inline-block rounded-full border border-border px-7 py-3 font-medium text-text-soft transition-colors hover:border-text-soft hover:text-text"
-              >
-                See how it works
-              </Link>
-            </Magnetic>
-          </div>
-        </FadeIn>
-
-        <p className="mt-14 font-mono text-xs uppercase tracking-widest text-text-faint">
-          ↓ Scroll to explore
-        </p>
+          <FadeIn delay={0.5}>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Magnetic>
+                <Link
+                  href="/roadmap"
+                  className="inline-block rounded-full bg-gradient-to-r from-glow-amber to-glow-ember px-7 py-3 font-medium text-void"
+                >
+                  Start your roadmap
+                </Link>
+              </Magnetic>
+              <Magnetic>
+                <ArrowLink href="/guide" className="text-text-soft hover:text-text">
+                  See how it works
+                </ArrowLink>
+              </Magnetic>
+            </div>
+          </FadeIn>
+        </div>
       </div>
+
+      <p className="relative mt-20 font-mono text-xs uppercase tracking-widest text-text-faint">
+        ↓ Scroll to explore
+      </p>
     </section>
   );
 }
@@ -133,12 +133,12 @@ function ReadingModeSample() {
             expected to already know — this guide walks through the parts that trip up
             most families, starting from the very beginning.
           </p>
-          <Link
+          <ArrowLink
             href={`/guide/${slugify("How the U.S. College System Works")}`}
-            className="mt-6 inline-block font-mono text-sm text-signal underline decoration-signal/40 underline-offset-4 hover:text-text"
+            className="mt-6 font-mono text-sm text-signal hover:text-text"
           >
-            Read the full guide →
-          </Link>
+            Read the full guide
+          </ArrowLink>
         </FadeIn>
       </div>
     </section>
