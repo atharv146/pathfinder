@@ -6,10 +6,9 @@ This file is auto-loaded by Claude Code at the start of every session. Keep it l
 A free, student-owned app guiding immigrant and first-generation students (and their families) through college prep, grades 6–12. Core differentiator: real, honest, specific content — not generic AI-generated advice. See `master-spec-doc.md` Section 1 for the full mission.
 
 ## Tech stack
-- Frontend: React (currently a single-file prototype — `pathfinder-app.jsx` — not yet split into a real Next.js app)
-- Target production stack: Next.js (App Router), Tailwind CSS, Supabase (auth + database)
-- Backend/DB: Supabase project — URL `https://kvnmydvsffjvrsndnawd.supabase.co` — DO NOT create a new project, this one has real signups
-- Hosting: Vercel (connect to GitHub repo for auto-deploy on push) — not yet fully wired
+- Frontend: Next.js (App Router) + Tailwind v4 + TypeScript, at `app/` — the real production app, not a prototype. `pathfinder-app.jsx` at the repo root is historical reference only.
+- Backend/DB: Supabase project — URL `https://kvnmydvsffjvrsndnawd.supabase.co` — DO NOT create a new project, this one has real signups. Not yet wired into the Next.js app (deliberately deferred).
+- Hosting: **Vercel — live and auto-deploying on every push to `master`.** Project name `pathfinder`, connected to the GitHub repo via the Vercel GitHub App (repo access granted explicitly, separate from account login). Deployed Aug 11, 2026.
 - Repo: `atharv146/pathfinder` (public) — https://github.com/atharv146/pathfinder
 
 ## Current status (update this section, keep it current — don't let it go stale)
