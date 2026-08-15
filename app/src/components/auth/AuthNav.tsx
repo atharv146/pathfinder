@@ -73,7 +73,16 @@ export function AuthNav() {
 
   return (
     <div className="flex items-center gap-4">
-      <span className="micro hidden max-w-[12rem] truncate text-smoke sm:inline">
+      {/* Signed-in-only destinations live here rather than in the main nav —
+          showing a link that just bounces you to a signup wall is worse than
+          not showing it. */}
+      <Link
+        href="/activities"
+        className="micro hidden text-ash transition-colors hover:text-chalk sm:inline"
+      >
+        :Activities
+      </Link>
+      <span className="micro hidden max-w-[10rem] truncate text-smoke lg:inline">
         {user.email}
       </span>
       <button

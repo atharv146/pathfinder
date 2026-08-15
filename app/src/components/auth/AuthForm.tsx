@@ -77,9 +77,29 @@ export function AuthForm({ mode }: { mode: Mode }) {
       email: email.trim(),
       password,
     });
+    if (error) {
+      setBusy(false);
+      return setError(friendlyAuthError(error.message));
+    }
+
+    // Same onboarding gate as the OAuth callback, for the password path.
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    let dest = next;
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarded_at")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!profile?.onboarded_at) {
+        dest = `/onboarding?next=${encodeURIComponent(next)}`;
+      }
+    }
+
     setBusy(false);
-    if (error) return setError(friendlyAuthError(error.message));
-    router.push(next);
+    router.push(dest);
     router.refresh();
   };
 

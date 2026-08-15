@@ -11,19 +11,34 @@ import { createClient } from "@/lib/supabase/client";
  * `migrateLocalProgress` lifts it into their account on first login instead.
  */
 
-const LEGACY_KEY = "pathfinder-progress";
-
-/** Reads the pre-accounts localStorage format: an array of item ids. */
+/**
+ * Reads the pre-accounts localStorage format.
+ *
+ * The real shape, confirmed against RoadmapGradeView: one key PER GRADE,
+ * `pathfinder:done:grade-6` … `grade-12`, each holding a
+ * Record<itemId, boolean> — not a single key with an array. Reading the wrong
+ * key would silently migrate nothing and look like it worked, so this walks
+ * all seven and keeps only entries explicitly set to true (unchecking writes
+ * `false` rather than deleting the key).
+ */
 function readLocal(): string[] {
   if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(LEGACY_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
-  } catch {
-    return [];
+  const ids: string[] = [];
+  for (let grade = 6; grade <= 12; grade++) {
+    try {
+      const raw = window.localStorage.getItem(`pathfinder:done:grade-${grade}`);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw) as Record<string, boolean>;
+      if (parsed && typeof parsed === "object") {
+        for (const [id, isDone] of Object.entries(parsed)) {
+          if (isDone === true) ids.push(id);
+        }
+      }
+    } catch {
+      // Corrupt entry for one grade shouldn't abort the whole migration.
+    }
   }
+  return ids;
 }
 
 export async function fetchProgress(): Promise<Set<string>> {

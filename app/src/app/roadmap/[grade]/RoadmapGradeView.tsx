@@ -6,29 +6,57 @@ import { Check } from "lucide-react";
 import type { RoadmapItem } from "@/data/roadmap";
 import { categoryMeta, categoryOrder, accentClasses } from "@/data/categories";
 import { FadeIn } from "@/components/FadeIn";
+import { fetchProgress, setItemDone } from "@/lib/db/progress";
 
+/**
+ * Progress is now account-backed, so it follows a student from their phone to
+ * a school laptop instead of living in one browser.
+ *
+ * localStorage is still written alongside the database, deliberately: it makes
+ * the checkbox feel instant, and it means progress isn't lost if the network
+ * drops mid-session. The database is the source of truth on load; the local
+ * copy is a cache and an offline cushion.
+ */
 export function RoadmapGradeView({ grade, items }: { grade: number; items: RoadmapItem[] }) {
   const [done, setDone] = useState<Record<string, boolean>>({});
   const storageKey = `pathfinder:done:grade-${grade}`;
 
   useEffect(() => {
+    // Paint from the local cache first so the list never flashes unchecked.
     try {
       const raw = localStorage.getItem(storageKey);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from localStorage on mount
       if (raw) setDone(JSON.parse(raw));
     } catch {
-      // localStorage unavailable — mark-as-done just won't persist this session
+      // localStorage unavailable — the DB fetch below still works.
     }
+
+    // Then reconcile against the account, which wins.
+    let cancelled = false;
+    fetchProgress().then((remote) => {
+      if (cancelled || remote.size === 0) return;
+      setDone((prev) => {
+        const merged = { ...prev };
+        for (const id of remote) merged[id] = true;
+        return merged;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [storageKey]);
 
   function toggleDone(id: string) {
     setDone((prev) => {
-      const next = { ...prev, [id]: !prev[id] };
+      const nextValue = !prev[id];
+      const next = { ...prev, [id]: nextValue };
       try {
         localStorage.setItem(storageKey, JSON.stringify(next));
       } catch {
-        // ignore — non-critical persistence
+        // ignore — non-critical cache write
       }
+      // Fire-and-forget: a failed write leaves the local copy intact rather
+      // than reverting the checkbox under the student's finger.
+      void setItemDone(id, nextValue);
       return next;
     });
   }
