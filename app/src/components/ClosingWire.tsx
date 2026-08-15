@@ -30,8 +30,15 @@ export function ClosingWire() {
 
   return (
     <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden border-t border-line px-6 sm:px-10">
+      {/* Oversized on purpose: the cage should read as the environment the
+          headline sits inside, not as a decorative object beside it. Scaled
+          past the section bounds so its edges leave frame. */}
       {can3D && (
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[190%] w-[150%] -translate-x-1/2 -translate-y-1/2"
+          aria-hidden
+          data-decor
+        >
           <WireCage />
         </div>
       )}

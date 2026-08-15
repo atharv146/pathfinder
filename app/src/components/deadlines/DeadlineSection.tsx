@@ -25,11 +25,24 @@ type Deadline = {
   day: number;
 };
 
+/**
+ * Only dates that are genuinely fixed and verifiable are listed.
+ *
+ * REMOVED deliberately: "FAFSA opens" (the federal open date has moved
+ * between cycles and stating it as fixed would be wrong), and generic
+ * "Early Action" / "Regular Decision" rows (those are per-college, not
+ * universal — the common Nov 1 / Jan 1 pattern is a tendency, not a rule).
+ *
+ * May 1 is the long-standing National College Decision Day, which is a real
+ * shared date rather than a per-school one. Nov 30 is included only as the
+ * outer edge of the early-application window, labelled as a range.
+ *
+ * DO NOT add school-specific deadlines here by hand. When this becomes real,
+ * it should read from a per-student list of the colleges they actually added,
+ * sourced from those colleges.
+ */
 const DEADLINES: Deadline[] = [
-  { label: "FAFSA opens", detail: "Federal aid application window", month: 10, day: 1 },
-  { label: "Early Action / ED", detail: "Most common early deadline", month: 11, day: 1 },
-  { label: "Regular Decision", detail: "Most common RD deadline", month: 1, day: 1 },
-  { label: "Decision Day", detail: "National reply date", month: 5, day: 1 },
+  { label: "Decision Day", detail: "National reply date — May 1", month: 5, day: 1 },
 ];
 
 function nextOccurrence(d: Deadline, now: Date) {
@@ -92,7 +105,8 @@ export function DeadlineSection() {
           Nobody tells you when things are due.
         </KineticText>
         <p className="mb-16 max-w-lg text-[0.95rem] leading-relaxed text-ash">
-          Typical dates, counting down live. Colour shifts as each one gets close.
+          Counting down live to the one date that is the same for everyone. Your own
+          deadlines depend on the colleges you apply to — that list is coming.
         </p>
 
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
@@ -139,8 +153,8 @@ export function DeadlineSection() {
         </div>
 
         <p className="micro mt-10 max-w-xl leading-relaxed text-smoke">
-          These are the most common dates, not promises. Every college sets its own — always
-          confirm on the school&rsquo;s own admissions page.
+          Every college sets its own application and aid deadlines, and they move between
+          years — always confirm on the school&rsquo;s own admissions page.
         </p>
       </div>
     </section>

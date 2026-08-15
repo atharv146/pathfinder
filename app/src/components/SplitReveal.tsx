@@ -58,8 +58,16 @@ export function SplitReveal({
       // stayed permanently invisible because the reveal never fired, so text
       // is force-shown if the split hasn't happened in time — a missed
       // animation is recoverable, unreadable content is not.
+      // The failsafe must undo the SPLIT, not just the container opacity.
+      // Restoring `autoAlpha` alone left every line still translated 108%
+      // inside its overflow-hidden mask — the element was "visible" while the
+      // text itself remained clipped out of view. Reverting the split puts the
+      // original markup back, which is the only state guaranteed readable.
       const failsafe = window.setTimeout(() => {
-        if (!cancelled && ref.current) gsap.set(ref.current, { autoAlpha: 1 });
+        if (cancelled || !ref.current) return;
+        split?.revert();
+        split = null;
+        gsap.set(ref.current, { autoAlpha: 1, clearProps: "transform" });
       }, 1500);
 
       document.fonts.ready.then(() => {

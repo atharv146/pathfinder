@@ -19,7 +19,6 @@ import { KineticText } from "@/components/KineticText";
 import { ClosingWire } from "@/components/ClosingWire";
 import { LightWire } from "@/components/LightWire";
 import { DeadlineSection } from "@/components/deadlines/DeadlineSection";
-import { CostReveal } from "@/components/CostReveal";
 
 export default function Home() {
   return (
@@ -48,7 +47,6 @@ export default function Home() {
       <TruthSpotlight />
       <ResumePaper />
       <DeadlineSection />
-      <CostReveal />
       <RoadmapPreview />
       <ClosingWire />
     </>
@@ -70,7 +68,9 @@ function Hero() {
       {/* Orbital graphic sits centred low in the section, behind the copy, so it
           fills the empty space under the headline instead of floating off to
           the side disconnected from the content. */}
-      <HeroVisual className="pointer-events-none absolute left-1/2 top-[64%] h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 opacity-70 sm:h-[52rem] sm:w-[52rem] sm:opacity-80" />
+      {/* Sized down and pushed right of centre. At 52rem centred it was
+          swallowing the headline and the CTA sat on top of the geometry. */}
+      <HeroVisual className="pointer-events-none absolute right-[-8%] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 opacity-45 sm:h-[40rem] sm:w-[40rem] sm:opacity-60 lg:right-[2%]" />
 
       <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-10 pt-14 lg:min-h-[52vh] lg:pt-20">
         <div>

@@ -354,10 +354,21 @@ body {
   z-index: 0 !important;
 }
 
-/* Any direct child of a section that isn't explicitly decoration sits above.
-   `position: relative` is required for z-index to apply at all. */
-section > *:not(.aurora):not(.aurora-accent):not([data-decor]) {
+/* Lift non-decorative section content above the decoration.
+ *
+ * CAREFUL — this rule previously omitted the `.absolute`/`.fixed` exclusions
+ * and set `position: relative` on EVERY direct child of every section. That
+ * clobbered the positioning of absolutely-placed elements (the hero visual,
+ * corner labels, the oversized "06/12" numeral), dropping them back into
+ * normal flow and pushing the page content down by their full height — the
+ * hero was half off-screen. Anything already positioned must be left alone;
+ * it only needs the z-index, not a new position value. */
+section > *:not(.aurora):not(.aurora-accent):not([data-decor]):not(.absolute):not(.fixed) {
   position: relative;
+  z-index: 1;
+}
+
+section > .absolute:not(.aurora):not(.aurora-accent):not([data-decor]) {
   z-index: 1;
 }
 

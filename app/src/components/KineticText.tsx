@@ -43,8 +43,14 @@ export function KineticText({
       let cancelled = false;
 
       gsap.set(el, { autoAlpha: 0 });
+      // Revert the split, not just the opacity — otherwise words stay
+      // translated inside their masks and the heading reads as blank/clipped
+      // even though the element is technically visible.
       const failsafe = window.setTimeout(() => {
-        if (!cancelled && ref.current) gsap.set(ref.current, { autoAlpha: 1 });
+        if (cancelled || !ref.current) return;
+        split?.revert();
+        split = null;
+        gsap.set(ref.current, { autoAlpha: 1, clearProps: "transform" });
       }, 1600);
 
       document.fonts.ready.then(() => {
