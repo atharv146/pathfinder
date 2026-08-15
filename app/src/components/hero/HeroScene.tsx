@@ -38,7 +38,7 @@ function OrbitRing({
 
   return (
     <mesh ref={ref} rotation={rotation}>
-      <torusGeometry args={[radius, 0.013, 10, 220]} />
+      <torusGeometry args={[radius, 0.0055, 8, 220]} />
       <meshBasicMaterial color={WHITE} transparent opacity={opacity} />
     </mesh>
   );
@@ -81,59 +81,36 @@ function Node({
 
 function Core() {
   const ref = useRef<THREE.Group>(null);
-  const wire = useRef<THREE.Mesh>(null);
 
-  // A live, deforming geometry — not EdgesGeometry, which is baked once and
-  // can never move. Base vertex positions are kept so each frame can displace
-  // them along their own direction, which is what actually makes the solid
-  // change shape rather than just spin.
-  const { geo, base } = useMemo(() => {
-    const g = new THREE.IcosahedronGeometry(0.72, 2);
-    return { geo: g, base: Float32Array.from(g.attributes.position.array) };
-  }, []);
+  // Back to EdgesGeometry at detail 1 — the original delicate treatment.
+  //
+  // The vertex-deforming version this replaces used a wireframe material at
+  // detail 2, which draws every triangulation line across every face. That
+  // read as a dense mesh ball rather than a hairline solid, and brightening it
+  // to fight the black occluder only made it heavier. EdgesGeometry draws just
+  // the silhouette edges of the polyhedron, which is the clean look this had
+  // originally. The morph is dropped along with it — spin does the work.
+  const edges = useMemo(
+    () => new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.62, 1)),
+    []
+  );
 
-  useFrame(({ clock }, delta) => {
-    if (ref.current) {
-      // Fast enough to read as motion at a glance. The previous 0.14 rad/s was
-      // ~8°/sec, which is genuinely hard to perceive.
-      ref.current.rotation.y += delta * 0.55;
-      ref.current.rotation.x += delta * 0.24;
-    }
-
-    const g = wire.current?.geometry as THREE.BufferGeometry | undefined;
-    if (!g) return;
-    const pos = g.attributes.position.array as Float32Array;
-    const t = clock.elapsedTime;
-
-    for (let i = 0; i < pos.length; i += 3) {
-      const x = base[i], y = base[i + 1], z = base[i + 2];
-      // Three offset waves keyed to the vertex's own position — the surface
-      // ripples and bulges instead of pulsing uniformly.
-      const n =
-        Math.sin(x * 3.1 + t * 1.1) * 0.5 +
-        Math.sin(y * 2.7 - t * 0.9) * 0.5 +
-        Math.sin(z * 3.4 + t * 1.3) * 0.5;
-      const k = 1 + n * 0.16;
-      pos[i] = x * k;
-      pos[i + 1] = y * k;
-      pos[i + 2] = z * k;
-    }
-    g.attributes.position.needsUpdate = true;
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    // Kept fast — this was the one genuinely good part of the last pass. The
+    // original 0.14 rad/s was too slow to perceive as motion.
+    ref.current.rotation.y += delta * 0.5;
+    ref.current.rotation.x += delta * 0.2;
   });
 
   return (
     <group ref={ref}>
-      <mesh ref={wire} geometry={geo}>
-        <meshBasicMaterial color={WHITE} wireframe transparent opacity={0.85} />
-      </mesh>
-      {/* Inner occluder, kept well inside the wireframe's minimum radius.
-          At 0.94 it was ABOVE the deformed surface's troughs — the wireframe
-          contracts up to 16% — so the black shell kept punching through the
-          lines and the whole core read as a dark blob mid-rotation. 0.72 sits
-          below the trough, so it only ever hides the far side. */}
-      <mesh scale={0.72}>
-        <icosahedronGeometry args={[0.72, 2]} />
-        <meshBasicMaterial color="#050506" />
+      <lineSegments geometry={edges}>
+        <lineBasicMaterial color={WHITE} transparent opacity={0.55} />
+      </lineSegments>
+      <mesh scale={0.97}>
+        <icosahedronGeometry args={[0.6, 1]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.85} />
       </mesh>
     </group>
   );
@@ -157,10 +134,10 @@ function Rig() {
     <group ref={ref}>
       <group rotation={[0.42, 0, 0.12]}>
         <Core />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.75} speed={0.22} />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.62} speed={-0.19} />
-        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.55} speed={0.28} />
-        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.45} speed={-0.15} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.34} speed={0.22} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.26} speed={-0.19} />
+        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.2} speed={0.28} />
+        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.15} speed={-0.15} />
 
         <Node radius={1.5} speed={0.36} size={0.032} color={WHITE} tilt={[0, 0, 0]} offset={0} />
         <Node radius={1.5} speed={0.3} size={0.026} color={SIGNAL} tilt={[0, 0.95, 0]} offset={2.1} />
@@ -183,7 +160,7 @@ export default function HeroScene() {
       <Suspense fallback={null}>
         <Rig />
         <EffectComposer>
-          <Bloom intensity={0.7} luminanceThreshold={0.18} luminanceSmoothing={0.9} mipmapBlur />
+          <Bloom intensity={0.35} luminanceThreshold={0.18} luminanceSmoothing={0.9} mipmapBlur />
         </EffectComposer>
       </Suspense>
     </Canvas>
