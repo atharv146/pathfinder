@@ -56,7 +56,13 @@ export function MobileNav({
     window.location.href = "/";
   };
 
-  const all = signedIn ? [...links, { href: "/activities", label: "Activities" }] : links;
+  const all = signedIn
+    ? [
+        ...links,
+        { href: "/activities", label: "Activities" },
+        { href: "/account", label: "Account" },
+      ]
+    : links;
 
   return (
     <div className="sm:hidden">

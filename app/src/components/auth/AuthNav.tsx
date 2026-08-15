@@ -82,9 +82,14 @@ export function AuthNav() {
       >
         :Activities
       </Link>
-      <span className="micro hidden max-w-[10rem] truncate text-smoke lg:inline">
+      {/* The email doubles as the account link — it's the affordance people
+          already expect to be clickable in a header. */}
+      <Link
+        href="/account"
+        className="micro hidden max-w-[10rem] truncate text-smoke transition-colors hover:text-chalk lg:inline"
+      >
         {user.email}
-      </span>
+      </Link>
       <button
         type="button"
         onClick={signOut}
