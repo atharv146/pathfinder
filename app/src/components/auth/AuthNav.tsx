@@ -50,13 +50,24 @@ export function AuthNav() {
   };
 
   if (!ready || !user) {
+    // Both options shown side by side rather than a single "Get started".
+    // A returning student should never have to guess that the signup button
+    // is also where you log in.
     return (
-      <Link
-        href="/signup"
-        className="rounded-full border border-line-bright px-5 py-2 text-[0.72rem] uppercase tracking-[0.18em] text-chalk transition-colors hover:border-chalk"
-      >
-        Get started
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/login"
+          className="rounded-full px-4 py-2 text-[0.72rem] uppercase tracking-[0.18em] text-ash transition-colors hover:text-chalk"
+        >
+          Log in
+        </Link>
+        <Link
+          href="/signup"
+          className="rounded-full bg-chalk px-5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ink transition-colors hover:bg-white"
+        >
+          Sign up
+        </Link>
+      </div>
     );
   }
 

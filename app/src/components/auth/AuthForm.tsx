@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { checkPassword, isValidEmail, friendlyAuthError } from "@/lib/auth/validation";
 
@@ -17,7 +17,13 @@ type Mode = "signin" | "signup";
  */
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
+  const params = useSearchParams();
   const isSignup = mode === "signup";
+
+  // `next` is set by proxy.ts when it intercepts a gated route. Only relative
+  // paths are honoured — an absolute URL here would be an open redirect.
+  const rawNext = params.get("next");
+  const next = rawNext && rawNext.startsWith("/") ? rawNext : "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +31,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [existing, setExisting] = useState(false);
 
   const pw = checkPassword(password);
   const emailOk = isValidEmail(email);
@@ -39,13 +46,27 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const supabase = createClient();
 
     if (isSignup) {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        },
       });
       setBusy(false);
       if (error) return setError(friendlyAuthError(error.message));
+
+      // Supabase deliberately does NOT error when the email already exists —
+      // that would let anyone probe which addresses have accounts. Instead it
+      // returns a decoy user with an empty `identities` array. Detecting that
+      // is the only way to tell someone they already have an account rather
+      // than leaving them waiting for an email that never arrives.
+      if (data.user && data.user.identities?.length === 0) {
+        setError("You already have an account with this email. Sign in instead.");
+        setExisting(true);
+        return;
+      }
+
       // Do NOT route to a logged-in view here — the account is not usable
       // until the email is confirmed.
       setSent(true);
@@ -58,7 +79,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     });
     setBusy(false);
     if (error) return setError(friendlyAuthError(error.message));
-    router.push("/");
+    router.push(next);
     router.refresh();
   };
 
@@ -68,7 +89,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      },
     });
     if (error) {
       setBusy(false);
@@ -158,9 +181,17 @@ export function AuthForm({ mode }: { mode: Mode }) {
         )}
 
         {error && (
-          <p role="alert" className="mt-5 text-[0.85rem] leading-snug text-[#ff7a6b]">
-            {error}
-          </p>
+          <div role="alert" className="mt-5">
+            <p className="text-[0.85rem] leading-snug text-[#ff7a6b]">{error}</p>
+            {existing && (
+              <Link
+                href="/login"
+                className="micro mt-3 inline-block text-chalk underline underline-offset-4 hover:text-accent"
+              >
+                Go to sign in →
+              </Link>
+            )}
+          </div>
         )}
 
         <button

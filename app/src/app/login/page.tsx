@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { PageFrame } from "@/components/PageFrame";
 
@@ -13,7 +14,9 @@ export default function LoginPage() {
           <p className="mb-10 text-[0.95rem] leading-relaxed text-ash">
             Your roadmap progress, saved where you left it.
           </p>
-          <AuthForm mode="signin" />
+          <Suspense fallback={<div className="h-[26rem]" />}>
+            <AuthForm mode="signin" />
+          </Suspense>
         </div>
       </section>
     </PageFrame>

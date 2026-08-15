@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { PageFrame } from "@/components/PageFrame";
 
@@ -13,7 +14,9 @@ export default function SignupPage() {
           <p className="mb-10 text-[0.95rem] leading-relaxed text-ash">
             Save your progress across devices. No cost, no upsell, nothing sold to anyone.
           </p>
-          <AuthForm mode="signup" />
+          <Suspense fallback={<div className="h-[26rem]" />}>
+            <AuthForm mode="signup" />
+          </Suspense>
         </div>
       </section>
     </PageFrame>

@@ -52,7 +52,30 @@ export async function proxy(request: NextRequest) {
   // Must be getUser(), not getSession(). getSession() trusts the cookie
   // contents as-is; getUser() revalidates the token against Supabase, which is
   // the only version safe to make decisions on.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = request.nextUrl.pathname;
+
+  // The landing page and the auth screens themselves stay open to everyone.
+  // Deliberate funnel choice: a visitor should be able to see what PathFinder
+  // is before being asked for anything. The ask happens on the first click
+  // *into* the product, not on arrival.
+  const isPublic =
+    path === "/" ||
+    path === "/login" ||
+    path === "/signup" ||
+    path.startsWith("/auth");
+
+  if (!user && !isPublic) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/signup";
+    // Remember where they were headed so they land there after signing up
+    // instead of being dumped back on the homepage.
+    url.searchParams.set("next", path);
+    return NextResponse.redirect(url);
+  }
 
   return response;
 }
