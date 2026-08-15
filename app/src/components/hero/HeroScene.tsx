@@ -81,28 +81,56 @@ function Node({
 
 function Core() {
   const ref = useRef<THREE.Group>(null);
+  const wire = useRef<THREE.Mesh>(null);
 
-  // Wireframe edges rather than a wireframe material — edges give clean single
-  // hairlines instead of triangulation noise across every face.
-  const edges = useMemo(
-    () => new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(0.62, 1)),
-    []
-  );
+  // A live, deforming geometry — not EdgesGeometry, which is baked once and
+  // can never move. Base vertex positions are kept so each frame can displace
+  // them along their own direction, which is what actually makes the solid
+  // change shape rather than just spin.
+  const { geo, base } = useMemo(() => {
+    const g = new THREE.IcosahedronGeometry(0.72, 2);
+    return { geo: g, base: Float32Array.from(g.attributes.position.array) };
+  }, []);
 
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-    ref.current.rotation.y += delta * 0.14;
-    ref.current.rotation.x += delta * 0.05;
+  useFrame(({ clock }, delta) => {
+    if (ref.current) {
+      // Fast enough to read as motion at a glance. The previous 0.14 rad/s was
+      // ~8°/sec, which is genuinely hard to perceive.
+      ref.current.rotation.y += delta * 0.55;
+      ref.current.rotation.x += delta * 0.24;
+    }
+
+    const g = wire.current?.geometry as THREE.BufferGeometry | undefined;
+    if (!g) return;
+    const pos = g.attributes.position.array as Float32Array;
+    const t = clock.elapsedTime;
+
+    for (let i = 0; i < pos.length; i += 3) {
+      const x = base[i], y = base[i + 1], z = base[i + 2];
+      // Three offset waves keyed to the vertex's own position — the surface
+      // ripples and bulges instead of pulsing uniformly.
+      const n =
+        Math.sin(x * 3.1 + t * 1.1) * 0.5 +
+        Math.sin(y * 2.7 - t * 0.9) * 0.5 +
+        Math.sin(z * 3.4 + t * 1.3) * 0.5;
+      const k = 1 + n * 0.16;
+      pos[i] = x * k;
+      pos[i + 1] = y * k;
+      pos[i + 2] = z * k;
+    }
+    g.attributes.position.needsUpdate = true;
   });
 
   return (
     <group ref={ref}>
-      <lineSegments geometry={edges}>
-        <lineBasicMaterial color={WHITE} transparent opacity={0.55} />
-      </lineSegments>
-      <mesh>
-        <icosahedronGeometry args={[0.6, 1]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.85} />
+      <mesh ref={wire} geometry={geo}>
+        <meshBasicMaterial color={WHITE} wireframe transparent opacity={0.5} />
+      </mesh>
+      {/* Opaque inner shell so the far side of the wireframe is hidden and the
+          form reads as a solid object rather than a tangle of lines. */}
+      <mesh scale={0.94}>
+        <icosahedronGeometry args={[0.72, 2]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.9} />
       </mesh>
     </group>
   );
@@ -126,10 +154,10 @@ function Rig() {
     <group ref={ref}>
       <group rotation={[0.42, 0, 0.12]}>
         <Core />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.3} speed={0.05} />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.2} speed={-0.04} />
-        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.16} speed={0.07} />
-        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.11} speed={-0.03} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.3} speed={0.22} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.2} speed={-0.19} />
+        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.16} speed={0.28} />
+        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.11} speed={-0.15} />
 
         <Node radius={1.5} speed={0.36} size={0.032} color={WHITE} tilt={[0, 0, 0]} offset={0} />
         <Node radius={1.5} speed={0.3} size={0.026} color={SIGNAL} tilt={[0, 0.95, 0]} offset={2.1} />

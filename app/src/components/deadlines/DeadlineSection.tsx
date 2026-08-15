@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { shouldRender3D } from "@/lib/motion";
 import { KineticText } from "@/components/KineticText";
+import { ShapeField } from "@/components/backdrop/ShapeField";
 
 const DeadlineOrbit = dynamic(() => import("./DeadlineOrbit"), { ssr: false });
 
@@ -103,6 +104,7 @@ export function DeadlineSection() {
 
   return (
     <section className="relative overflow-hidden border-t border-line px-6 py-28 sm:px-10">
+      <ShapeField color="#7fd4c6" />
       <div className="relative mx-auto max-w-6xl">
         <p className="micro mb-4 text-smoke">(07) &nbsp;The clock is the whole problem</p>
         <KineticText as="h2" className="display mb-4 max-w-3xl text-4xl text-chalk sm:text-6xl">

@@ -11,6 +11,7 @@ import { ArrowLink } from "@/components/ArrowLink";
 import { ScrollFade } from "@/components/ScrollFade";
 import { SplitReveal } from "@/components/SplitReveal";
 import { CountUp } from "@/components/CountUp";
+import { ShapeField } from "@/components/backdrop/ShapeField";
 import { RoadmapPath } from "@/components/RoadmapPath";
 import { TruthSpotlight } from "@/components/TruthSpotlight";
 import { ResumePaper } from "@/components/ResumePaper";
@@ -159,7 +160,8 @@ function StatBreak() {
   ];
 
   return (
-    <section className="relative border-y border-line bg-ink-2 px-6 py-24 sm:px-10">
+    <section className="relative overflow-hidden border-y border-line bg-ink-2 px-6 py-24 sm:px-10">
+      <ShapeField />
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <p className="micro mb-14 text-smoke">(02) &nbsp;Why this exists</p>
