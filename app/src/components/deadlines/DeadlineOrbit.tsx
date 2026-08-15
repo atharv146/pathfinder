@@ -41,7 +41,14 @@ function Ring({
   const color = useMemo(() => urgencyColor(days), [days]);
 
   useFrame(({ clock }) => {
-    if (group.current) group.current.rotation.z = clock.elapsedTime * speed;
+    const t = clock.elapsedTime;
+    if (group.current) {
+      group.current.rotation.z = t * speed;
+      // Slow breathing tilt — the ring plane itself shifts, so the assembly
+      // keeps changing silhouette instead of spinning as a rigid object.
+      group.current.rotation.x = Math.sin(t * 0.18 + radius) * 0.45;
+      group.current.rotation.y = Math.cos(t * 0.13 + radius) * 0.38;
+    }
     if (marker.current) {
       // Marker sits at the elapsed fraction, measured from 12 o'clock.
       const a = -Math.PI / 2 + progress * Math.PI * 2;
@@ -121,7 +128,7 @@ function Gyro({ rings }: { rings: { progress: number; days: number }[] }) {
           ]}
         >
           <Ring
-            radius={1.05 + i * 0.62}
+            radius={1.15 + i * 0.58}
             progress={r.progress}
             days={r.days}
             speed={0.05 + i * 0.018}
@@ -140,7 +147,7 @@ export default function DeadlineOrbit({
   return (
     <Canvas
       dpr={[1, 1.6]}
-      camera={{ position: [0, 0, 6.4], fov: 45 }}
+      camera={{ position: [0, 0, 5.6], fov: 50 }}
       gl={{ antialias: true, alpha: true }}
       style={{ background: "transparent" }}
     >

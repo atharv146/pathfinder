@@ -26,10 +26,16 @@ export function IntroLoader() {
   const root = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
 
+  // Plays on EVERY full page load.
+  //
+  // This used to be gated on a sessionStorage flag, which meant it ran once
+  // and then never again in that tab — so reloading the page never replayed
+  // it and the opening appeared to be missing entirely. Client-side route
+  // changes don't remount the root layout, so navigating between pages still
+  // won't re-trigger it; only a real load does, which is the intent.
   const [shouldRun] = useState(() => {
     if (typeof window === "undefined") return false;
-    if (!shouldAnimateAggressively()) return false;
-    return sessionStorage.getItem("pf-intro") !== "1";
+    return shouldAnimateAggressively();
   });
 
   useGSAP(
@@ -38,7 +44,6 @@ export function IntroLoader() {
         setDone(true);
         return;
       }
-      sessionStorage.setItem("pf-intro", "1");
       document.body.style.overflow = "hidden";
 
       const finish = () => {

@@ -42,6 +42,10 @@ type Deadline = {
  * sourced from those colleges.
  */
 const DEADLINES: Deadline[] = [
+  { label: "Common App opens", detail: "Application platform opens — Aug 1", month: 8, day: 1 },
+  { label: "CSS Profile opens", detail: "Institutional aid form — Oct 1", month: 10, day: 1 },
+  { label: "Early deadlines", detail: "Most common EA/ED date — Nov 1", month: 11, day: 1 },
+  { label: "Regular deadlines", detail: "Most common RD date — Jan 1", month: 1, day: 1 },
   { label: "Decision Day", detail: "National reply date — May 1", month: 5, day: 1 },
 ];
 
@@ -105,12 +109,11 @@ export function DeadlineSection() {
           Nobody tells you when things are due.
         </KineticText>
         <p className="mb-16 max-w-lg text-[0.95rem] leading-relaxed text-ash">
-          Counting down live to the one date that is the same for everyone. Your own
-          deadlines depend on the colleges you apply to — that list is coming.
+          Counting down live. Colour shifts as each one closes in.
         </p>
 
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
-          <div className="relative aspect-square w-full max-w-[30rem]">
+          <div className="relative aspect-square w-full max-w-[38rem]">
             {can3D && counts ? (
               <DeadlineOrbit
                 rings={counts.map((c) => ({ progress: c.progress, days: c.days }))}

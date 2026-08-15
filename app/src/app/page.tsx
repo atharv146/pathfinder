@@ -68,9 +68,11 @@ function Hero() {
       {/* Orbital graphic sits centred low in the section, behind the copy, so it
           fills the empty space under the headline instead of floating off to
           the side disconnected from the content. */}
-      {/* Sized down and pushed right of centre. At 52rem centred it was
-          swallowing the headline and the CTA sat on top of the geometry. */}
-      <HeroVisual className="pointer-events-none absolute right-[-8%] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 opacity-45 sm:h-[40rem] sm:w-[40rem] sm:opacity-60 lg:right-[2%]" />
+      {/* Large and dominant — it should read as the environment the headline
+          sits in. Anchored right so it fills the space beside the copy rather
+          than printing through it, which is what made the centred version
+          unreadable. */}
+      <HeroVisual className="pointer-events-none absolute right-[-14%] top-1/2 h-[42rem] w-[42rem] -translate-y-1/2 opacity-70 sm:h-[62rem] sm:w-[62rem] sm:opacity-85 lg:right-[-4%]" />
 
       <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-10 pt-14 lg:min-h-[52vh] lg:pt-20">
         <div>
