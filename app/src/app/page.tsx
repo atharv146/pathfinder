@@ -72,7 +72,11 @@ function Hero() {
           sits in. Anchored right so it fills the space beside the copy rather
           than printing through it, which is what made the centred version
           unreadable. */}
-      <HeroVisual className="pointer-events-none absolute left-1/2 top-[62%] h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 opacity-75 sm:h-[58rem] sm:w-[58rem] sm:opacity-90" />
+      {/* On phones the object is pushed below the copy and dimmed hard. At
+          full size and 75% opacity it printed straight through the paragraph
+          and the CTA, which is a readability problem, not a taste one — and
+          this audience is phone-first. Desktop keeps the dominant version. */}
+      <HeroVisual className="pointer-events-none absolute left-1/2 top-[82%] h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-1/2 opacity-30 sm:top-[62%] sm:h-[58rem] sm:w-[58rem] sm:opacity-90" />
 
       <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-10 pt-14 lg:min-h-[52vh] lg:pt-20">
         <div>
@@ -83,7 +87,7 @@ function Hero() {
           <SplitReveal
             as="h1"
             immediate
-            className="display text-6xl leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
+            className="display text-[2.75rem] leading-[1.04] tracking-[-0.02em] text-chalk sm:text-8xl sm:leading-[1.02]"
           >
             Your path to college,
           </SplitReveal>
@@ -91,7 +95,7 @@ function Hero() {
             as="h1"
             immediate
             delay={0.16}
-            className="display text-6xl leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
+            className="display text-[2.75rem] leading-[1.04] tracking-[-0.02em] text-chalk sm:text-8xl sm:leading-[1.02]"
           >
             mapped out for <span className="glow-signal">real.</span>
           </SplitReveal>

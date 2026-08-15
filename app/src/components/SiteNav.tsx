@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AuthNav } from "@/components/auth/AuthNav";
+import { MobileNav } from "@/components/MobileNav";
 
 const links = [
   // Explicit Home link — relying on the wordmark alone hides the way back
@@ -32,7 +33,14 @@ export function SiteNav() {
         ))}
       </nav>
 
-      <AuthNav />
+      <div className="flex items-center gap-3">
+        {/* Auth controls are desktop-only here; the mobile sheet carries its
+            own copy so the header stays uncluttered on small screens. */}
+        <div className="hidden sm:block">
+          <AuthNav />
+        </div>
+        <MobileNav links={links} />
+      </div>
     </header>
   );
 }
