@@ -5,7 +5,8 @@
       "name": "pathfinder-app",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--prefix", "app"],
-      "port": 3000
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

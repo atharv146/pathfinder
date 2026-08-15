@@ -1,35 +1,32 @@
 import Link from "next/link";
 import { gradeGroups } from "@/data/roadmap";
-import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
+import { PageFrame } from "@/components/PageFrame";
+import { Backdrop } from "@/components/backdrop/Backdrop";
+import { KineticText } from "@/components/KineticText";
 
 export const metadata = { title: "Roadmap — PathFinder" };
 
 export default function RoadmapIndex() {
   return (
-    <section className="texture-dots relative overflow-hidden px-6 py-16 sm:px-10">
-      <span
-        className="drift-shape absolute right-[8%] top-[10%] h-14 w-14 rotate-12 rounded-2xl border border-ember/30"
-        style={{ animationDelay: "0.5s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute bottom-[12%] left-[6%] h-9 w-9 rounded-full border border-signal/30"
-        style={{ animationDelay: "1.6s" }}
-        aria-hidden
-      />
+    <PageFrame accent="lime" label="Roadmap" index="A02">
+    <section className="texture-dots relative min-h-[70vh] overflow-hidden px-6 py-16 sm:px-10">
+      {/* Digital terrain — grades as ground being crossed. */}
+      <Backdrop variant="grid" accent="lime" />
 
       <div className="relative mx-auto max-w-4xl">
         <FadeIn>
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-accent">
             The roadmap
           </p>
         </FadeIn>
-        <RevealText
+        <KineticText
           as="h1"
-          text="Pick your grade."
-          className="font-display text-4xl font-semibold sm:text-5xl"
-        />
+          immediate
+          className="display text-5xl leading-[1.05] sm:text-7xl"
+        >
+          Pick your <span className="glow-accent italic">grade.</span>
+        </KineticText>
         <FadeIn delay={0.2}>
           <p className="mt-4 max-w-xl text-ash">
             Every grade has its own guidance. There&rsquo;s no such thing as falling
@@ -52,7 +49,7 @@ export default function RoadmapIndex() {
                       href={`/roadmap/${grade}`}
                       className="group relative block overflow-hidden rounded-2xl border border-line bg-panel px-6 py-8 text-center transition-colors hover:border-ember/60"
                     >
-                      <span className="font-display block text-3xl font-semibold transition-colors group-hover:text-ember">
+                      <span className="display block text-3xl transition-colors group-hover:text-ember">
                         {grade}
                       </span>
                       <span className="mt-1 block font-mono text-xs uppercase tracking-widest text-smoke">
@@ -68,5 +65,6 @@ export default function RoadmapIndex() {
         </div>
       </div>
     </section>
+    </PageFrame>
   );
 }

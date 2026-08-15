@@ -52,7 +52,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                     <Icon size={16} className={accent.text} />
                   </span>
                 )}
-                <h2 className="font-display text-2xl font-semibold">{category}</h2>
+                <h2 className="display text-2xl">{category}</h2>
               </div>
             </FadeIn>
 
@@ -84,7 +84,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                     </button>
 
                     <h3
-                      className={`font-display text-xl font-semibold sm:text-2xl ${
+                      className={`display text-xl font-semibold sm:text-2xl ${
                         isDone ? "text-ash" : "text-chalk"
                       }`}
                     >
@@ -95,7 +95,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                       {item.sections.map((section, i) => (
                         <div key={i}>
                           {section.heading && (
-                            <h4 className="font-display text-base font-semibold text-chalk">
+                            <h4 className="display text-base text-chalk">
                               {section.heading}
                             </h4>
                           )}

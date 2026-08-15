@@ -1,21 +1,16 @@
-import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
+import { PageFrame } from "@/components/PageFrame";
+import { Backdrop } from "@/components/backdrop/Backdrop";
+import { KineticText } from "@/components/KineticText";
 
 export const metadata = { title: "Ask AI — PathFinder" };
 
 export default function AskAiPage() {
   return (
-    <section className="texture-dots relative flex flex-1 items-center justify-center overflow-hidden px-6 py-16 sm:px-10">
-      <span
-        className="drift-shape absolute left-[10%] top-[14%] h-16 w-16 rotate-12 rounded-2xl border border-ember/30"
-        style={{ animationDelay: "0.3s" }}
-        aria-hidden
-      />
-      <span
-        className="drift-shape absolute bottom-[16%] right-[12%] h-10 w-10 rounded-full border border-signal/30"
-        style={{ animationDelay: "1.3s" }}
-        aria-hidden
-      />
+    <PageFrame accent="violet" label="Ask AI" index="A04">
+    <section className="texture-dots relative flex min-h-[80vh] flex-1 items-center justify-center overflow-hidden px-6 py-16 sm:px-10">
+      {/* Particle field that leans toward the cursor — the page listening. */}
+      <Backdrop variant="swarm" accent="violet" />
 
       <div className="relative w-full max-w-lg">
         <FadeIn>
@@ -24,11 +19,13 @@ export default function AskAiPage() {
             System status: offline
           </p>
         </FadeIn>
-        <RevealText
+        <KineticText
           as="h1"
-          text="Coming online in a later step."
-          className="font-display text-3xl font-semibold sm:text-4xl"
-        />
+          immediate
+          className="display text-4xl leading-[1.05] sm:text-5xl"
+        >
+          Coming <span className="glow-accent italic">online</span> in a later step.
+        </KineticText>
 
         <FadeIn delay={0.2}>
           <p className="mt-4 text-sm leading-relaxed text-ash">
@@ -65,5 +62,6 @@ export default function AskAiPage() {
         </FadeIn>
       </div>
     </section>
+    </PageFrame>
   );
 }

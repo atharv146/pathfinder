@@ -1,31 +1,34 @@
 import Link from "next/link";
 import { guideArticles, slugify } from "@/data/guide";
-import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
 import { ArrowUpRight } from "lucide-react";
+import { PageFrame } from "@/components/PageFrame";
+import { Backdrop } from "@/components/backdrop/Backdrop";
+import { KineticText } from "@/components/KineticText";
 
 export const metadata = { title: "Guide — PathFinder" };
 
 export default function GuideIndex() {
   return (
-    <section className="texture-dots relative overflow-hidden px-6 py-16 sm:px-10">
-      <span
-        className="drift-shape absolute right-[10%] top-[8%] h-12 w-12 rotate-45 rounded-xl border border-signal/30"
-        style={{ animationDelay: "0.9s" }}
-        aria-hidden
-      />
+    <PageFrame accent="coral" label="Guide" index="A03">
+    <section className="texture-dots relative min-h-[70vh] overflow-hidden px-6 py-16 sm:px-10">
+      {/* Pages caught mid-air — the guide as physical documents. */}
+      <Backdrop variant="sheets" accent="coral" />
 
       <div className="relative mx-auto max-w-3xl">
         <FadeIn>
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-signal">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-accent">
             Parent &amp; student guide
           </p>
         </FadeIn>
-        <RevealText
+        <KineticText
           as="h1"
-          text="Plain-language answers to the questions that come up most."
-          className="font-display text-4xl font-semibold leading-tight sm:text-5xl"
-        />
+          immediate
+          className="display text-4xl leading-[1.08] sm:text-6xl"
+        >
+          Plain-language answers to the questions that{" "}
+          <span className="glow-accent italic">come up most.</span>
+        </KineticText>
 
         <div className="mt-14 divide-y divide-line border-y border-line">
           {guideArticles.map((article, i) => (
@@ -38,7 +41,7 @@ export default function GuideIndex() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="flex-1">
-                  <span className="font-display block text-lg font-semibold transition-colors group-hover:text-ember sm:text-xl">
+                  <span className="display block text-lg transition-colors group-hover:text-ember sm:text-xl">
                     {article.title}
                   </span>
                   <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-ash">
@@ -55,5 +58,6 @@ export default function GuideIndex() {
         </div>
       </div>
     </section>
+    </PageFrame>
   );
 }

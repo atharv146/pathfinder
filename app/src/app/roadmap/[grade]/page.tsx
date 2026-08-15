@@ -35,7 +35,7 @@ export default async function RoadmapGradePage({
           <RevealText
             as="h1"
             text={`Grade ${grade}`}
-            className="mt-4 font-display text-4xl font-semibold"
+            className="mt-4 display text-4xl font-semibold"
           />
           <RoadmapGradeView grade={grade} items={items} />
         </div>

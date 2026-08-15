@@ -5,19 +5,52 @@ import { FadeIn } from "@/components/FadeIn";
 import { Magnetic } from "@/components/Magnetic";
 import { GradeRow } from "@/components/GradeRow";
 import { OrbitField } from "@/components/OrbitField";
+import { HeroVisual } from "@/components/hero/HeroVisual";
 import { CornerLabels } from "@/components/CornerLabels";
 import { ArrowLink } from "@/components/ArrowLink";
 import { ScrollFade } from "@/components/ScrollFade";
+import { SplitReveal } from "@/components/SplitReveal";
+import { CountUp } from "@/components/CountUp";
+import { RoadmapPath } from "@/components/RoadmapPath";
+import { TruthSpotlight } from "@/components/TruthSpotlight";
+import { ResumePaper } from "@/components/ResumePaper";
+import { Marquee } from "@/components/Marquee";
+import { KineticText } from "@/components/KineticText";
+import { ClosingWire } from "@/components/ClosingWire";
+import { LightWire } from "@/components/LightWire";
+import { DeadlineSection } from "@/components/deadlines/DeadlineSection";
+import { CostReveal } from "@/components/CostReveal";
 
 export default function Home() {
   return (
     <>
       <Hero />
       <StatBreak />
+      <Marquee
+        pingpong
+        duration={46}
+        items={[
+          "Free forever",
+          "No waitlist",
+          "Grades 6–12",
+          "Built by a student",
+          "No consultant fees",
+          "Immigrant & first-gen",
+          "Parents welcome",
+          "Financial aid explained",          "Nothing sold to you",
+          "Sources cited",
+          "Español-aware guidance",
+        ]}
+      />
       <ReadingModeSample />
       <EditorialBeat />
+      <RoadmapPath />
+      <TruthSpotlight />
+      <ResumePaper />
+      <DeadlineSection />
+      <CostReveal />
       <RoadmapPreview />
-      <ClosingCta />
+      <ClosingWire />
     </>
   );
 }
@@ -32,29 +65,37 @@ function Hero() {
         bottomRight="Est. 2026"
       />
 
-      {/* Orbital graphic sits right of centre so it never sits under the headline */}
-      <OrbitField className="pointer-events-none absolute -right-[18%] top-1/2 h-[46rem] w-[46rem] -translate-y-1/2 opacity-70 lg:-right-[6%]" />
+      <div className="aurora" aria-hidden />
 
-      <div className="relative mx-auto grid max-w-6xl gap-14 pt-16 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:pt-24">
+      {/* Orbital graphic sits centred low in the section, behind the copy, so it
+          fills the empty space under the headline instead of floating off to
+          the side disconnected from the content. */}
+      <HeroVisual className="pointer-events-none absolute left-1/2 top-[64%] h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 opacity-70 sm:h-[52rem] sm:w-[52rem] sm:opacity-80" />
+
+      <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-10 pt-14 lg:min-h-[52vh] lg:pt-20">
         <div>
           <FadeIn>
             <p className="micro mb-8 text-signal">(01) &nbsp;The roadmap you were never given</p>
           </FadeIn>
 
-          <RevealText
+          <SplitReveal
             as="h1"
-            text="Your path to college,"
-            className="font-display text-6xl font-normal leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
-          />
-          <RevealText
+            immediate
+            className="display text-6xl leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
+          >
+            Your path to college,
+          </SplitReveal>
+          <SplitReveal
             as="h1"
-            delay={0.18}
-            text="mapped out for real."
-            className="font-display text-6xl font-normal italic leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
-          />
+            immediate
+            delay={0.16}
+            className="display text-6xl leading-[1.02] tracking-[-0.01em] text-chalk sm:text-8xl"
+          >
+            mapped out for <span className="glow-signal">real.</span>
+          </SplitReveal>
         </div>
 
-        <div className="lg:pb-3">
+        <div className="max-w-xl">
           <FadeIn delay={0.4}>
             <p className="max-w-sm text-[0.95rem] leading-relaxed text-ash">
               Honest, specific guidance for immigrant and first-generation students
@@ -83,7 +124,7 @@ function Hero() {
         </div>
       </div>
 
-      <p className="micro relative mt-24 text-smoke">↓ &nbsp;Scroll to explore</p>
+      <p className="micro relative mt-14 text-smoke">↓ &nbsp;Scroll to explore</p>
     </section>
   );
 }
@@ -97,7 +138,8 @@ function StatBreak() {
   const stats = [
     {
       index: "01",
-      figure: "1.5",
+      figure: 1.5,
+      decimals: 1,
       unit: "hrs / year",
       claim:
         "That is roughly all the college guidance a school counselor can give a single student, once caseloads are accounted for.",
@@ -105,7 +147,8 @@ function StatBreak() {
     },
     {
       index: "02",
-      figure: "5.9",
+      figure: 5.9,
+      decimals: 1,
       unit: "million",
       claim:
         "Immigrant-origin students now in U.S. higher education — about 32% of everyone enrolled.",
@@ -126,9 +169,11 @@ function StatBreak() {
               <div className="flex h-full flex-col p-8 sm:p-10">
                 <span className="micro text-smoke">{s.index}</span>
                 <div className="mt-8 flex items-baseline gap-3">
-                  <span className="font-display text-7xl leading-none text-chalk sm:text-8xl">
-                    {s.figure}
-                  </span>
+                  <CountUp
+                    value={s.figure}
+                    decimals={s.decimals}
+                    className="display text-7xl leading-none text-chalk sm:text-8xl"
+                  />
                   <span className="micro text-ash">{s.unit}</span>
                 </div>
                 <p className="mt-8 max-w-sm text-[0.95rem] leading-relaxed text-ash">
@@ -144,20 +189,31 @@ function StatBreak() {
   );
 }
 
+/**
+ * Light section. Intrepid inverts to a cool off-white between dark sections,
+ * and that inversion is doing more work than any single animation — it's what
+ * makes a long page feel like it has chapters instead of one endless black
+ * scroll. Type colours flip to the dark ramp inside here.
+ */
 function ReadingModeSample() {
   return (
-    <section className="relative px-6 py-28 sm:px-10">
-      <div className="mx-auto max-w-2xl">
+    <section className="bone-surface relative overflow-hidden px-6 py-32 text-ink sm:px-10">
+      {/* Wireframe geometry on the light ground, the way Intrepid sets its
+          light sections — line art, not photography. */}
+      <LightWire />
+
+      <div className="relative mx-auto max-w-5xl">
         <FadeIn>
-          <p className="micro mb-8 text-smoke">(03) &nbsp;From the guide</p>
+          <p className="micro mb-8 text-ink/45">(03) &nbsp;From the guide</p>
         </FadeIn>
-        <RevealText
+        <KineticText
           as="h2"
-          text="How the U.S. college system actually works"
-          className="font-display text-4xl font-normal leading-[1.1] text-chalk sm:text-5xl"
-        />
+          className="display max-w-3xl text-5xl text-ink sm:text-7xl"
+        >
+          How the U.S. college system actually works
+        </KineticText>
         <FadeIn delay={0.2}>
-          <p className="mt-8 text-base leading-relaxed text-ash">
+          <p className="mt-10 max-w-xl text-base leading-relaxed text-ink/70">
             If this system feels confusing or backwards compared to what you knew
             growing up, that&rsquo;s completely normal. This isn&rsquo;t something anyone is
             expected to already know — this guide walks through the parts that trip up
@@ -165,7 +221,7 @@ function ReadingModeSample() {
           </p>
           <ArrowLink
             href={`/guide/${slugify("How the U.S. College System Works")}`}
-            className="micro mt-10 text-chalk hover:text-signal"
+            className="micro mt-10 text-ink hover:text-ember"
           >
             Read the full guide
           </ArrowLink>
@@ -179,7 +235,7 @@ function EditorialBeat() {
   return (
     <section className="flex min-h-[44vh] items-center justify-center border-y border-line px-6 py-20 sm:px-10">
       <ScrollFade className="mx-auto max-w-2xl text-center">
-        <p className="font-display text-3xl font-normal italic leading-snug text-ash sm:text-4xl">
+        <p className="display text-3xl leading-snug text-ash sm:text-4xl">
           Not another generic checklist. A roadmap that actually says something.
         </p>
       </ScrollFade>
@@ -198,7 +254,7 @@ function RoadmapPreview() {
   return (
     <section className="texture-dots relative overflow-hidden px-6 py-28 sm:px-10">
       <span
-        className="font-display pointer-events-none absolute -right-4 top-10 select-none text-[10rem] leading-none text-panel-2 sm:text-[15rem]"
+        className="display pointer-events-none absolute -right-4 top-10 select-none text-[10rem] leading-none text-panel-2 sm:text-[15rem]"
         aria-hidden
       >
         06/12
@@ -211,7 +267,7 @@ function RoadmapPreview() {
         <RevealText
           as="h2"
           text="Every grade, mapped."
-          className="font-display text-4xl font-normal text-chalk sm:text-5xl"
+          className="display text-4xl text-chalk sm:text-5xl"
         />
 
         <div className="mt-14 divide-y divide-line border-y border-line">
@@ -227,19 +283,20 @@ function RoadmapPreview() {
 function ClosingCta() {
   return (
     <section className="relative overflow-hidden border-t border-line px-6 py-32 sm:px-10">
+      <div className="aurora" aria-hidden />
       <OrbitField className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 opacity-30" />
 
       <div className="relative mx-auto max-w-2xl text-center">
         <RevealText
           as="h2"
           text="No waitlist. No paywall."
-          className="font-display text-5xl font-normal leading-[1.05] text-chalk sm:text-6xl"
+          className="display text-5xl leading-[1.05] text-chalk sm:text-6xl"
         />
         <RevealText
           as="h2"
           delay={0.15}
           text="Start now."
-          className="font-display text-5xl font-normal italic leading-[1.05] text-chalk sm:text-6xl"
+          className="display text-5xl leading-[1.05] text-chalk sm:text-6xl"
         />
         <FadeIn delay={0.4}>
           <div className="mt-12">

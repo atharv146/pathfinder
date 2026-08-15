@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Figtree, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { MotionProvider } from "@/components/MotionProvider";
+import { Starfield } from "@/components/Starfield";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { CustomCursor } from "@/components/CustomCursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { IntroLoader } from "@/components/IntroLoader";
+import { MotionToggle } from "@/components/MotionToggle";
 import "./globals.css";
 
-// High-contrast editorial serif — the display face in the wine-site and
-// luxury-residence references, used for headlines only.
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+/**
+ * Display face switched from Instrument Serif to Figtree (Aug 14, 2026).
+ *
+ * The editorial serif was the single largest reason the site read as a generic
+ * template next to the user's references — Intrepid, Zypsy and Rejouice all
+ * run a bold geometric sans. Figtree is the closest free match to that
+ * register (Aeonik/Söhne family of shapes) and carries weight up to 900, which
+ * is what makes the huge headline treatment work.
+ */
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -19,10 +31,12 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+// Kept only for rare italic accents; no longer the display face.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -39,13 +53,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${ibmPlexMono.variable} ${inter.variable} h-full antialiased`}
+      className={`${figtree.variable} ${ibmPlexMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-chalk">
+        <IntroLoader />
+        <MotionToggle />
+        <Starfield />
+        <CustomCursor />
+        <ScrollProgress />
         <MotionProvider>
-          <SiteNav />
-          {children}
-          <SiteFooter />
+          <SmoothScroll>
+            <SiteNav />
+            {children}
+            <SiteFooter />
+          </SmoothScroll>
         </MotionProvider>
       </body>
     </html>

@@ -29,11 +29,11 @@ export function GradeRow({
         <span className="font-mono text-xs text-smoke">
           {String(index + 1).padStart(2, "0")}
         </span>
-        <span className="font-display w-16 shrink-0 text-2xl font-semibold text-smoke transition-colors group-hover:text-ember sm:text-3xl">
+        <span className="display w-16 shrink-0 text-2xl text-smoke transition-colors group-hover:text-ember sm:text-3xl">
           {grade}
         </span>
         <span className="flex-1">
-          <span className="font-display block text-lg font-semibold transition-colors sm:text-xl">
+          <span className="display block text-lg transition-colors sm:text-xl">
             {label}
           </span>
           <span className="mt-1 block max-w-md text-sm text-ash opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:text-base">

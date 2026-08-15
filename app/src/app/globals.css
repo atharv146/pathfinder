@@ -29,9 +29,16 @@
   --color-ember: #d46438;
   --color-signal: #7fd4c6;
 
-  --font-display: var(--font-instrument-serif);
+  --font-display: var(--font-figtree);
   --font-mono: var(--font-ibm-plex-mono);
-  --font-body: var(--font-inter);
+  --font-body: var(--font-figtree);
+  --font-serif: var(--font-instrument-serif);
+
+  /* Light section ground — Intrepid inverts to a cool off-white between dark
+     sections, which is what stops a long page reading as one endless black
+     slab. */
+  --color-bone: #eef0ed;
+  --color-bone-2: #e2e5e0;
 }
 
 @theme inline {
@@ -49,6 +56,25 @@
   --font-display: var(--font-display);
   --font-mono: var(--font-mono);
   --font-body: var(--font-body);
+  --font-serif: var(--font-serif);
+  --color-bone: var(--color-bone);
+  --color-bone-2: var(--color-bone-2);
+}
+
+/* Display type now runs bold + tight, the way the reference sites set it.
+   A geometric sans at 400 weight looks unfinished at these sizes. */
+.display {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+
+.display-md {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.03;
 }
 
 body {
@@ -148,10 +174,305 @@ body {
   to { transform: rotate(0deg); }
 }
 
+/* ---------------------------------------------------------------------------
+   Colour / glow layer (Aug 14, 2026)
+   The near-monochrome system read as "plain" to the user across several
+   rounds. Rather than abandoning it, colour is introduced as *light* —
+   glows, auroras and emissive edges over the same true-black ground — so the
+   editorial structure survives while the page stops feeling flat.
+   --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   Per-page accent identity.
+   Each route commits to ONE bold colour, the way the reference sites do
+   (Intrepid = coral, Zypsy = stark mono). Set `data-accent` on the page root
+   and every accent-aware utility below follows it, so pages stop reading as
+   the same page with different words.
+   --------------------------------------------------------------------------- */
+[data-accent] { --accent: #7fd4c6; --accent-rgb: 127, 212, 198; }
+[data-accent="teal"] { --accent: #7fd4c6; --accent-rgb: 127, 212, 198; }
+[data-accent="lime"] { --accent: #d4ff4f; --accent-rgb: 212, 255, 79; }
+[data-accent="coral"] { --accent: #ff7a4d; --accent-rgb: 255, 122, 77; }
+[data-accent="violet"] { --accent: #b18cff; --accent-rgb: 177, 140, 255; }
+
+.text-accent { color: var(--accent); }
+.bg-accent { background-color: var(--accent); }
+.border-accent { border-color: var(--accent); }
+
+.glow-accent {
+  color: var(--accent);
+  text-shadow:
+    0 0 14px rgba(var(--accent-rgb), 0.55),
+    0 0 46px rgba(var(--accent-rgb), 0.28);
+}
+
+.aurora-accent {
+  position: absolute;
+  inset: -30%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.42;
+  background:
+    radial-gradient(38% 44% at 24% 28%, rgba(var(--accent-rgb), 0.5), transparent 70%),
+    radial-gradient(34% 40% at 76% 24%, rgba(var(--accent-rgb), 0.26), transparent 70%),
+    radial-gradient(44% 38% at 60% 78%, rgba(255, 255, 255, 0.09), transparent 70%);
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+
+/* Viewport corner brackets, straight off the Intrepid reference. Purely
+   decorative framing — kept fixed so they hold the page like a viewfinder. */
+.corner-bracket {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  border-color: rgba(var(--accent-rgb), 0.55);
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Slow-drifting aurora field. Multiple offset radial gradients rather than one
+   blurred blob, which is the look this project already rejected once. */
+.aurora {
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.5;
+  background:
+    radial-gradient(38% 44% at 22% 30%, rgba(127, 212, 198, 0.36), transparent 70%),
+    radial-gradient(34% 40% at 78% 22%, rgba(212, 100, 56, 0.28), transparent 70%),
+    radial-gradient(44% 38% at 62% 76%, rgba(96, 132, 255, 0.26), transparent 70%),
+    radial-gradient(30% 34% at 30% 82%, rgba(127, 212, 198, 0.2), transparent 70%);
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0% { transform: translate3d(-3%, -2%, 0) scale(1); }
+  50% { transform: translate3d(3%, 2%, 0) scale(1.08); }
+  100% { transform: translate3d(-2%, 3%, 0) scale(1.03); }
+}
+
+/* Emissive type — used on single words, never whole paragraphs. */
+.glow-signal {
+  color: var(--color-signal);
+  text-shadow:
+    0 0 14px rgba(127, 212, 198, 0.55),
+    0 0 46px rgba(127, 212, 198, 0.28);
+}
+
+.glow-ember {
+  color: var(--color-ember);
+  text-shadow:
+    0 0 14px rgba(212, 100, 56, 0.5),
+    0 0 44px rgba(212, 100, 56, 0.25);
+}
+
+/* Hairline that lights up — for panel edges and dividers. */
+.edge-glow {
+  position: relative;
+}
+
+.edge-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    130deg,
+    rgba(127, 212, 198, 0.55),
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(212, 100, 56, 0.4)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* Scanline sweep for "futuristic panel" surfaces. */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.028) 0px,
+    rgba(255, 255, 255, 0.028) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Infinite marquee. Duplicated content + 50% translate = seamless loop. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration, 38s) linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Ping-pong variant: drifts left, then returns, instead of wrapping. Used
+   where the full set of items should stay legible rather than cycling past.
+   `alternate` + ease-in-out is what makes the turnaround feel like a glide
+   rather than a bounce off a wall. */
+.marquee-pingpong .marquee-track {
+  animation: marquee-sweep var(--marquee-duration, 38s) ease-in-out infinite alternate;
+}
+
+@keyframes marquee-sweep {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% + 100vw - 3rem)); }
+}
+
+.marquee-reverse .marquee-track {
+  animation-direction: reverse;
+}
+
+/* ---------------------------------------------------------------------------
+   Stacking discipline.
+
+   Text was intermittently sinking behind decorative layers (auroras, WebGL
+   backdrops, wire cages). Root cause: those layers are absolutely positioned,
+   so any *non*-positioned content later in the DOM paints underneath them.
+   Rather than chase it per-section, decoration is pinned to the floor and
+   every section's content is lifted above it here, once.
+   --------------------------------------------------------------------------- */
+.aurora,
+.aurora-accent,
+[data-decor] {
+  z-index: 0 !important;
+}
+
+/* Any direct child of a section that isn't explicitly decoration sits above.
+   `position: relative` is required for z-index to apply at all. */
+section > *:not(.aurora):not(.aurora-accent):not([data-decor]) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Income slider on the cost section. Native range styling is inconsistent
+   across engines, so track and thumb are both drawn explicitly. */
+.cost-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: rgba(20, 26, 20, 0.22);
+  border-radius: 999px;
+  outline: none;
+}
+
+.cost-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #14190f;
+  border: 3px solid var(--color-bone);
+  box-shadow: 0 0 0 1px rgba(20, 26, 20, 0.3);
+  cursor: grab;
+}
+
+.cost-range::-webkit-slider-thumb:active { cursor: grabbing; }
+
+.cost-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #14190f;
+  border: 3px solid var(--color-bone);
+  cursor: grab;
+}
+
+/* Light sections need as much surface as the dark ones — a flat off-white
+   reads cheaper than flat black, not better. Blueprint grid + a warm/cool
+   gradient wash + vignette, so it feels like a lit surface. */
+.bone-surface {
+  background-color: var(--color-bone);
+  background-image:
+    linear-gradient(to right, rgba(20, 26, 20, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 26, 20, 0.045) 1px, transparent 1px),
+    radial-gradient(60% 55% at 18% 12%, rgba(255, 140, 90, 0.16), transparent 70%),
+    radial-gradient(55% 50% at 85% 80%, rgba(90, 170, 255, 0.14), transparent 70%),
+    radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(20, 26, 20, 0.10) 100%);
+  background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* Paper stock for the application-document section — a deliberate, contextual
+   inversion (a résumé is physically paper), not a palette change. */
+.paper {
+  background-color: #efe9dd;
+  background-image:
+    radial-gradient(rgba(120, 105, 80, 0.09) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.04));
+  background-size: 4px 4px, 100% 100%;
+  color: #1a1712;
+}
+
+/* GSAP SplitText line wrappers. The mask clips at the line box, which slices
+   descenders (p, g, y, j) — padding restores the room, the negative margin
+   keeps the visual line spacing unchanged. */
+.split-line {
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+  will-change: transform;
+}
+
+/* Film grain. A true-black page is optically flat; a barely-there noise field
+   gives it surface without becoming visible texture. Fixed so it doesn't
+   travel with scroll, which would read as crawling static. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 9996;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 8s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-1.5%, 1%); }
+  40% { transform: translate(1%, -1.5%); }
+  60% { transform: translate(-1%, -1%); }
+  80% { transform: translate(1.5%, 1.5%); }
+}
+
+.star-twinkle {
+  animation-name: star-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: var(--star-base); }
+  50% { opacity: var(--star-peak); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drift-shape,
   .spin-slow,
-  .spin-slow-reverse {
+  .spin-slow-reverse,
+  .star-twinkle,
+  .aurora,
+  .marquee-track {
+    animation: none;
+  }
+
+  body::after {
     animation: none;
   }
 }

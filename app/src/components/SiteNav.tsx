@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 const links = [
+  // Explicit Home link — relying on the wordmark alone hides the way back
+  // from anyone who doesn't already know that convention.
+  { href: "/", label: "Home" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/ask-ai", label: "Ask AI" },
   { href: "/guide", label: "Guide" },
@@ -10,7 +13,7 @@ export function SiteNav() {
   return (
     <header className="relative z-20 flex items-center justify-between border-b border-line px-6 py-5 sm:px-10">
       <Link href="/" className="flex items-baseline gap-2">
-        <span className="font-display text-xl leading-none tracking-tight text-chalk">
+        <span className="display text-xl leading-none tracking-tight text-chalk">
           PathFinder
         </span>
         <span className="micro text-smoke">®</span>

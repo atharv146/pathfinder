@@ -33,7 +33,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
       <RevealText
         as="h1"
         text={title}
-        className="font-display text-3xl font-semibold leading-tight sm:text-4xl"
+        className="display text-3xl leading-tight sm:text-4xl"
       />
 
       {quickAnswer && quickAnswer.length > 0 && (
@@ -58,7 +58,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
         {sections.map((section, i) => (
           <FadeIn key={i} delay={Math.min(i * 0.05, 0.3)}>
             {section.heading && (
-              <h2 className="font-display text-xl font-semibold text-chalk">
+              <h2 className="display text-xl text-chalk">
                 {section.heading}
               </h2>
             )}
@@ -81,7 +81,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
           <dl className="space-y-4">
             {keyTerms.map((kt) => (
               <div key={kt.term}>
-                <dt className="font-display text-sm font-semibold text-signal">
+                <dt className="display text-sm text-signal">
                   {kt.term}
                 </dt>
                 <dd className="mt-1 text-sm leading-relaxed text-ash">
