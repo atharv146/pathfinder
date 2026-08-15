@@ -62,10 +62,16 @@ export async function proxy(request: NextRequest) {
   // Deliberate funnel choice: a visitor should be able to see what PathFinder
   // is before being asked for anything. The ask happens on the first click
   // *into* the product, not on arrival.
+  // `/guide` is deliberately public: it's the parent-facing explainer content,
+  // and for an immigrant-family audience, forcing a signup before anyone can
+  // read a word about how U.S. admissions works costs more trust than the
+  // captured emails are worth. The roadmap (the actual tool) stays gated.
   const isPublic =
     path === "/" ||
     path === "/login" ||
     path === "/signup" ||
+    path === "/guide" ||
+    path.startsWith("/guide/") ||
     path.startsWith("/auth");
 
   if (!user && !isPublic) {
