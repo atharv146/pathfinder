@@ -28,18 +28,14 @@ function useCanRender3D() {
       return;
     }
 
-    // Coarse device-capability heuristic. deviceMemory/hardwareConcurrency are
-    // not in every browser, so a missing value is treated as "probably fine"
-    // rather than excluding capable browsers that just don't report.
-    const nav = navigator as Navigator & { deviceMemory?: number };
-    if (typeof nav.deviceMemory === "number" && nav.deviceMemory < 4) {
-      setOk(false);
-      return;
-    }
-    if (typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency < 4) {
-      setOk(false);
-      return;
-    }
+    // deviceMemory/hardwareConcurrency were removed as a gate (Aug 2026):
+    // privacy-hardening browsers — Brave in particular — deliberately report
+    // capped, fake values (commonly hardwareConcurrency: 2, deviceMemory: 4)
+    // to resist fingerprinting, regardless of the real hardware. That made
+    // this heuristic silently disable all WebGL for every Brave user, on
+    // real machines that ran it fine. Confirmed live: a real Mac reported
+    // hardwareConcurrency 2 in Brave. WebGL context creation below is the
+    // actual capability test and isn't spoofed the same way.
 
     // Confirm WebGL actually exists before committing to the dynamic import.
     try {

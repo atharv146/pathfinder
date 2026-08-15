@@ -38,10 +38,11 @@ export function Backdrop({
     // 3D survives "calm" — only "still" drops to the CSS aurora.
     if (!shouldRender3D()) return setOk(false);
 
-    const nav = navigator as Navigator & { deviceMemory?: number };
-    if (typeof nav.deviceMemory === "number" && nav.deviceMemory < 4) return setOk(false);
-    if (typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency < 4)
-      return setOk(false);
+    // deviceMemory/hardwareConcurrency gate removed — Brave and other
+    // privacy-hardening browsers report capped, fake values for these
+    // (commonly 2 and 4) to resist fingerprinting, which was silently
+    // disabling WebGL for every such user regardless of real hardware.
+    // WebGL context creation below is the real, unspoofed capability test.
     try {
       const c = document.createElement("canvas");
       setOk(!!(c.getContext("webgl2") || c.getContext("webgl")));
