@@ -101,7 +101,12 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                   >
                     <button
                       onClick={() => toggleDone(item.id)}
-                      className="absolute -left-[11px] top-1 flex h-5 w-5 items-center justify-center rounded-full border bg-ink transition-colors"
+                      // The visible dot stays 20px, but `before:-inset-3`
+                      // extends the touch region to ~44px — the accessibility
+                      // minimum for a finger. Without it this was a 20px
+                      // target, which on a phone means repeatedly missing the
+                      // one interactive control on the page.
+                      className="absolute -left-[11px] top-1 flex h-5 w-5 items-center justify-center rounded-full border bg-ink transition-colors before:absolute before:-inset-3 before:content-['']"
                       style={{
                         borderColor: isDone ? "var(--color-ember)" : "var(--color-line)",
                         backgroundColor: isDone ? "var(--color-ember)" : "var(--color-ink)",

@@ -372,6 +372,23 @@ section > .absolute:not(.aurora):not(.aurora-accent):not([data-decor]) {
   z-index: 1;
 }
 
+/* ---------------------------------------------------------------------------
+   iOS auto-zoom guard.
+
+   Safari on iOS zooms the whole page in when a focused input has a computed
+   font-size below 16px — the layout lurches and the user has to pinch back
+   out. Our form fields sat at 15.2px, so every signup, login and activities
+   field triggered it. 16px is the exact threshold; this is the standard fix
+   and is why form inputs on mobile should never be styled smaller.
+   --------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Income slider on the cost section. Native range styling is inconsistent
    across engines, so track and thumb are both drawn explicitly. */
 .cost-range {

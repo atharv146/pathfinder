@@ -98,7 +98,7 @@ export function ActivitiesBuilder() {
   return (
     <div>
       {items.length === 0 && (
-        <div className="mb-10 rounded-lg border border-line bg-panel/60 p-8">
+        <div className="mb-10 rounded-lg border border-line bg-panel/60 p-6 sm:p-8">
           <p className="display-md mb-4 text-xl text-chalk">
             Not sure what counts? Most of this does.
           </p>
@@ -115,7 +115,7 @@ export function ActivitiesBuilder() {
 
       <div className="space-y-4">
         {items.map((it, i) => (
-          <div key={it.id} className="rounded-lg border border-line bg-ink-2 p-6">
+          <div key={it.id} className="rounded-lg border border-line bg-ink-2 p-4 sm:p-6">
             <div className="mb-4 flex items-center justify-between">
               <span className="micro text-smoke">{String(i + 1).padStart(2, "0")}</span>
               <div className="flex items-center gap-4">
@@ -160,9 +160,12 @@ export function ActivitiesBuilder() {
               className="mb-4 w-full resize-y rounded-md border border-line bg-ink px-3 py-2.5 text-[0.9rem] leading-relaxed text-chalk outline-none focus:border-accent"
             />
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <label className="flex items-center gap-3">
-                <span className="micro shrink-0 text-smoke">Hrs / week</span>
+            {/* Two columns even on phones: these are a pair of short numeric
+                fields, and stacking them wastes a full screen of height in a
+                form that's already long. */}
+            <div className="grid grid-cols-2 gap-3">
+              <label className="flex items-center gap-2 sm:gap-3">
+                <span className="micro shrink-0 text-smoke">Hrs / wk</span>
                 <input
                   type="number"
                   min={0}
@@ -174,11 +177,11 @@ export function ActivitiesBuilder() {
                       hours_per_week: e.target.value === "" ? null : Number(e.target.value),
                     })
                   }
-                  className="w-24 rounded-md border border-line bg-ink px-3 py-2 text-[0.9rem] text-chalk outline-none focus:border-accent"
+                  className="w-full min-w-0 rounded-md border border-line bg-ink px-3 py-2 text-[0.9rem] text-chalk outline-none focus:border-accent"
                 />
               </label>
-              <label className="flex items-center gap-3">
-                <span className="micro shrink-0 text-smoke">Weeks / year</span>
+              <label className="flex items-center gap-2 sm:gap-3">
+                <span className="micro shrink-0 text-smoke">Wks / yr</span>
                 <input
                   type="number"
                   min={0}
@@ -189,7 +192,7 @@ export function ActivitiesBuilder() {
                       weeks_per_year: e.target.value === "" ? null : Number(e.target.value),
                     })
                   }
-                  className="w-24 rounded-md border border-line bg-ink px-3 py-2 text-[0.9rem] text-chalk outline-none focus:border-accent"
+                  className="w-full min-w-0 rounded-md border border-line bg-ink px-3 py-2 text-[0.9rem] text-chalk outline-none focus:border-accent"
                 />
               </label>
             </div>
