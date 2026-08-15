@@ -71,28 +71,20 @@ export function AccountPanel() {
     setDeleteError(null);
     const supabase = createClient();
 
-    // Rows are removed explicitly here rather than relying only on the auth
-    // cascade, because deleting the auth user itself requires the service-role
-    // key and therefore a server route — which does not exist yet. This clears
-    // everything the student actually created; see the note in the UI.
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setDeleting(false);
-      return setDeleteError("You appear to be signed out already.");
-    }
+    // Delegated to a server route: erasing the login record itself needs the
+    // service-role key, which must never reach the browser. The route takes no
+    // parameters — it deletes whoever the verified session says you are.
+    try {
+      const res = await fetch("/api/account/delete", { method: "POST" });
+      const body = await res.json().catch(() => ({}));
 
-    const results = await Promise.all([
-      supabase.from("activities").delete().eq("user_id", user.id),
-      supabase.from("roadmap_progress").delete().eq("user_id", user.id),
-      supabase.from("profiles").delete().eq("id", user.id),
-    ]);
-
-    const failed = results.find((r) => r.error);
-    if (failed?.error) {
+      if (!res.ok) {
+        setDeleting(false);
+        return setDeleteError(body.error ?? "Something went wrong. Nothing was deleted.");
+      }
+    } catch {
       setDeleting(false);
-      return setDeleteError(failed.error.message);
+      return setDeleteError("Couldn't reach the server. Nothing was deleted.");
     }
 
     await supabase.auth.signOut();
@@ -195,9 +187,8 @@ export function AccountPanel() {
               </button>
             </div>
             <p className="micro mt-5 leading-relaxed text-smoke">
-              Note: this clears everything you created. Removing the login record itself
-              needs a server-side step that isn&rsquo;t built yet — email us and it will be
-              done manually until then.
+              This removes your profile, progress, activities and your login. You can sign
+              up again any time, but nothing will be restored.
             </p>
           </div>
         )}

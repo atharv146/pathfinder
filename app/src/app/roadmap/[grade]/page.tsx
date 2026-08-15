@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getRoadmapItems } from "@/data/roadmap";
 import { RoadmapGradeView } from "./RoadmapGradeView";
+import { MajorLens } from "@/components/roadmap/MajorLens";
 import { RevealText } from "@/components/RevealText";
 
 export function generateStaticParams() {
@@ -37,6 +38,8 @@ export default async function RoadmapGradePage({
             text={`Grade ${grade}`}
             className="mt-4 display text-4xl font-semibold"
           />
+          <MajorLens grade={grade} />
+
           <RoadmapGradeView grade={grade} items={items} />
         </div>
       </section>
