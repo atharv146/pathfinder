@@ -68,6 +68,24 @@ export function shouldRender3D() {
   return getMotionLevel() !== "still";
 }
 
+/**
+ * Ambient/decorative WebGL is skipped on phones.
+ *
+ * Several of these canvases can be alive at once, each running its own rAF
+ * loop, and on a mid-range phone that shows up as scroll jank — reported
+ * directly as "mobile feels laggy". Desktop keeps everything. This is only for
+ * *decoration*; content-carrying 3D (the hero, the deadline clock) still
+ * renders, just dimmed and smaller.
+ *
+ * Uses a width check rather than a UA sniff, so a narrow desktop window gets
+ * the same benefit.
+ */
+export function shouldRenderAmbient3D() {
+  if (typeof window === "undefined") return false;
+  if (!shouldRender3D()) return false;
+  return window.matchMedia("(min-width: 640px)").matches;
+}
+
 /** Bounce, scrub, parallax and scroll hijack are `full`-only. */
 export function shouldAnimateAggressively() {
   return getMotionLevel() === "full";

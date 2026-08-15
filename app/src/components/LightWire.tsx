@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { shouldRender3D } from "@/lib/motion";
+import { shouldRenderAmbient3D } from "@/lib/motion";
 
 const WireCage = dynamic(() => import("./backdrop/WireCage"), { ssr: false });
 
@@ -18,7 +18,7 @@ export function LightWire() {
   const [on, setOn] = useState(false);
 
   useEffect(() => {
-    if (!shouldRender3D()) return;
+    if (!shouldRenderAmbient3D()) return;
     try {
       const c = document.createElement("canvas");
       setOn(!!(c.getContext("webgl2") || c.getContext("webgl")));

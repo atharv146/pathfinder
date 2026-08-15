@@ -106,6 +106,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const google = async () => {
     setBusy(true);
     setError(null);
+
+    // If the redirect hasn't happened in 8s something is wrong upstream —
+    // most often the current origin isn't in Supabase's allowed Redirect URLs,
+    // which silently strands the user on a dead "Working…" button. Say so
+    // instead of leaving them stuck.
+    const stuck = window.setTimeout(() => {
+      setBusy(false);
+      setError(
+        "Google sign-in didn't respond. If this keeps happening, this site's address may not be authorised in Supabase yet."
+      );
+    }, 8000);
+
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -114,10 +126,11 @@ export function AuthForm({ mode }: { mode: Mode }) {
       },
     });
     if (error) {
+      window.clearTimeout(stuck);
       setBusy(false);
       setError(friendlyAuthError(error.message));
     }
-    // On success the browser navigates away to Google; no cleanup needed.
+    // On success the browser navigates away to Google, discarding the timer.
   };
 
   if (sent) {

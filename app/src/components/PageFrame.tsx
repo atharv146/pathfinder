@@ -27,7 +27,12 @@ export function PageFrame({
 }) {
   return (
     <div data-accent={accent} className="relative">
-      <div aria-hidden>
+      {/* Desktop only. These are viewport-FIXED, so on a phone they float over
+          whatever happens to be scrolling past — headings collided with the
+          route label, and the brackets landed mid-content. There isn't enough
+          margin on a 375px screen for chrome that sits outside the content, so
+          they're dropped rather than crammed in. */}
+      <div aria-hidden className="hidden sm:block">
         <span className="corner-bracket left-5 top-20 border-l border-t" />
         <span className="corner-bracket right-5 top-20 border-r border-t" />
         <span className="corner-bracket bottom-5 left-5 border-b border-l" />
@@ -37,7 +42,7 @@ export function PageFrame({
       {(label || index) && (
         <div
           aria-hidden
-          className="pointer-events-none fixed inset-x-0 top-24 z-30 flex justify-between px-10"
+          className="pointer-events-none fixed inset-x-0 top-24 z-30 hidden justify-between px-10 sm:flex"
         >
           <span className="micro text-accent/70">{label}</span>
           <span className="micro text-smoke">{index}</span>

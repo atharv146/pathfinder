@@ -1,6 +1,6 @@
 "use client";
 
-import { shouldRender3D } from "@/lib/motion";
+import { shouldRenderAmbient3D } from "@/lib/motion";
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ export function Backdrop({
 
   useEffect(() => {
     // 3D survives "calm" — only "still" drops to the CSS aurora.
-    if (!shouldRender3D()) return setOk(false);
+    if (!shouldRenderAmbient3D()) return setOk(false);
 
     // deviceMemory/hardwareConcurrency gate removed — Brave and other
     // privacy-hardening browsers report capped, fake values for these
