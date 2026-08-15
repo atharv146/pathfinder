@@ -462,6 +462,57 @@ body::after {
   80% { transform: translate(1.5%, 1.5%); }
 }
 
+/* ---------------------------------------------------------------------------
+   Intro sequence — all CSS, no JS animation engine. See IntroLoader for why.
+   --------------------------------------------------------------------------- */
+.intro-wash {
+  background: #7fd4c6;
+  animation: intro-wash 4.6s ease-in-out forwards;
+}
+
+@keyframes intro-wash {
+  0%   { background-color: #7fd4c6; }
+  18%  { background-color: #d4ff4f; }
+  38%  { background-color: #ff7a4d; }
+  58%  { background-color: #b18cff; }
+  76%, 100% { background-color: #000000; }
+}
+
+/* Rings rush the camera, then blow past it. */
+.intro-ring {
+  opacity: 0;
+  animation: intro-ring 4.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes intro-ring {
+  0%   { transform: scale(0.04) rotate(0deg); opacity: 0; }
+  30%  { opacity: 1; }
+  62%  { transform: scale(1) rotate(120deg); opacity: 1; }
+  100% { transform: scale(8) rotate(200deg); opacity: 0; }
+}
+
+/* Wordmark resolves out of blur, then travels through the viewer. */
+.intro-word {
+  animation: intro-word 4.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes intro-word {
+  0%   { transform: scale(0.84); opacity: 0; filter: blur(16px); }
+  34%  { transform: scale(1); opacity: 1; filter: blur(0); }
+  72%  { transform: scale(1.04); opacity: 1; filter: blur(0); }
+  100% { transform: scale(2.6); opacity: 0; filter: blur(12px); }
+}
+
+/* Panels clear upward last, revealing the finished page beneath. */
+.intro-panel {
+  transform: translateY(0);
+  animation: intro-panel 0.75s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+@keyframes intro-panel {
+  to { transform: translateY(-100%); }
+}
+
 .star-twinkle {
   animation-name: star-twinkle;
   animation-timing-function: ease-in-out;

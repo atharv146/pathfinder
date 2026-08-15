@@ -38,7 +38,7 @@ function OrbitRing({
 
   return (
     <mesh ref={ref} rotation={rotation}>
-      <torusGeometry args={[radius, 0.0055, 8, 220]} />
+      <torusGeometry args={[radius, 0.013, 10, 220]} />
       <meshBasicMaterial color={WHITE} transparent opacity={opacity} />
     </mesh>
   );
@@ -124,13 +124,16 @@ function Core() {
   return (
     <group ref={ref}>
       <mesh ref={wire} geometry={geo}>
-        <meshBasicMaterial color={WHITE} wireframe transparent opacity={0.5} />
+        <meshBasicMaterial color={WHITE} wireframe transparent opacity={0.85} />
       </mesh>
-      {/* Opaque inner shell so the far side of the wireframe is hidden and the
-          form reads as a solid object rather than a tangle of lines. */}
-      <mesh scale={0.94}>
+      {/* Inner occluder, kept well inside the wireframe's minimum radius.
+          At 0.94 it was ABOVE the deformed surface's troughs — the wireframe
+          contracts up to 16% — so the black shell kept punching through the
+          lines and the whole core read as a dark blob mid-rotation. 0.72 sits
+          below the trough, so it only ever hides the far side. */}
+      <mesh scale={0.72}>
         <icosahedronGeometry args={[0.72, 2]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.9} />
+        <meshBasicMaterial color="#050506" />
       </mesh>
     </group>
   );
@@ -154,10 +157,10 @@ function Rig() {
     <group ref={ref}>
       <group rotation={[0.42, 0, 0.12]}>
         <Core />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.3} speed={0.22} />
-        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.2} speed={-0.19} />
-        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.16} speed={0.28} />
-        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.11} speed={-0.15} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0, 0]} opacity={0.75} speed={0.22} />
+        <OrbitRing radius={1.5} rotation={[Math.PI / 2, 0.95, 0]} opacity={0.62} speed={-0.19} />
+        <OrbitRing radius={1.12} rotation={[Math.PI / 2.6, 0.4, 0.5]} opacity={0.55} speed={0.28} />
+        <OrbitRing radius={1.92} rotation={[Math.PI / 2.2, -0.5, 0]} opacity={0.45} speed={-0.15} />
 
         <Node radius={1.5} speed={0.36} size={0.032} color={WHITE} tilt={[0, 0, 0]} offset={0} />
         <Node radius={1.5} speed={0.3} size={0.026} color={SIGNAL} tilt={[0, 0.95, 0]} offset={2.1} />

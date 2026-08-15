@@ -59,6 +59,14 @@ function Shape({
 // Fixed layout rather than Math.random() at render: a random scatter would
 // differ between server and client and trip hydration, and would also reshuffle
 // on every navigation.
+/**
+ * Positions deliberately hug the left/right margins and the top band, leaving
+ * the centre clear. The first version scattered shapes across the middle,
+ * where they sat directly behind the stat numerals and read as clutter — the
+ * point of these is to fill dead space, not to compete with content.
+ *
+ * `bob` is also higher here so they visibly drift rather than hover.
+ */
 const SHAPES: {
   kind: ShapeKind;
   position: [number, number, number];
@@ -66,12 +74,15 @@ const SHAPES: {
   spin: [number, number, number];
   bob: number;
 }[] = [
-  { kind: "ico", position: [-5.4, 1.8, -2], scale: 0.62, spin: [0.18, 0.26, 0], bob: 0.5 },
-  { kind: "octa", position: [5.1, -1.4, -1.5], scale: 0.55, spin: [0.24, -0.2, 0.1], bob: 0.62 },
-  { kind: "torus", position: [-3.8, -2.6, -3], scale: 0.5, spin: [-0.3, 0.22, 0.14], bob: 0.44 },
-  { kind: "tetra", position: [4.2, 2.5, -2.6], scale: 0.6, spin: [0.2, 0.3, -0.16], bob: 0.55 },
-  { kind: "ico", position: [0.6, 3.1, -4], scale: 0.4, spin: [-0.22, 0.18, 0.2], bob: 0.7 },
-  { kind: "octa", position: [-1.4, -3.2, -3.4], scale: 0.44, spin: [0.26, 0.14, -0.22], bob: 0.5 },
+  // Left margin
+  { kind: "ico", position: [-7.6, 1.9, -2], scale: 0.66, spin: [0.3, 0.42, 0], bob: 0.85 },
+  { kind: "torus", position: [-6.8, -2.4, -3], scale: 0.54, spin: [-0.46, 0.34, 0.22], bob: 0.72 },
+  // Right margin
+  { kind: "octa", position: [7.4, -1.6, -1.6], scale: 0.6, spin: [0.38, -0.34, 0.16], bob: 0.9 },
+  { kind: "tetra", position: [6.9, 2.4, -2.6], scale: 0.64, spin: [0.32, 0.46, -0.26], bob: 0.78 },
+  // Top band, well above the copy
+  { kind: "ico", position: [-2.6, 4.2, -4], scale: 0.42, spin: [-0.36, 0.3, 0.32], bob: 1.05 },
+  { kind: "octa", position: [2.9, 4.5, -3.6], scale: 0.46, spin: [0.42, 0.24, -0.34], bob: 0.95 },
 ];
 
 function Field({ color }: { color: string }) {

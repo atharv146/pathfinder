@@ -73,7 +73,7 @@ function Hero() {
           sits in. Anchored right so it fills the space beside the copy rather
           than printing through it, which is what made the centred version
           unreadable. */}
-      <HeroVisual className="pointer-events-none absolute right-[-14%] top-1/2 h-[42rem] w-[42rem] -translate-y-1/2 opacity-70 sm:h-[62rem] sm:w-[62rem] sm:opacity-85 lg:right-[-4%]" />
+      <HeroVisual className="pointer-events-none absolute left-1/2 top-[62%] h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 opacity-75 sm:h-[58rem] sm:w-[58rem] sm:opacity-90" />
 
       <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-10 pt-14 lg:min-h-[52vh] lg:pt-20">
         <div>
