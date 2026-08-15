@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthNav } from "@/components/auth/AuthNav";
 
 const links = [
   // Explicit Home link — relying on the wordmark alone hides the way back
@@ -31,12 +32,7 @@ export function SiteNav() {
         ))}
       </nav>
 
-      <Link
-        href="/roadmap"
-        className="micro rounded-full border border-line px-4 py-2 text-chalk transition-colors hover:border-chalk"
-      >
-        Get Started
-      </Link>
+      <AuthNav />
     </header>
   );
 }
