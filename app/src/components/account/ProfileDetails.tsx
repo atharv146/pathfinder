@@ -44,18 +44,66 @@ const STATUS = [
 
 type Patch = Partial<Record<keyof Profile, unknown>>;
 
+/**
+ * Migration 0004 may not have been applied to this Supabase project yet.
+ * Postgres doesn't return columns it doesn't have, so those fields arrive as
+ * `undefined` — not `null` — and the declared Profile type is optimistic about
+ * them. Two ways that bites, both of which shipped as real bugs once:
+ *
+ *   - `target_colleges.length` throws outright on undefined.
+ *   - `first_gen === null` is FALSE for undefined, so an unanswered question
+ *     silently rendered as "No".
+ *
+ * Normalising once here means every field below can be read without a guard,
+ * and the account page renders whether or not the migration has run.
+ */
+function normalize(p: Profile): Profile {
+  return {
+    ...p,
+    target_colleges: p.target_colleges ?? [],
+    gpa: p.gpa ?? null,
+    gpa_scale: p.gpa_scale ?? null,
+    sat_score: p.sat_score ?? null,
+    act_score: p.act_score ?? null,
+    course_rigor: p.course_rigor ?? null,
+    first_gen: p.first_gen ?? null,
+    home_language: p.home_language ?? null,
+    status_category: p.status_category ?? null,
+  };
+}
+
 export function ProfileDetails({ profile: initial }: { profile: Profile }) {
-  const [profile, setProfile] = useState<Profile>(initial);
+  const [profile, setProfile] = useState<Profile>(() => normalize(initial));
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [collegeInput, setCollegeInput] = useState("");
 
-  useEffect(() => setProfile(initial), [initial]);
+  useEffect(() => setProfile(normalize(initial)), [initial]);
 
   const save = useCallback(
     async (patch: Patch) => {
       setProfile((p) => ({ ...p, ...(patch as Partial<Profile>) }));
+      setSaveError(null);
+
       const supabase = createClient();
-      await supabase.from("profiles").update(patch).eq("id", initial.id);
+      const { error } = await supabase
+        .from("profiles")
+        .update(patch)
+        .eq("id", initial.id);
+
+      // Never claim "Saved" on a failed write. The most likely cause is that
+      // migration 0004 hasn't been run, in which case the column genuinely
+      // doesn't exist — say that plainly instead of leaving someone to believe
+      // their answer was stored.
+      if (error) {
+        setSaveError(
+          error.message.includes("column")
+            ? "Couldn't save — the database is missing these fields. Run migration 0004 in Supabase."
+            : `Couldn't save: ${error.message}`
+        );
+        return;
+      }
+
       setSavedAt(Date.now());
     },
     [initial.id]
@@ -81,12 +129,21 @@ export function ProfileDetails({ profile: initial }: { profile: Profile }) {
     <div className="mt-10 rounded-lg border border-line bg-panel p-6 sm:p-8">
       <div className="flex items-baseline justify-between gap-4">
         <h2 className="display-md text-xl text-chalk">Your details</h2>
-        {savedAt && (
+        {savedAt && !saveError && (
           <span className="micro text-smoke" aria-live="polite">
             Saved
           </span>
         )}
       </div>
+
+      {saveError && (
+        <p
+          role="alert"
+          className="mt-3 rounded-md border border-[#ff7a6b]/30 px-4 py-3 text-[0.85rem] leading-relaxed text-[#ff7a6b]"
+        >
+          {saveError}
+        </p>
+      )}
 
       <p className="mt-2 text-[0.9rem] leading-relaxed text-ash">
         All of this is optional and you can change it any time. Leaving
