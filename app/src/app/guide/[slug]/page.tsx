@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { guideArticles, getGuideArticleBySlug, slugify } from "@/data/guide";
 import { ArticleView } from "@/components/ArticleView";
+import { FreshnessStamp } from "@/components/FreshnessStamp";
 
 export function generateStaticParams() {
   return guideArticles.map((a) => ({ slug: slugify(a.title) }));
@@ -36,6 +37,12 @@ export default async function GuideArticlePage({
           sections={article.sections}
           keyTerms={article.keyTerms}
         />
+        {/* When these facts were last checked. Renders in both cases — an
+            unstamped article says so, because a missing stamp that looks like
+            a verified one is exactly how stale content hides. */}
+        <div className="mx-auto max-w-2xl">
+          <FreshnessStamp slug={slug} />
+        </div>
       </section>
     </>
   );

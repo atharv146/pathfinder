@@ -9,6 +9,7 @@ const links = [
   { href: "/roadmap", label: "Roadmap" },
   { href: "/ask-ai", label: "Ask AI" },
   { href: "/guide", label: "Guide" },
+  { href: "/tools", label: "Tools" },
 ];
 
 export function SiteNav() {
