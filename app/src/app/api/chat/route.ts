@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
-import { createClient } from "@/lib/supabase/server";
+import {
+  guardAiRequest,
+  upstreamError,
+  withRetry,
+  MODEL,
+} from "@/lib/ai/guard";
 import { SYSTEM_PROMPT, buildContextBlock } from "@/lib/ai/system-prompt";
 import { flagTopics } from "@/lib/ai/flags";
 
@@ -20,9 +24,9 @@ import { flagTopics } from "@/lib/ai/flags";
  *   3. Non-empty, bounded input.
  *
  * ── PROVIDER ─────────────────────────────────────────────────────────────
- * Currently Gemini 2.5 Flash, on the free tier, chosen deliberately to avoid
- * setting up billing while the app has no users. This is a temporary cost
- * decision, not an architectural one.
+ * Currently Gemini 3.7 Flash (see MODEL in lib/ai/guard.ts), on the free tier,
+ * chosen deliberately to avoid setting up billing while the app has no users.
+ * This is a temporary cost decision, not an architectural one.
  *
  * To move to Claude (planned, once usage justifies billing): swap GoogleGenAI
  * for the already-installed `@anthropic-ai/sdk`, change the role mapping back
@@ -35,9 +39,6 @@ import { flagTopics } from "@/lib/ai/flags";
 // timeout would cut a long response off mid-sentence.
 export const maxDuration = 60;
 
-/** Messages per user per rolling 24h. Tune with real usage, not guesses. */
-const DAILY_MESSAGE_CAP = 30;
-
 /** Longest question we'll accept. Generous for a real question, bounded. */
 const MAX_INPUT_CHARS = 4000;
 
@@ -45,32 +46,11 @@ const MAX_INPUT_CHARS = 4000;
 const HISTORY_TURNS = 20;
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return NextResponse.json(
-      { error: "Please sign in to ask a question." },
-      { status: 401 }
-    );
-  }
-
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    // Same shape as the account-deletion route: a config gap is not the
-    // user's fault and shouldn't read as a crash.
-    return NextResponse.json(
-      {
-        error:
-          "Ask AI isn't configured on the server yet. Nothing is wrong on your end.",
-      },
-      { status: 501 }
-    );
-  }
+  // Signed in → key present → under the daily cap. Shared with the interview
+  // routes so the three can't drift apart.
+  const guard = await guardAiRequest();
+  if (!guard.ok) return guard.response;
+  const { supabase, user, ai } = guard;
 
   let message: string;
   try {
@@ -96,23 +76,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // --- Guard 2: daily cap -------------------------------------------------
-  // Counted server-side via a SECURITY DEFINER function so the number can't be
-  // spoofed from the client. Fail *open* on an error here: a monitoring blip
-  // shouldn't lock a student out of the product.
-  const { data: usedToday } = await supabase.rpc("chat_messages_today", {
-    p_user_id: user.id,
-  });
-
-  if (typeof usedToday === "number" && usedToday >= DAILY_MESSAGE_CAP) {
-    return NextResponse.json(
-      {
-        error: `You've hit today's limit of ${DAILY_MESSAGE_CAP} questions. It resets 24 hours after your first question today — the roadmap and guides are always open in the meantime.`,
-      },
-      { status: 429 }
-    );
-  }
-
   // --- Context ------------------------------------------------------------
   const { data: profile } = await supabase
     .from("profiles")
@@ -126,6 +89,7 @@ export async function POST(request: Request) {
     .from("chat_messages")
     .select("role, content")
     .eq("user_id", user.id)
+    .eq("kind", "chat")
     .order("created_at", { ascending: false })
     .limit(HISTORY_TURNS);
 
@@ -146,6 +110,7 @@ export async function POST(request: Request) {
     role: "user",
     content: message,
     flagged_topics: flags,
+    kind: "chat",
   });
 
   const contextBlock = buildContextBlock({
@@ -164,8 +129,6 @@ export async function POST(request: Request) {
     statusCategory: profile?.status_category ?? null,
   });
 
-  const ai = new GoogleGenAI({ apiKey });
-
   // Gemini names the assistant role "model", not "assistant".
   const contents = [
     ...priorTurns.map((turn) => ({
@@ -178,39 +141,35 @@ export async function POST(request: Request) {
   let stream: Awaited<ReturnType<typeof ai.models.generateContentStream>>;
 
   try {
-    stream = await ai.models.generateContentStream({
-      // Pinned, not the `gemini-flash-latest` alias. An alias silently swaps
-      // the model under a running app; for something giving advice to minors,
-      // a behaviour change should be a deliberate commit, not a surprise.
-      // Note gemini-2.5-flash was already retired for new keys — expect to
-      // revisit this string periodically.
-      model: "gemini-3.7-flash",
-      contents,
-      config: {
-        // The system prompt is byte-identical across every request, which is
-        // what lets Gemini's implicit context caching kick in. Keep it stable;
-        // per-user context goes in the message turn, not here.
-        systemInstruction: SYSTEM_PROMPT,
-        maxOutputTokens: 4096,
+    stream = await withRetry(() =>
+      ai.models.generateContentStream({
+        // Pinned, not the `gemini-flash-latest` alias. An alias silently
+        // swaps the model under a running app; for something giving advice to
+        // minors, a behaviour change should be a deliberate commit, not a
+        // surprise. Note gemini-2.5-flash was already retired for new keys —
+        // expect to revisit this string periodically.
+        model: MODEL,
+        contents,
+        config: {
+          // The system prompt is byte-identical across every request, which
+          // is what lets Gemini's implicit context caching kick in. Keep it
+          // stable; per-user context goes in the message turn, not here.
+          systemInstruction: SYSTEM_PROMPT,
+          maxOutputTokens: 4096,
 
-        // -1 lets the model size its own reasoning per question. Set this to 0
-        // to disable thinking entirely if free-tier quota becomes the binding
-        // constraint — it's the cheapest lever here, and most of these
-        // questions are explanatory rather than genuinely hard.
-        thinkingConfig: { thinkingBudget: -1 },
-      },
-    });
+          // -1 lets the model size its own reasoning per question. Set this
+          // to 0 to disable thinking entirely if free-tier quota becomes the
+          // binding constraint — it's the cheapest lever here, and most of
+          // these questions are explanatory rather than genuinely hard.
+          thinkingConfig: { thinkingBudget: -1 },
+        },
+      })
+    );
   } catch (err) {
     // A bad key or an exhausted quota fails here, before any bytes are sent —
     // so it can still be a clean JSON error instead of a truncated stream.
     console.error("[ask-ai] request rejected:", err);
-    return NextResponse.json(
-      {
-        error:
-          "Couldn't reach the AI service. If this keeps happening the daily free-tier quota may be used up — try again later.",
-      },
-      { status: 502 }
-    );
+    return upstreamError();
   }
 
   const encoder = new TextEncoder();
@@ -260,6 +219,7 @@ export async function POST(request: Request) {
           role: "assistant",
           content: answer,
           flagged_topics: flags,
+          kind: "chat",
         });
       }
 

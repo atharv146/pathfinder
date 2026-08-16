@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ActivityInterview } from "@/components/activities/ActivityInterview";
 import type { Activity } from "@/lib/db/types";
 
 /**
@@ -43,18 +44,21 @@ export function ActivitiesBuilder() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
 
-  useEffect(() => {
-    const load = async () => {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("activities")
-        .select("*")
-        .order("sort_order", { ascending: true });
-      setItems((data as Activity[]) ?? []);
-      setLoading(false);
-    };
-    load();
+  // Hoisted out of the effect so the interview can re-run it after a draft is
+  // accepted — otherwise an added activity wouldn't appear until a reload.
+  const load = useCallback(async () => {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("activities")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    setItems((data as Activity[]) ?? []);
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const add = async () => {
     const supabase = createClient();
@@ -97,6 +101,8 @@ export function ActivitiesBuilder() {
 
   return (
     <div>
+      <ActivityInterview onSaved={load} />
+
       {items.length === 0 && (
         <div className="mb-10 rounded-lg border border-line bg-panel/60 p-6 sm:p-8">
           <p className="display-md mb-4 text-xl text-chalk">
