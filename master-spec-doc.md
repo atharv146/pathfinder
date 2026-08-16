@@ -298,7 +298,7 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 | 6 | ~~**Essay brainstorm tool**~~ **DONE Aug 15, 2026** — `/tools`, `EssayBrainstorm`, `data/essay-brainstorm.ts`. Writes nothing; notes stay in localStorage. — the method is already written in the 11th-grade content: five moments, values-then-memory, tell-it-out-loud, narrative vs. montage. Make it interactive. | ⚠️ Must never draft essays for students — an integrity problem that would also blacklist the app with counselors, who are distribution priority #1. | Low (method already written) |
 | 7 | ~~**Fee waiver checker**~~ **DONE Aug 15, 2026** — `/tools`, `FeeWaiverChecker`, `data/fee-waivers.ts`. Never returns "you don't qualify". (Net price comparison still open — `CostReveal` exists but isn't wired to a real multi-school compare.) — "based on what you've told us, you likely qualify for X, here's how to ask." Net price via the existing `CostReveal`, using the COA-minus-gift-aid method already documented in the 12th-grade content. | Saves families real money, builds real trust, cheap to build. Can jump earlier if a quick win is wanted. | Low |
 | 8 | ~~**Policy freshness system**~~ **DONE Aug 15, 2026** — `data/freshness.ts` + `FreshnessStamp` on every guide article. — visible "verified [date]" stamps on time-sensitive claims. | Directly solves the staleness problem found Aug 15, and doubles as a trust signal no competitor offers. | Low |
-| 9 | **Counselor / mentor share link** — student-initiated and revocable, per the July 21 decision protecting student autonomy. | The distribution unlock: counselors are Section 10's #1 channel, and this puts the app in front of them via students. | None |
+| 9 | ~~**Counselor / mentor share link**~~ **DONE Aug 15, 2026** — migration `0007`, `ShareLink`, public `/s/[token]`. See §16I. — student-initiated and revocable, per the July 21 decision protecting student autonomy. | The distribution unlock: counselors are Section 10's #1 channel, and this puts the app in front of them via students. | None |
 | 10 | ~~**Parent mode / in-language**~~ **DONE Aug 15, 2026** — account-type UI + Spanish. See §16H. — parent-side view, translation of core content. | Promotes Section 3's deferred translation item. Highest reach-per-effort for this specific audience. | Medium–High |
 
 **Explicitly recommended AGAINST (do not build without revisiting):**
@@ -432,6 +432,24 @@ What was built instead: **`ExplainInSpanish`** on every guide article, which han
 **Real bug found and fixed in the same pass:** `ChatPanel`'s client-side history query had no `kind` filter, so the activities-interview turns would have appeared in the Ask AI transcript — precisely what migration 0005's `kind` column exists to prevent. The server route filtered correctly; the client did not. Fixed, and the two filters must stay in sync.
 
 **When real translated content happens** it needs a human bilingual pass and its own freshness stamps (`data/freshness.ts`), not a bulk model run.
+
+---
+
+## 16I. V2 Step 9 — Counselor Share Link (built Aug 15, 2026)
+
+Migration `0007_share_links.sql` (run it), `components/account/ShareLink.tsx`, public route `/s/[token]`.
+
+Implements the July 21, 2026 decision literally: **student-initiated and student-revocable.** Nobody else can generate a link — not parents, not the app. That is why the feature took this shape instead of "link a parent account to a student", and the distinction is the difference between a sharing tool and a monitoring tool.
+
+**This is the only place in the app where data leaves an account**, so the exposed surface is deliberate and narrow. The `get_shared_progress` SECURITY DEFINER function returns exactly: grade, major interest, completed roadmap item ids, and the activities list. It **never** returns immigration status, GPA, test scores, first-gen flag, home language, target colleges, or any chat/interview transcript. Because the caller is anonymous and has no rights to those tables, the function's return list *is* the security boundary — it is written out field by field rather than selecting `*`, and adding anything to it is a privacy decision rather than a feature decision.
+
+Other protections: the token is 32 bytes from the platform CSPRNG (never derived from user id or timestamp, since the token is the only credential), revocation is a timestamp rather than a delete so the student can see a link is dead, and there is a hard 180-day expiry so a link handed over in 11th grade isn't still live after graduation.
+
+**Informed consent is in the UI, not just the schema.** Before creating a link the student sees two columns — "they will see" (grade, roadmap progress, activities) and "they will not see" (immigration status, GPA/test scores, anything asked the AI). Someone about to hand a URL to an adult should know the contents before sending it.
+
+The `/s/[token]` page is written for a reader who has never heard of PathFinder: it explains what the app is, states that the student chose to share and can revoke, leads with the activities list (the part a counselor can actually act on, and the part students most undersell in person), and closes by saying explicitly that none of it is a grade or an evaluation.
+
+Verified: `/s/` is public, an invalid token renders the "this link isn't active" page rather than erroring, and `/account` remains gated.
 
 ---
 

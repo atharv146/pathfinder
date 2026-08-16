@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ProfileDetails } from "@/components/account/ProfileDetails";
 import { LanguageAndRole } from "@/components/i18n/LanguageAndRole";
+import { ShareLink } from "@/components/account/ShareLink";
 import type { Profile } from "@/lib/db/types";
 
 const GRADES = [6, 7, 8, 9, 10, 11, 12];
@@ -142,6 +143,8 @@ export function AccountPanel() {
       <LanguageAndRole />
 
       {profile && <ProfileDetails profile={profile} />}
+
+      <ShareLink />
 
       <section className="rounded-lg border border-[#ff7a6b]/30 p-5 sm:p-6">
         <p className="display-md mb-2 text-lg text-chalk">Delete your data</p>

@@ -72,6 +72,10 @@ export async function proxy(request: NextRequest) {
     path === "/signup" ||
     path === "/guide" ||
     path.startsWith("/guide/") ||
+    // Shared counselor links. Public by necessity — the recipient has no
+    // account. The token plus the narrow SECURITY DEFINER function in
+    // migration 0007 is the security boundary, not the session.
+    path.startsWith("/s/") ||
     path.startsWith("/auth");
 
   // API routes authenticate themselves and answer with a JSON status code.
