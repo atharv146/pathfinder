@@ -74,7 +74,15 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/guide/") ||
     path.startsWith("/auth");
 
-  if (!user && !isPublic) {
+  // API routes authenticate themselves and answer with a JSON status code.
+  // Redirecting them would hand a `fetch()` caller a 307 to an HTML signup
+  // page, which then fails to parse as JSON and surfaces to the user as a
+  // generic "something went wrong" instead of "please sign in". Status codes
+  // are for APIs; redirects are for pages. Every route under /api/ starts by
+  // verifying the session itself, so this is not a hole.
+  const isApi = path.startsWith("/api/");
+
+  if (!user && !isPublic && !isApi) {
     const url = request.nextUrl.clone();
     url.pathname = "/signup";
     // Remember where they were headed so they land there after signing up

@@ -275,6 +275,60 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 
 ---
 
+## 16B. V2 Build Sequence — Personalization & Resume Builder
+
+*(Added Aug 15, 2026, at the user's explicit direction. This supersedes Section 16 as the active build order — Section 16's steps 1–6 are done or substantially done. This promotes most of Section 3B from "deferred" to "building now," which is a real scope decision the user made deliberately.)*
+
+**Three strategic calls this order is built on:**
+1. **Content volume is the binding constraint, not engineering.** See the Aug 15 Decisions Log entry — two dating errors were found in only 51 roadmap items + 6 articles that had already been revised multiple times. Major-specific pathways multiply that surface area enormously, and every fact goes stale each admissions cycle. Therefore: **8 major *families* deep, not 50 majors shallow.**
+2. **Most personalization needs no new content.** "Start where you are" is a diff between a student's profile and the existing 51 items — pure logic, high perceived personalization, zero research cost. It ships before the content-heavy work.
+3. **Never score or rank the student.** The "AI evaluates how far along you are" idea is reframed as gap analysis: the student self-reports, the app shows *what's still available to them*, never a judgment or a "you're behind." For this audience a behind-ness score is actively harmful, and the app genuinely cannot see a student's personal circumstances.
+
+**Parallel track, not a numbered step: get 5–10 real students using the app.** Section 3B originally deferred all of this until V1 was "validated with real users," and there are currently zero. Everything below is being built on assumption until that changes. Section 10's distribution plan already names the first move (local counselors / community orgs).
+
+**The order:**
+
+| # | Item | Why here | Content cost |
+|---|---|---|---|
+| 1 | ~~**AI backend** — server-side route holding the key~~ **DONE Aug 15, 2026** — see the Decisions Log entry for that date | Blocks every AI feature below. Nothing else in this list works without it. | None |
+| 2 | **Profile expansion** — GPA, test scores, courses, target schools, plus the Section 4 fields onboarding currently skips. Apply the Lovable-era "N/A is okay" lesson; immigration status stays optional and separate per the July 21 decision. | Blocks personalization, gap analysis, and the fee-waiver checker. | None |
+| 3 | **AI activities interview + "does this count?" translator** — AI asks questions to surface what a student actually does, then turns it into Common App-shaped entries (~150 chars). Explicitly catches caregiving, translating, family business, and paid work, which this audience systematically undersells. Payoff visual: their real entries develop onto the existing `ResumePaper` sheet. | **The single strongest feature in the plan.** Zero content cost, directly serves the mission, hard to get free anywhere else, and `activities` table + `ActivitiesBuilder` already exist. | None |
+| 4 | **Gap analysis / "start where you are"** — diff profile against existing roadmap items; show what's still available, never a score. Visual: their position lit up on the existing `RoadmapPath`. | Huge perceived personalization built entirely from content that already exists. | None |
+| 5 | **Major-family pathways** — deepen the existing 8 buckets in `majors.ts` into real multi-year pathways: coursework sequences, activity types, timing. Shared pathway *logic*, only the specifics vary per family. | The expensive one. Do it after the cheap wins so it can be paced properly. **Only researched specifics — no invented program names.** | **High — the bottleneck** |
+| 6 | **Essay brainstorm tool** (brainstorm, NOT write) — the method is already written in the 11th-grade content: five moments, values-then-memory, tell-it-out-loud, narrative vs. montage. Make it interactive. | ⚠️ Must never draft essays for students — an integrity problem that would also blacklist the app with counselors, who are distribution priority #1. | Low (method already written) |
+| 7 | **Fee waiver checker + net price comparison** — "based on what you've told us, you likely qualify for X, here's how to ask." Net price via the existing `CostReveal`, using the COA-minus-gift-aid method already documented in the 12th-grade content. | Saves families real money, builds real trust, cheap to build. Can jump earlier if a quick win is wanted. | Low |
+| 8 | **Policy freshness system** — visible "verified [date]" stamps on time-sensitive claims. | Directly solves the staleness problem found Aug 15, and doubles as a trust signal no competitor offers. | Low |
+| 9 | **Counselor / mentor share link** — student-initiated and revocable, per the July 21 decision protecting student autonomy. | The distribution unlock: counselors are Section 10's #1 channel, and this puts the app in front of them via students. | None |
+| 10 | **Parent mode / in-language** — parent-side view, translation of core content. | Promotes Section 3's deferred translation item. Highest reach-per-effort for this specific audience. | Medium–High |
+
+**Explicitly recommended AGAINST (do not build without revisiting):**
+- **Chancing / admissions-odds calculator** — CollegeVine owns this, it needs real admissions data, it's frequently wrong, and it's demoralizing for exactly this audience.
+- **Past-admit example profiles** (from Section 3B) — cannot be fabricated without violating the project's own "never invent statistics" rule, and real ones require data not currently available. Cut or source properly.
+- **AI-written essays** — see item 6.
+- **50 individual majors** — see strategic call #1.
+
+**Design thread (runs through every item, not a separate step):** the user's standing requirement is that new features carry the same visual quality bar. Prefer reuse of existing proven components — `ResumePaper` (item 3), `RoadmapPath` (item 4), `DeadlineOrbit`, `CostReveal` (item 7) — with genuinely new 3D reserved for item 5 (a path that forks by major) and item 6 (memory points connecting into a throughline). All WebGL stays behind the `src/lib/motion.ts` capability gate with a real fallback, per the standing rule.
+
+---
+
+---
+
+## 16C. V2 Step 1 — AI Backend (built Aug 15, 2026)
+
+**Shipped.** `/api/chat` (`app/src/app/api/chat/route.ts`) — the server-side model call that unblocks steps 3, 4, and 6 of Section 16B, and closes the last open piece of Section 16's step 6.
+
+- **Why it's a server route at all:** the original `pathfinder-app.jsx` called `api.anthropic.com` directly from the browser. An API key shipped to the client is a public API key. `ANTHROPIC_API_KEY` now lives server-side only (no `NEXT_PUBLIC_` prefix), and the browser only talks to this route.
+- **Model:** `claude-opus-5`, streaming, adaptive thinking at `effort: "medium"`. Effort is the tuning knob if responses feel slow — `low` is still strong on this model. Thinking is deliberately left on: financial-aid and status-aware questions have real nuance, and disabling thinking on this model can leak internal tags into the visible answer.
+- **Cost controls, in order:** signed-in only → 30 messages per user per rolling 24h → 4,000-char input cap. The system prompt is prompt-cached (it is byte-identical across all users, so it's a stable prefix); per-user context is passed in the message turn precisely so it doesn't invalidate that cache.
+- **Content:** the system prompt is in `src/lib/ai/system-prompt.ts` and is treated as content, not code — it encodes the Section 6 draft plus the honesty rules (never invent a statistic, org, scholarship, or policy specific; flag facts that move year-to-year and send people to the school's own page), the hard limit on immigration legal advice, and the "a job/caregiving/translating counts as a real activity" point this audience systematically misses.
+- **Escalation (Section 6's rule):** `src/lib/ai/flags.ts` flags messages touching immigration status, mental-health crisis, or safety, stores the flags on the message row, and the UI shows a real human resource (988, school counselor, licensed attorney, notario warning) **alongside** the answer — never instead of it, and never as a refusal. It is a keyword heuristic and says so in its own header comment; the response quality comes from the system prompt, not from it.
+- **Storage:** migration `0003_chat.sql` adds `chat_messages` — the Section 4 "Chat Message" model including `flagged_topics` — with RLS, select+insert only (no update/delete: a student rewriting the transcript would defeat the escalation flags; full erasure still happens via the account-deletion cascade), plus a `SECURITY DEFINER` counter for the rate limit that returns only a number.
+- **⚠️ Two things gate this working in production:** (1) `ANTHROPIC_API_KEY` must be set locally *and* in Vercel's env vars — the route returns a clean 501 explaining it isn't the user's fault until then; (2) **migration `0003` must be run in the Supabase SQL editor.** Until it is, the chat still answers but has no memory and — the part that matters — **no spend cap**.
+- **Real bug found and fixed while verifying:** `src/proxy.ts` was redirecting API routes to `/signup` (307 → HTML), so a `fetch()` caller got an unparseable HTML body and surfaced a generic error instead of the real 401. `/api/` is now exempt from the redirect; each route verifies the session itself and returns JSON. This also silently affected the pre-existing `/api/account/delete`. **Standing rule: never redirect an API route — status codes are for APIs, redirects are for pages.**
+- **Not verified by execution:** no Anthropic API key was available in this session, so the model call itself has never run. Verified instead: clean `npm run build`, clean `tsc --noEmit`, the `fallbacks: 'default'` and `effort` params confirmed against the installed SDK's own type definitions (`@anthropic-ai/sdk` 0.117.1), and both API routes confirmed returning JSON 401s via curl. **First real call is the actual test** — if the `server-side-fallback-2026-07-01` beta ever 400s, dropping the two `betas`/`fallbacks` lines in `route.ts` is the one-line fix.
+
+---
+
 ## 17. Handoff Notes for Any New Claude Session
 
 If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is.
