@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { fetchProgress } from "@/lib/db/progress";
 import { buildGaps, type Gaps } from "@/lib/roadmap/gaps";
 import { categoryMeta } from "@/data/categories";
+import { JourneyArc } from "@/components/roadmap/JourneyArc";
 
 /**
  * The signed-in student's own view of the roadmap.
@@ -83,6 +84,12 @@ export function WhereYouAre() {
           </>
         )}
       </p>
+
+      <JourneyArc
+        grade={grade}
+        doneThisYear={gaps.doneThisYear}
+        totalThisYear={gaps.thisYear.length}
+      />
 
       <div className="mt-7 grid gap-3 sm:grid-cols-2">
         <Link
