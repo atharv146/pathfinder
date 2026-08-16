@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import {
   guardAiRequest,
   upstreamError,
-  withRetry,
-  MODEL,
+  callWithFallback,
 } from "@/lib/ai/guard";
 import { INTERVIEW_PROMPT } from "@/lib/ai/interview-prompt";
 import { tolerateMissingColumn } from "@/lib/db/resilient";
@@ -97,20 +96,20 @@ export async function POST(request: Request) {
 
   let stream: Awaited<ReturnType<typeof ai.models.generateContentStream>>;
   try {
-    stream = await withRetry(() =>
+    stream = await callWithFallback((model) =>
       ai.models.generateContentStream({
-        model: MODEL,
+        model,
         contents,
         config: {
           systemInstruction: INTERVIEW_PROMPT,
           maxOutputTokens: 2048,
-          thinkingConfig: { thinkingBudget: -1 },
+          thinkingConfig: { thinkingBudget: 0 },
         },
       })
     );
   } catch (err) {
     console.error("[interview] request rejected:", err);
-    return upstreamError();
+    return upstreamError(err);
   }
 
   const encoder = new TextEncoder();

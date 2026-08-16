@@ -53,7 +53,7 @@ export function MajorLens({ grade }: { grade: number }) {
 
   if (undecided || !family) {
     return (
-      <div className="mb-12 rounded-lg border border-line bg-panel/50 p-5 sm:p-6">
+      <div className="mb-12 border-l-2 border-line-bright pl-5 sm:pl-6">
         <p className="micro mb-2 text-smoke">Your major</p>
         <p className="mb-4 text-[0.95rem] leading-relaxed text-ash">
           {undecided
@@ -74,7 +74,7 @@ export function MajorLens({ grade }: { grade: number }) {
   const phase = phaseForGrade(family, grade);
 
   return (
-    <div className="mb-12 rounded-lg border border-accent/30 bg-accent/[0.04] p-5 sm:p-6">
+    <div className="mb-12 border-l-2 border-accent/50 pl-5 sm:pl-6">
       <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
         <p className="micro text-accent">What changes for {family.label}</p>
         {!relevant && (

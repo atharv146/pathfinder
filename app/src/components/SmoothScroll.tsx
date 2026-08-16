@@ -35,6 +35,8 @@ function LenisRoot({ children }: { children: ReactNode }) {
     // instead of breaking scrolling outright.
     let raf = 0;
     let lenis: ReturnType<() => NonNullable<LenisRef["lenis"]>> | undefined;
+    let observer: ResizeObserver | undefined;
+    let resizeTimer = 0;
     const onScroll = () => ScrollTrigger.update();
 
     const attach = () => {
@@ -45,11 +47,38 @@ function LenisRoot({ children }: { children: ReactNode }) {
       }
       lenis.on("scroll", onScroll);
       ScrollTrigger.refresh();
+
+      // ── THE STALE-LIMIT BUG ────────────────────────────────────────────
+      // Lenis caches the scrollable height and clamps wheel scrolling to it.
+      // When content grows *after* mount — expanding "Show all 24", opening a
+      // roadmap item, a chat reply streaming in, an image finally loading —
+      // that cached limit is now too small, so the wheel stops partway down
+      // the page while the native scrollbar still works, because dragging it
+      // bypasses Lenis entirely.
+      //
+      // That asymmetry (wheel dead, scrollbar fine) is the signature of this
+      // bug, and it reads to a user as "the site randomly stops scrolling".
+      //
+      // A ResizeObserver on the document element catches every height change
+      // regardless of what caused it, which is the only approach that doesn't
+      // require remembering to call resize() from each expandable component.
+      // Debounced to the next frame so a burst of mutations costs one recalc.
+      observer = new ResizeObserver(() => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          lenis?.resize();
+          ScrollTrigger.refresh();
+        }, 60);
+      });
+      observer.observe(document.documentElement);
+      if (document.body) observer.observe(document.body);
     };
     attach();
 
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(resizeTimer);
+      observer?.disconnect();
       lenis?.off("scroll", onScroll);
     };
   }, []);

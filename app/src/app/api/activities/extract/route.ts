@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import {
   guardAiRequest,
   upstreamError,
-  withRetry,
-  MODEL,
+  callWithFallback,
 } from "@/lib/ai/guard";
 import { EXTRACT_PROMPT } from "@/lib/ai/interview-prompt";
 import { tolerateMissingColumn } from "@/lib/db/resilient";
@@ -85,9 +84,9 @@ export async function POST() {
 
   let raw: string | undefined;
   try {
-    const result = await withRetry(() =>
+    const result = await callWithFallback((model) =>
       ai.models.generateContent({
-        model: MODEL,
+        model,
         contents: [
           { role: "user", parts: [{ text: `TRANSCRIPT:\n\n${transcript}` }] },
         ],
@@ -106,7 +105,7 @@ export async function POST() {
     raw = result.text;
   } catch (err) {
     console.error("[extract] request rejected:", err);
-    return upstreamError();
+    return upstreamError(err);
   }
 
   if (!raw) {

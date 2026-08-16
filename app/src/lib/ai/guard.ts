@@ -20,8 +20,27 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 /** Messages per user per rolling 24h, across chat AND interview combined. */
 export const DAILY_MESSAGE_CAP = 30;
 
-/** Pinned deliberately — see the PROVIDER note in api/chat/route.ts. */
-export const MODEL = "gemini-3.7-flash";
+/**
+ * Model fallback chain, tried in order.
+ *
+ * NOT belt-and-braces — measured. The Gemini free tier returns 503 ("high
+ * demand") and 429 (quota) frequently enough that a single pinned model fails
+ * visibly for real users. When 3.7 is saturated, 3.5 has repeatedly answered
+ * on the same key seconds later, so falling across models rescues far more
+ * requests than retrying one model harder does.
+ *
+ * All pinned, never `-latest` aliases: a silent model swap under an app
+ * advising minors should be a deliberate commit. Order is best-first, so a
+ * healthy free tier always serves 3.7.
+ */
+export const MODEL_CHAIN = [
+  "gemini-3.7-flash",
+  "gemini-3.5-flash",
+  "gemini-3.1-flash-lite",
+] as const;
+
+/** Primary model. Kept for callers that only need a label. */
+export const MODEL = MODEL_CHAIN[0];
 
 type GuardOk = {
   ok: true;
@@ -90,14 +109,56 @@ export async function guardAiRequest(): Promise<GuardOk | GuardFail> {
  * demand") are common enough to be worth naming honestly rather than showing a
  * generic error.
  */
-export function upstreamError() {
+export function upstreamError(err?: unknown) {
+  // 429 and 503 need different advice: one means "come back tomorrow", the
+  // other means "try again right now". Telling a student to retry against an
+  // exhausted daily quota just wastes their evening.
+  const status = (err as { status?: number })?.status;
+
+  if (status === 429) {
+    return NextResponse.json(
+      {
+        error:
+          "PathFinder's AI has hit today's free usage limit. It resets within 24 hours — the roadmap, guides and your activities list all still work in the meantime.",
+      },
+      { status: 429 }
+    );
+  }
+
   return NextResponse.json(
     {
       error:
-        "Couldn't reach the AI service just now — it's often a temporary capacity blip. Try again in a moment.",
+        "The AI service is busy right now — this is usually a short spike. Wait a few seconds and send it again.",
     },
     { status: 502 }
   );
+}
+
+/**
+ * Run `call` against each model in the chain until one answers.
+ *
+ * Retries transient statuses within a model (short backoff), then falls to the
+ * next model. A non-transient error — a bad request, a retired model — throws
+ * immediately rather than burning the whole chain on a request that can never
+ * succeed.
+ */
+export async function callWithFallback<T>(
+  call: (model: string) => Promise<T>
+): Promise<T> {
+  let lastError: unknown;
+
+  for (const model of MODEL_CHAIN) {
+    try {
+      return await withRetry(() => call(model), 2);
+    } catch (err) {
+      lastError = err;
+      const status = (err as { status?: number })?.status;
+      // Only fall to the next model for capacity/quota problems.
+      if (!status || !RETRYABLE.has(status)) throw err;
+    }
+  }
+
+  throw lastError;
 }
 
 /**

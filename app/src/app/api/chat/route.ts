@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import {
   guardAiRequest,
   upstreamError,
-  withRetry,
-  MODEL,
+  callWithFallback,
 } from "@/lib/ai/guard";
 import { SYSTEM_PROMPT, buildContextBlock } from "@/lib/ai/system-prompt";
 import { flagTopics } from "@/lib/ai/flags";
@@ -44,7 +43,7 @@ export const maxDuration = 60;
 const MAX_INPUT_CHARS = 4000;
 
 /** How much prior conversation to replay. The API is stateless. */
-const HISTORY_TURNS = 20;
+const HISTORY_TURNS = 10;
 
 export async function POST(request: Request) {
   // Signed in → key present → under the daily cap. Shared with the interview
@@ -159,14 +158,11 @@ export async function POST(request: Request) {
   let stream: Awaited<ReturnType<typeof ai.models.generateContentStream>>;
 
   try {
-    stream = await withRetry(() =>
+    stream = await callWithFallback((model) =>
       ai.models.generateContentStream({
-        // Pinned, not the `gemini-flash-latest` alias. An alias silently
-        // swaps the model under a running app; for something giving advice to
-        // minors, a behaviour change should be a deliberate commit, not a
-        // surprise. Note gemini-2.5-flash was already retired for new keys —
-        // expect to revisit this string periodically.
-        model: MODEL,
+        // Falls across MODEL_CHAIN when the free tier 503s or 429s — see
+        // lib/ai/guard.ts. All pinned, never a `-latest` alias.
+        model,
         contents,
         config: {
           // The system prompt is byte-identical across every request, which
@@ -175,11 +171,12 @@ export async function POST(request: Request) {
           systemInstruction: SYSTEM_PROMPT,
           maxOutputTokens: 4096,
 
-          // -1 lets the model size its own reasoning per question. Set this
-          // to 0 to disable thinking entirely if free-tier quota becomes the
-          // binding constraint — it's the cheapest lever here, and most of
-          // these questions are explanatory rather than genuinely hard.
-          thinkingConfig: { thinkingBudget: -1 },
+          // Thinking OFF. Free-tier quota is the binding constraint in
+          // practice (measured 429s), and thinking tokens count against the
+          // output budget on every single message. These questions are
+          // explanatory rather than genuinely hard, and answer quality was
+          // indistinguishable in testing. Raise this only if answers thin out.
+          thinkingConfig: { thinkingBudget: 0 },
         },
       })
     );
@@ -187,7 +184,7 @@ export async function POST(request: Request) {
     // A bad key or an exhausted quota fails here, before any bytes are sent —
     // so it can still be a clean JSON error instead of a truncated stream.
     console.error("[ask-ai] request rejected:", err);
-    return upstreamError();
+    return upstreamError(err);
   }
 
   const encoder = new TextEncoder();
