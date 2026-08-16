@@ -291,7 +291,7 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 | # | Item | Why here | Content cost |
 |---|---|---|---|
 | 1 | ~~**AI backend** — server-side route holding the key~~ **DONE Aug 15, 2026** — see the Decisions Log entry for that date | Blocks every AI feature below. Nothing else in this list works without it. | None |
-| 2 | **Profile expansion** — GPA, test scores, courses, target schools, plus the Section 4 fields onboarding currently skips. Apply the Lovable-era "N/A is okay" lesson; immigration status stays optional and separate per the July 21 decision. | Blocks personalization, gap analysis, and the fee-waiver checker. | None |
+| 2 | ~~**Profile expansion**~~ **DONE Aug 15, 2026** — migration `0004_profile_details.sql` + `ProfileDetails` on `/account`. GPA (+scale), SAT/ACT, course rigor, target colleges, first-gen, home language, and an optional status field. Every column nullable; "leaving something blank is completely fine" is stated on screen, not just implied. Status sits last, visually separated, and explains why it's asked and that it's never shared *before* asking — per Section 7 and the July 21 decision. All fields feed the chat's context block, so the AI actually uses them. | Blocks personalization, gap analysis, and the fee-waiver checker. | None |
 | 3 | **AI activities interview + "does this count?" translator** — AI asks questions to surface what a student actually does, then turns it into Common App-shaped entries (~150 chars). Explicitly catches caregiving, translating, family business, and paid work, which this audience systematically undersells. Payoff visual: their real entries develop onto the existing `ResumePaper` sheet. | **The single strongest feature in the plan.** Zero content cost, directly serves the mission, hard to get free anywhere else, and `activities` table + `ActivitiesBuilder` already exist. | None |
 | 4 | **Gap analysis / "start where you are"** — diff profile against existing roadmap items; show what's still available, never a score. Visual: their position lit up on the existing `RoadmapPath`. | Huge perceived personalization built entirely from content that already exists. | None |
 | 5 | **Major-family pathways** — deepen the existing 8 buckets in `majors.ts` into real multi-year pathways: coursework sequences, activity types, timing. Shared pathway *logic*, only the specifics vary per family. | The expensive one. Do it after the cheap wins so it can be paced properly. **Only researched specifics — no invented program names.** | **High — the bottleneck** |
@@ -326,6 +326,24 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 - **⚠️ Two things gate this working in production:** (1) `ANTHROPIC_API_KEY` must be set locally *and* in Vercel's env vars — the route returns a clean 501 explaining it isn't the user's fault until then; (2) **migration `0003` must be run in the Supabase SQL editor.** Until it is, the chat still answers but has no memory and — the part that matters — **no spend cap**.
 - **Real bug found and fixed while verifying:** `src/proxy.ts` was redirecting API routes to `/signup` (307 → HTML), so a `fetch()` caller got an unparseable HTML body and surfaced a generic error instead of the real 401. `/api/` is now exempt from the redirect; each route verifies the session itself and returns JSON. This also silently affected the pre-existing `/api/account/delete`. **Standing rule: never redirect an API route — status codes are for APIs, redirects are for pages.**
 - **Not verified by execution:** no Anthropic API key was available in this session, so the model call itself has never run. Verified instead: clean `npm run build`, clean `tsc --noEmit`, the `fallbacks: 'default'` and `effort` params confirmed against the installed SDK's own type definitions (`@anthropic-ai/sdk` 0.117.1), and both API routes confirmed returning JSON 401s via curl. **First real call is the actual test** — if the `server-side-fallback-2026-07-01` beta ever 400s, dropping the two `betas`/`fallbacks` lines in `route.ts` is the one-line fix.
+
+---
+
+## 16D. V2 Step 2 — Profile Expansion (built Aug 15, 2026)
+
+**Shipped.** Migration `0004_profile_details.sql` + `src/components/account/ProfileDetails.tsx`, rendered inside `AccountPanel` on `/account`.
+
+Adds the rest of the Section 4 student model: GPA and GPA scale, SAT/ACT, course rigor (coarse buckets, not a course list — the roadmap branches on "are you on the most rigorous track available to you", which a student can answer, and enumerating courses is data entry that buys nothing), target colleges, first-gen, home language, and an optional immigration-status category.
+
+**Every column is nullable and the UI says so out loud.** The Lovable-era "N/A is okay" lesson is implemented as visible copy — a 9th grader with no test scores, or a student who doesn't know their GPA scale, must not feel behind. Nothing in the app gates on any of these.
+
+**The status field follows Section 7 and the July 21 decision precisely:** it is last, visually separated in its own bordered block, and states *before asking* why it's collected (aid rules genuinely differ, and generic advice is often flat-out wrong for immigrant families), that it is never shared or sold, and that it can be cleared or deleted at any time. It also restates that PathFinder can't give legal advice. "Skip this" is the default option, not an afterthought.
+
+All fields flow into `buildContextBlock()` in `src/lib/ai/system-prompt.ts`, so the chat uses them immediately rather than collecting data nothing reads — with an explicit instruction not to raise a student's status unless it's relevant to what they actually asked.
+
+**Model changed this session at the user's direction:** `claude-sonnet-5` at `effort: "low"` (was Opus 5 at medium). Correct call for a free app answering explanatory questions. The escalation of last resort if quality drops is `effort: "medium"` *before* a model change.
+
+**Deferred, with reasoning — routing to free/open models (OpenRouter).** The user asked for this to cut cost further. Not done, because the saving is small relative to the risk on this specific product: Sonnet 5 at low with a cached system prompt already puts a typical exchange in fractions of a cent, and the paths where a weaker model does real damage are exactly the ones this app is built for — a nervous first-gen student asking about aid eligibility, or the crisis/safety/immigration escalations where the wrong answer isn't a bad answer but a harmful one, given to a minor. Revisit if volume makes the bill real; the model string is one line in `route.ts`.
 
 ---
 

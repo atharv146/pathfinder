@@ -104,7 +104,9 @@ export async function POST(request: Request) {
   // --- Context ------------------------------------------------------------
   const { data: profile } = await supabase
     .from("profiles")
-    .select("grade, major, major_undecided, account_type")
+    .select(
+      "grade, major, major_undecided, account_type, gpa, gpa_scale, sat_score, act_score, course_rigor, target_colleges, first_gen, home_language, status_category"
+    )
     .eq("id", user.id)
     .maybeSingle();
 
@@ -139,21 +141,28 @@ export async function POST(request: Request) {
     major: profile?.major ?? null,
     majorUndecided: profile?.major_undecided ?? false,
     accountType: profile?.account_type ?? "student",
+    gpa: profile?.gpa ?? null,
+    gpaScale: profile?.gpa_scale ?? null,
+    satScore: profile?.sat_score ?? null,
+    actScore: profile?.act_score ?? null,
+    courseRigor: profile?.course_rigor ?? null,
+    targetColleges: profile?.target_colleges ?? [],
+    firstGen: profile?.first_gen ?? null,
+    homeLanguage: profile?.home_language ?? null,
+    statusCategory: profile?.status_category ?? null,
   });
 
   const anthropic = new Anthropic({ apiKey });
 
-  const stream = anthropic.beta.messages.stream({
-    model: "claude-opus-5",
+  const stream = anthropic.messages.stream({
+    // Sonnet 5 at low effort. Deliberate cost choice: this app is free, has no
+    // revenue, and the questions it answers are explanatory rather than
+    // reasoning-heavy. Sonnet 5 is near-Opus quality on this kind of work at a
+    // fraction of the price, and `low` is unusually strong on this model.
+    // Revisit if answer quality visibly suffers — raise `effort` to "medium"
+    // first, and only then change the model.
+    model: "claude-sonnet-5",
     max_tokens: 8000,
-
-    // Safety classifiers can decline a request outright. Without a fallback
-    // the turn just stops; with one, the request is re-served by another model
-    // inside the same call. Refusals are unlikely in this domain, but a silent
-    // dead end in a student's face is a bad failure mode. Remove these two
-    // lines to opt out.
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
 
     // Cached: the system prompt is identical for every user and every request,
     // so it's a stable prefix. Per-user context goes in the message turn below
@@ -166,12 +175,12 @@ export async function POST(request: Request) {
       },
     ],
 
-    // Thinking is on by default on this model. Left on deliberately: financial
-    // aid and status-aware questions have real nuance, and disabling thinking
-    // on Opus 5 can leak internal tags into the visible answer. `effort` is the
-    // tuning knob if responses feel slow — "low" is still strong here.
+    // Adaptive thinking, kept on. Cheaper than it sounds at low effort, and
+    // disabling thinking outright is the worse trade: financial-aid and
+    // status-aware questions have real nuance, and a thinking-off model is
+    // measurably more likely to leak internal tags into the visible answer.
     thinking: { type: "adaptive" },
-    output_config: { effort: "medium" },
+    output_config: { effort: "low" },
 
     messages: [
       ...priorTurns,

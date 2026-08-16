@@ -59,12 +59,39 @@ One thing worth knowing because this audience systematically undersells it: a pa
  * "verify this on the school's site" land on the right cycle instead of an
  * outdated one.
  */
-export function buildContextBlock(profile: {
+export type ChatProfile = {
   grade: number | null;
   major: string | null;
   majorUndecided: boolean;
   accountType: string;
-}): string {
+  gpa: number | null;
+  gpaScale: string | null;
+  satScore: number | null;
+  actScore: number | null;
+  courseRigor: string | null;
+  targetColleges: string[];
+  firstGen: boolean | null;
+  homeLanguage: string | null;
+  statusCategory: string | null;
+};
+
+const RIGOR_LABEL: Record<string, string> = {
+  standard: "standard classes",
+  some_honors: "a few honors/AP classes",
+  mostly_honors_ap: "mostly honors/AP classes",
+  most_rigorous: "the most rigorous schedule their school offers",
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  us_citizen: "a U.S. citizen",
+  permanent_resident: "a permanent resident (green card holder)",
+  eligible_noncitizen: 'an "eligible non-citizen" for federal aid purposes',
+  daca: "a DACA recipient",
+  undocumented: "undocumented",
+  international: "an international student",
+};
+
+export function buildContextBlock(profile: ChatProfile): string {
   const lines: string[] = [
     `Today's date: ${new Date().toISOString().slice(0, 10)}.`,
   ];
@@ -89,6 +116,48 @@ export function buildContextBlock(profile: {
     );
   } else if (profile.major) {
     lines.push(`They are interested in: ${profile.major}.`);
+  }
+
+  if (profile.gpa !== null) {
+    const scale = profile.gpaScale ? ` (${profile.gpaScale})` : "";
+    lines.push(`Self-reported GPA: ${profile.gpa}${scale}.`);
+  }
+
+  const tests: string[] = [];
+  if (profile.satScore !== null) tests.push(`SAT ${profile.satScore}`);
+  if (profile.actScore !== null) tests.push(`ACT ${profile.actScore}`);
+  if (tests.length) lines.push(`Test scores: ${tests.join(", ")}.`);
+
+  if (profile.courseRigor && RIGOR_LABEL[profile.courseRigor]) {
+    lines.push(`Course load: ${RIGOR_LABEL[profile.courseRigor]}.`);
+  }
+
+  if (profile.targetColleges.length) {
+    lines.push(
+      `Schools they're curious about: ${profile.targetColleges.join(", ")}. Treat this as a list to think with, not a committed plan.`
+    );
+  }
+
+  if (profile.firstGen === true) {
+    lines.push(
+      "They would be the first in their family to attend college in the U.S. Don't assume family familiarity with any part of the process."
+    );
+  }
+
+  if (profile.homeLanguage) {
+    lines.push(
+      `Language spoken at home: ${profile.homeLanguage}. This is an asset worth naming if it's ever relevant (credit by exam, placement, essays) — never a deficit.`
+    );
+  }
+
+  // Status changes what is actually true about aid eligibility, which is why
+  // it's here at all. The prohibition on legal advice is unchanged and
+  // restated at the point of use — this is the one field most likely to pull
+  // an answer toward advice it must not give.
+  if (profile.statusCategory && STATUS_LABEL[profile.statusCategory]) {
+    lines.push(
+      `They have told us they are ${STATUS_LABEL[profile.statusCategory]}. Use this only to make aid and eligibility guidance accurate. Do NOT give legal advice, do not speculate about risk, and do not bring their status up unless it's relevant to what they asked.`
+    );
   }
 
   return `<context>\n${lines.join("\n")}\n</context>`;

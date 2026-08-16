@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ProfileDetails } from "@/components/account/ProfileDetails";
 import type { Profile } from "@/lib/db/types";
 
 const GRADES = [6, 7, 8, 9, 10, 11, 12];
@@ -133,6 +134,11 @@ export function AccountPanel() {
           <p className="micro mt-2 text-smoke">Activities saved</p>
         </div>
       </section>
+
+      {/* Optional profile fields. Rendered only once the profile has loaded —
+          every field inside is nullable, so there is nothing to show until we
+          know what's already filled in. */}
+      {profile && <ProfileDetails profile={profile} />}
 
       <section className="rounded-lg border border-[#ff7a6b]/30 p-5 sm:p-6">
         <p className="display-md mb-2 text-lg text-chalk">Delete your data</p>
