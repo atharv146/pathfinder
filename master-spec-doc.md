@@ -472,6 +472,77 @@ Deliberately absent: competition rankings, "students like you got in", admission
 
 ---
 
+## 16K. V2 Extension — Major Page, Restructured Tools, Profile Analysis (PLANNED Aug 16, 2026, NOT BUILT)
+
+*This entire section is a plan captured at the user's explicit request — "understand everything first, don't build anything yet." Nothing in this section exists in code. Before building any of it, confirm the plan still matches what the user wants; a lot of detail below is this session's understanding, not a locked spec.*
+
+### Why this section exists
+
+The user laid out a substantial expansion in one message: a dedicated major page, tools becoming real pages, a separate stats-editing page, and a new flagship "Profile Analysis" tool. Rather than build immediately, the instruction was to understand it fully, write it back for confirmation, and document it for handoff — this section is that documentation. Migration 0005 was confirmed applied (`chat_messages.kind` exists) in the same session, so the AI resilience/fallback work from the previous entries is fully live.
+
+### 1. `/major` — a dedicated page, not a roadmap card
+
+**Problem being solved:** major-specific guidance currently lives inside `MajorLens`, a card bolted onto the shared `/roadmap/[grade]` page. The user correctly identified this as "mixed together" — it doesn't feel like its own thing, and it can't grow without crowding the general roadmap.
+
+**Plan:** a new route, `/major` (or `/major/[grade]` if grade-scoped routing reads better once built — decide at build time). Contents:
+- Major switcher at the top, backed by the same 8 `MAJOR_FAMILIES` in `majors.ts`.
+- A **specialized, grade-by-grade breakdown** — more detailed than the current `phases` field — covering, per grade: common courses, common extracurriculars, and common **narrative angles** (the story/theme an application in that field often tells — e.g., a sustained personal project for CS, patient-facing volunteer work for health/medicine). All three must stay in the register the file header already establishes: "commonly true of this field," never "this is what got someone in." No past-admit claims, ever — that's explicitly out of scope per Section 3B and the existing `majors.ts` header.
+- The 5B researched opportunities (`major-opportunities.ts` / `Opportunities.tsx`) **move here** from their current home inside `MajorLens`. `/major` becomes the one real home for all major-specific content; the grade roadmap should carry only a slim one-line link out to it (something like "Health & Medicine · what changes for grade 9 →"), not a duplicate card.
+
+**Content cost:** the grade-phased structural data (course/EC/narrative patterns) is Part A-style work — checkable, no per-program research needed, safe to build without new web research. This is distinct from 5B's named-program research, which stays sourced and dated as it already is.
+
+### 2. Tools become real pages
+
+**Plan:** `/tools` becomes an index/gallery rather than a single page with sections. Each tool gets its own route:
+- `/tools/fee-waivers` (currently a section on `/tools`)
+- `/tools/essay-brainstorm` (currently a section on `/tools`)
+- `/tools/profile-analysis` (new — see below)
+
+Existing deep links from roadmap items (`src/data/item-tools.ts`, e.g. `/tools#fee-waivers`) will need updating to real routes (`/tools/fee-waivers`) once this ships — that file is the single place those links are defined, so it's a contained change.
+
+### 3. A dedicated settings/stats page
+
+**Problem being solved:** the user doesn't want profile-stat editing living inside the same area as account/email management — wants it separated so profile analysis has an obvious, discoverable place to edit the inputs it reads.
+
+**Plan:** this is very likely **not new data** — `ProfileDetails.tsx` (GPA, GPA scale, SAT/ACT, course rigor, target colleges, first-gen, home language, status) already collects everything described. The work here is moving that editor to its own page/route (e.g. `/account/stats` or a top-level `/stats`) rather than building a second copy of the same fields. Confirm this reading before starting — if the user actually wants additional fields beyond what `ProfileDetails` already has (the message mentions "what courses they're taking" specifically, which is NOT currently captured — course rigor is a coarse bucket, not a course list), that's new schema, not just a relocation. **Open question to resolve before building:** does "courses they're taking" mean a real per-course list (new table/schema, meaningfully bigger scope) or is `course_rigor`'s existing bucket sufficient input for the college-requirement comparison in section 4 below? Ask before building either way — a full course-list feature is a real scope decision, not a given.
+
+### 4. The flagship tool — Profile Analysis / Resume Builder
+
+The centerpiece of this whole plan. Reads the student's full profile and:
+
+- **Builds/reframes a resume from their activities** — takes what's already in the `activities` table (populated by the step-3 AI interview or manual entry) and writes it up clearly. **Same hard rule as the activities interview: reframe, never invent.** "Watched siblings after school" can become a well-written, honest sentence; it can never become a fabricated title or an exaggerated scope. This is a real risk surface — the user's own words were "reframe what they have to make it sound better," which is the right instinct done carefully, but is one prompt-writing mistake away from crossing into the inflation the interview extraction prompt explicitly forbids. Whichever prompt drives this needs the same "never inflate" rule stated as explicitly as `interview-prompt.ts`'s `EXTRACT_PROMPT` does.
+- **Recommends internships/projects/programs** by major — surfaces 5B's researched opportunities (and/or Part A's structural patterns) relevant to the student's specific profile, not just their major in the abstract.
+- **Surfaces relevant guide/roadmap content** based on gaps in their profile — framed positively ("here's what might help"), explicitly not as a deficiency report. This directly echoes the existing non-negotiable rule from `WhereYouAre`/gap analysis: **never score the student.**
+- **Compares against their "dream colleges"** (the `target_colleges` field already in the schema) — reach/target/safety framing, flagging **structural** gaps only (a required course not on their transcript, a language sequence not far enough along, a testing requirement they haven't planned for). 
+  - **⚠️ Scope boundary requiring explicit user confirmation before building:** this sits directly adjacent to the "chancing calculator" that master-spec-doc §16B explicitly recommended against building (CollegeVine's territory, needs real admissions data this app doesn't have, demoralizing when wrong for exactly this audience). The distinction that makes this acceptable: **structural fact-checking is fine** ("Calc BC isn't on your transcript and this school's page lists it as expected" — checkable, no odds involved); **probability/odds framing is not** ("you have a 62% chance," "this is a reach for you" stated as a prediction rather than a self-reported category). The user's own language used "reach/dream/safety" as labels, which is fine as long as those labels come from the *student's own categorization* of their list (or from published, non-probabilistic admit-rate context, cited and dated like everything else in this app) rather than from a model estimating their odds. **Get explicit confirmation this reading is correct before writing the comparison logic** — it's the single highest-risk piece of this whole plan for quietly becoming the exact thing already rejected once.
+  - **Reach/target/safety definitions**, if built, should reuse language already established in the roadmap content itself (`11-2`, "Build a real range: reach, target, and safety") rather than inventing new definitions.
+- **Takes current courses + planned future-grade path as input** — see the open question in section 3 above; this is the part that may need new schema.
+
+**Advertise from the homepage once built** — per the user's explicit ask, this becomes a named, promoted feature once it exists, intended to be the thing that pulls people into checking out the rest of the tools.
+
+**Design bar:** the user was explicit this needs to be visually excellent ("really important tool... looks super cool... has to be built well to be visually appealing"), consistent with the project's existing per-page 3D/accent-system standard (`PageFrame`, `SceneBackdrop`, `KineticText`) rather than a plain form-and-results page.
+
+### 5. Two AI providers, chosen per-feature by stakes
+
+A real architecture decision, not an implementation detail — worth its own heading so it isn't lost in a future diff.
+
+- **Profile Analysis (the flagship): upgrade to Claude Sonnet.** `@anthropic-ai/sdk` is already installed (kept installed specifically for this eventuality — see the PROVIDER note in `api/chat/route.ts`), and `ANTHROPIC_API_KEY` needs to be added to `.env.local` and Vercel. This is the highest-stakes AI feature in the app (touches the college-comparison boundary above, writes resume content that goes to real applications) and the user explicitly wants to spend real money here rather than stay on the free tier.
+- **Resume-building generation ("the building"): OpenRouter, multi-model fallback.** The user asked specifically for an OpenRouter-backed chain that "keeps defaulting to other AIs if one is down" — the same *shape* as the `MODEL_CHAIN` fallback already built for Gemini in `lib/ai/guard.ts` (`callWithFallback`, `withRetry`), but spanning **providers** via OpenRouter rather than falling across models within one provider. This needs a new `OPENROUTER_API_KEY` and a parallel guard/fallback module (or an extension of the existing one) that speaks OpenRouter's API shape rather than `@google/genai`'s.
+- **Note the earlier OpenRouter decision this doesn't overturn:** `master-spec-doc.md`'s Aug 15 entry deferred OpenRouter for the *main chat* specifically because of the crisis/immigration-enforcement guardrail risk on a genuinely free/unvetted model tier. That reasoning was scoped to chat's crisis-adjacent paths, not to every AI feature in the app — resume-text rewriting is a different risk profile (no crisis/immigration content), so using OpenRouter there is a distinct decision, not a reversal. Keep both entries; don't let a future session read this as contradicting the earlier one.
+- **Practical implication:** three model configurations will exist side by side once this ships — Gemini chain (Ask AI, activities interview), OpenRouter chain (resume building), Claude Sonnet (profile analysis). Each AI route should keep stating its provider choice and reasoning in its own header comment, the way `api/chat/route.ts` already does — do not let a future session quietly collapse them onto one provider "for consistency" without re-deciding the stakes tradeoff above.
+
+### Build order, if/when this proceeds
+
+Not yet sequenced or approved — proposed order once the open questions above are answered:
+1. `/major` page (contained, no new schema, reuses 5B data)
+2. Tools-as-pages restructure (mechanical, low risk)
+3. Settings/stats page relocation (mechanical, pending the courses-list scope question)
+4. OpenRouter provider module + Claude Sonnet wiring (plumbing, no user-facing surface yet)
+5. Profile Analysis tool itself (the real build, gated on 1–4 and on the reach/safety scope confirmation)
+6. Homepage promotion of Profile Analysis
+
+---
+
 ## 17. Handoff Notes for Any New Claude Session
 
 If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is.
