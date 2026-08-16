@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { findMajorFamily, MAJOR_FAMILIES, type MajorFamily } from "@/data/majors";
+import {
+  findMajorFamily,
+  phaseForGrade,
+  MAJOR_FAMILIES,
+  type MajorFamily,
+} from "@/data/majors";
 
 /**
  * "What changes for your major" — shown above the grade roadmap.
@@ -65,6 +70,7 @@ export function MajorLens({ grade }: { grade: number }) {
   }
 
   const relevant = grade >= family.actFrom;
+  const phase = phaseForGrade(family, grade);
 
   return (
     <div className="mb-12 rounded-lg border border-accent/30 bg-accent/[0.04] p-5 sm:p-6">
@@ -92,6 +98,61 @@ export function MajorLens({ grade }: { grade: number }) {
               </li>
             ))}
           </ul>
+
+          {/* The grade-phased pathway — only the phase covering THIS grade.
+              Showing all four at once turns a pathway back into a wall of
+              text, which is what the grade pages already do well. */}
+          {phase && (
+            <div className="border-t border-line pb-5 pt-5">
+              <p className="micro mb-1 text-accent">
+                Grade {grade} · {phase.label}
+              </p>
+              <ul className="mt-3 space-y-3">
+                {phase.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-3">
+                    <span className="mt-[0.5rem] h-1 w-1 shrink-0 rounded-full bg-accent" />
+                    <span className="text-[0.92rem] leading-relaxed text-ash">
+                      {pt}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Questions, not answers. The answers are school-specific and we'd
+              be guessing; the question itself is the thing a better-resourced
+              classmate already knows to ask. */}
+          <div className="border-t border-line pb-5 pt-5">
+            <p className="micro mb-3 text-smoke">Worth asking your counselor</p>
+            <ul className="space-y-2">
+              {family.askCounselor.map((q) => (
+                <li
+                  key={q}
+                  className="rounded-lg border border-line bg-ink px-4 py-2.5 text-[0.88rem] leading-snug text-chalk"
+                >
+                  &ldquo;{q}&rdquo;
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Explicitly naming what we do NOT know for them. */}
+          <div className="border-t border-line pb-5 pt-5">
+            <p className="micro mb-3 text-smoke">
+              Check these per school — they genuinely differ
+            </p>
+            <ul className="space-y-2">
+              {family.verify.map((v) => (
+                <li key={v} className="flex items-start gap-3">
+                  <span className="mt-[0.5rem] h-1 w-1 shrink-0 rounded-full bg-smoke" />
+                  <span className="text-[0.88rem] leading-relaxed text-ash">
+                    {v}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -102,7 +163,9 @@ export function MajorLens({ grade }: { grade: number }) {
           aria-expanded={expanded}
           className="micro text-chalk transition-colors hover:text-accent"
         >
-          {expanded ? "— Hide details" : `+ ${family.notes.length} things to know`}
+          {expanded
+            ? "— Hide details"
+            : `+ What this means for grade ${grade}`}
         </button>
         <Link href="/account" className="micro text-smoke transition-colors hover:text-chalk">
           Change major
