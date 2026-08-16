@@ -42,3 +42,8 @@ next-env.d.ts
 
 .vercel
 .env*
+# ...but the example file is documentation, not secrets, and is the only
+# record of which env vars this app needs. Without this negation the broad
+# .env* rule silently swallows it and a fresh clone has no idea what to set.
+# It must never contain real values — only blank keys and comments.
+!.env.local.example

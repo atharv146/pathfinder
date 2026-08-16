@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import { createClient } from "@/lib/supabase/server";
 import { SYSTEM_PROMPT, buildContextBlock } from "@/lib/ai/system-prompt";
 import { flagTopics } from "@/lib/ai/flags";
@@ -8,15 +8,27 @@ import { flagTopics } from "@/lib/ai/flags";
  * Ask AI — the server-side model call.
  *
  * WHY THIS ROUTE EXISTS AT ALL: the original prototype (pathfinder-app.jsx)
- * called api.anthropic.com directly from the browser. That can never work —
- * an API key shipped to the client is a public API key, and anyone can spend
- * it. The key lives here, in ANTHROPIC_API_KEY (no NEXT_PUBLIC_ prefix), and
- * the browser only ever talks to this route.
+ * called the model API directly from the browser. That can never work — an API
+ * key shipped to the client is a public API key, and anyone can spend it. The
+ * key lives here, server-side only (no NEXT_PUBLIC_ prefix), and the browser
+ * only ever talks to this route.
  *
  * Three guards, in order:
- *   1. Signed in. Anonymous access to a paid model is an open tab for abuse.
- *   2. Under the daily cap. This app is free; the model is not.
+ *   1. Signed in. Anonymous access to a model endpoint is an open tab for abuse.
+ *   2. Under the daily cap. Free tiers have quotas; blowing through one takes
+ *      the feature down for every user at once.
  *   3. Non-empty, bounded input.
+ *
+ * ── PROVIDER ─────────────────────────────────────────────────────────────
+ * Currently Gemini 2.5 Flash, on the free tier, chosen deliberately to avoid
+ * setting up billing while the app has no users. This is a temporary cost
+ * decision, not an architectural one.
+ *
+ * To move to Claude (planned, once usage justifies billing): swap GoogleGenAI
+ * for the already-installed `@anthropic-ai/sdk`, change the role mapping back
+ * ("model" → "assistant"), move systemInstruction back to a cached `system`
+ * block, and set ANTHROPIC_API_KEY. Everything else here — the guards, the
+ * escalation flags, the storage — is provider-agnostic on purpose.
  */
 
 // Thinking + a full answer can take a while. Vercel's default serverless
@@ -47,7 +59,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     // Same shape as the account-deletion route: a config gap is not the
     // user's fault and shouldn't read as a crash.
@@ -152,41 +164,54 @@ export async function POST(request: Request) {
     statusCategory: profile?.status_category ?? null,
   });
 
-  const anthropic = new Anthropic({ apiKey });
+  const ai = new GoogleGenAI({ apiKey });
 
-  const stream = anthropic.messages.stream({
-    // Sonnet 5 at low effort. Deliberate cost choice: this app is free, has no
-    // revenue, and the questions it answers are explanatory rather than
-    // reasoning-heavy. Sonnet 5 is near-Opus quality on this kind of work at a
-    // fraction of the price, and `low` is unusually strong on this model.
-    // Revisit if answer quality visibly suffers — raise `effort` to "medium"
-    // first, and only then change the model.
-    model: "claude-sonnet-5",
-    max_tokens: 8000,
+  // Gemini names the assistant role "model", not "assistant".
+  const contents = [
+    ...priorTurns.map((turn) => ({
+      role: turn.role === "assistant" ? "model" : "user",
+      parts: [{ text: turn.content }],
+    })),
+    { role: "user", parts: [{ text: `${contextBlock}\n\n${message}` }] },
+  ];
 
-    // Cached: the system prompt is identical for every user and every request,
-    // so it's a stable prefix. Per-user context goes in the message turn below
-    // — putting it here would invalidate the cache on every call.
-    system: [
-      {
-        type: "text",
-        text: SYSTEM_PROMPT,
-        cache_control: { type: "ephemeral" },
+  let stream: Awaited<ReturnType<typeof ai.models.generateContentStream>>;
+
+  try {
+    stream = await ai.models.generateContentStream({
+      // Pinned, not the `gemini-flash-latest` alias. An alias silently swaps
+      // the model under a running app; for something giving advice to minors,
+      // a behaviour change should be a deliberate commit, not a surprise.
+      // Note gemini-2.5-flash was already retired for new keys — expect to
+      // revisit this string periodically.
+      model: "gemini-3.7-flash",
+      contents,
+      config: {
+        // The system prompt is byte-identical across every request, which is
+        // what lets Gemini's implicit context caching kick in. Keep it stable;
+        // per-user context goes in the message turn, not here.
+        systemInstruction: SYSTEM_PROMPT,
+        maxOutputTokens: 4096,
+
+        // -1 lets the model size its own reasoning per question. Set this to 0
+        // to disable thinking entirely if free-tier quota becomes the binding
+        // constraint — it's the cheapest lever here, and most of these
+        // questions are explanatory rather than genuinely hard.
+        thinkingConfig: { thinkingBudget: -1 },
       },
-    ],
-
-    // Adaptive thinking, kept on. Cheaper than it sounds at low effort, and
-    // disabling thinking outright is the worse trade: financial-aid and
-    // status-aware questions have real nuance, and a thinking-off model is
-    // measurably more likely to leak internal tags into the visible answer.
-    thinking: { type: "adaptive" },
-    output_config: { effort: "low" },
-
-    messages: [
-      ...priorTurns,
-      { role: "user", content: `${contextBlock}\n\n${message}` },
-    ],
-  });
+    });
+  } catch (err) {
+    // A bad key or an exhausted quota fails here, before any bytes are sent —
+    // so it can still be a clean JSON error instead of a truncated stream.
+    console.error("[ask-ai] request rejected:", err);
+    return NextResponse.json(
+      {
+        error:
+          "Couldn't reach the AI service. If this keeps happening the daily free-tier quota may be used up — try again later.",
+      },
+      { status: 502 }
+    );
+  }
 
   const encoder = new TextEncoder();
 
@@ -195,24 +220,27 @@ export async function POST(request: Request) {
       let answer = "";
 
       try {
-        for await (const event of stream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            answer += event.delta.text;
-            controller.enqueue(encoder.encode(event.delta.text));
+        for await (const chunk of stream) {
+          const text = chunk.text;
+          if (text) {
+            answer += text;
+            controller.enqueue(encoder.encode(text));
           }
         }
 
-        const final = await stream.finalMessage();
-
-        // A refusal arrives as a successful response with empty or partial
-        // content — not as a thrown error. Checked explicitly so it surfaces
-        // as a real message instead of a blank bubble.
-        if (final.stop_reason === "refusal" && !answer) {
-          const note =
-            "I can't help with that one. If it's about your immigration status or something urgent, a school counselor or a licensed professional is the right person — see the resources below.";
+        // Gemini's safety filters can suppress a response entirely and still
+        // return successfully — no error, just nothing. The topics most likely
+        // to trip them (self-harm, abuse) are precisely the ones this app must
+        // not go silent on.
+        //
+        // The escalation resources are safe here by design: they're computed
+        // from the user's own message and sent in a header, so 988 and the
+        // counselor pointer still render even when the model produces zero
+        // tokens. This only replaces the empty bubble sitting above them.
+        if (!answer) {
+          const note = flags.length
+            ? "I can't answer that one directly — but please look at the resources just below. Those are real people who can help, and reaching out to them is the right move here."
+            : "I wasn't able to generate an answer to that one. Try rephrasing it, or ask me something more specific?";
           answer = note;
           controller.enqueue(encoder.encode(note));
         }
