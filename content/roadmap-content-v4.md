@@ -6,6 +6,15 @@ Middle school (6th–8th) keeps its substance from v2/v3 unchanged — the explo
 
 Parent guide articles are not touched in this pass.
 
+**Academics — "World language runs on a sequence too, and starting now changes where you finish"**
+Language works like math: each level is a prerequisite for the next, so where you finish is decided by where you start. A student beginning in 9th grade typically reaches level 4 by senior year. Beginning in 8th grade puts level 5, or an AP language course, within reach.
+
+This matters for humanities-leaning students in particular, where several years of the same language is commonly expected and occasionally a stated requirement. It matters less for other paths, so it is worth weighing rather than treating as mandatory.
+
+One specific note for multilingual families: if you already speak a language at home, ask whether your school offers a placement test or a credit-by-exam route for it. Some districts grant credit for demonstrated proficiency, and some colleges do too. Students who grew up speaking a language sometimes sit through beginner classes in it because nobody told them testing out was an option.
+
+Speaking a language at home is an academic asset. It is worth having on the transcript rather than only in your head.
+
 ═══════════════════════════════════
 
 ## MIDDLE SCHOOL (6th–8th grade)
@@ -29,10 +38,23 @@ This doesn't need to be a college conversation specifically. It can be about wha
 **Summer after 6th Grade — "Have a good summer. That's genuinely the assignment."**
 Skip the "summer program" pressure entirely. A great 6th-grade summer looks like seeing friends, being outside, reading whatever you want, and, only if something sounds fun, a free or low-cost class through the library or a rec center. If you're one of the kids who loves math or another subject, downtime is a fine time to get a little ahead on your own terms — not because it's expected. There's no real disadvantage to a summer that's just a normal, good summer.
 
+**Academics — "Ask how your school decides math placement — this is the quiet decision that shapes everything"**
+Almost nothing in 6th grade affects college. Math placement is the exception, and it is the single most under-explained thing in middle school.
+
+Here is the mechanism. Most high schools run math as a fixed ladder: Algebra 1, then Geometry, then Algebra 2, then Precalculus, then Calculus. That is five courses. If you start Algebra 1 in 9th grade, you finish Precalculus as a senior and never reach Calculus. If you start Algebra 1 in 8th grade, Calculus fits.
+
+This matters because engineering and computer science programs often expect calculus on a transcript. The decision that makes it possible is usually made two or three years earlier, by a placement test or a teacher recommendation you may never hear about.
+
+So ask, this year: how does our district decide who takes Algebra 1 in 8th grade? Is there a test? Who recommends students? Can a family request a review? None of these questions require you to be ahead — they just require knowing the ladder exists. Families who already know the system ask by default, which is precisely why asking is worth so much here.
+
 ### 7th Grade
 
 **Extracurriculars — "Start noticing what you actually enjoy"**
-By now you've probably tried a handful of things. Notice which ones you look forward to versus which feel like a chore. You don't have to commit to one activity yet, but this is a good year to narrow from "everything" down to the one or two things you actually like.
+By now you have probably tried a handful of things. Notice which ones you look forward to and which feel like a chore. You do not have to commit yet.
+
+There is a practical reason this matters beyond self-knowledge. Applications years from now ask you to describe a small number of activities in depth, not to list twenty. Depth is easier to build when you started early on something you actually liked, and much harder to manufacture in 11th grade.
+
+So the useful move in 7th grade is subtraction, not addition: narrow from everything down to the one or two things you would keep doing if nobody were watching.
 
 **Academics — "Keep reading, and start noticing what subjects pull you in"**
 Keep the daily-reading habit going. Start paying attention to which classes you find yourself curious about, even outside of homework. This isn't about choosing a future major (nowhere close to that yet); it's just about noticing. It'll make choosing electives in 8th and 9th grade easier.
@@ -46,10 +68,34 @@ No action needed yet. Just knowing these exist matters more than it sounds. Fami
 **Summer after 7th Grade — "Keep it low-pressure: reading, friends, maybe a first small job"**
 Same spirit as 6th grade summer. No formal program required. If you're old enough and interested, a first small job or volunteer role (babysitting, yard work, helping at a family business) is a nice, age-appropriate way to build habits, but it's an option, not an expectation.
 
+**Academics — "Find out whether any middle school class will appear on your high school transcript"**
+Some middle schools offer courses that carry actual high school credit — most often Algebra 1, sometimes Geometry or a world language. In some districts those grades appear on the high school transcript and count toward high school GPA. In others they only satisfy the prerequisite and are not graded on the transcript at all.
+
+That difference is worth knowing before you are in the class, not after. If the grade counts, an 8th-grade course is a real transcript entry that colleges will see. If it does not count, it still moves you up the sequence, which is usually the more valuable part anyway.
+
+Ask a counselor directly: does this class appear on the high school transcript, and does it affect high school GPA? Both answers are common and neither is bad. What hurts is assuming one and finding out it was the other.
+
+If it does count and a class goes badly, ask what your options are — many districts allow retaking, and some let a middle-school grade be excluded from the high school GPA on request.
+
+**Financial Literacy Awareness — "If your family qualifies for free or reduced lunch, that status unlocks things later"**
+Nothing to act on yet. This is one to file away, because it saves real money in four or five years and almost nobody explains the connection.
+
+Students from lower-income families can get fee waivers for college admissions tests and, separately, for college application fees themselves. Applications commonly cost money per school, and testing costs money per sitting, so waivers can be worth hundreds of dollars across a senior year.
+
+Qualifying for free or reduced-price lunch is one of the common indicators used to establish eligibility, though it is not the only route and the exact rules differ between programs. The practical thing now is simply to know the link exists.
+
+If your family qualifies and has not enrolled because of paperwork, language, or discomfort about applying, it is worth revisiting. The benefit is not only the meals; it is the documentation trail that makes later waivers straightforward instead of a scramble in 12th grade.
+
 ### 8th Grade
 
 **Academics — "Choose your 9th grade classes carefully. This is where your real transcript starts."**
-This is the first genuinely consequential academic decision in this whole roadmap. Talk to a counselor about which classes, especially any Honors-level options, make sense for you. If your school holds a course-selection night for incoming freshmen, go, and bring a parent if you can. This is often where course-track decisions quietly get made, and it's much easier to start on the right track than to switch onto it later.
+This is the first genuinely consequential academic decision in this roadmap. Ninth-grade grades appear on the transcript colleges read.
+
+Go to the course-selection night if your school holds one, and bring a parent or guardian if you can. This is often where track decisions get made quietly, and it is far easier to start on a track than to move onto it later.
+
+Two things to ask about specifically. First, honors or accelerated options: which are available, what do they require, and can you request one if you were not recommended? Second, the math sequence — confirm which course you are placed into and what that means for what you can reach by senior year.
+
+If you are placed lower than you expected, ask what the path back up looks like. Some districts allow a summer course or a placement test to move over. That option usually exists but is rarely advertised.
 
 **Extracurriculars — "Pick 1–2 activities to carry with you into high school"**
 Consistency reads as genuine interest rather than resume-building, and it's just easier to keep momentum on something you already know you like.
