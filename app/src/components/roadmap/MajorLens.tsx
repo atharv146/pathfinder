@@ -9,6 +9,7 @@ import {
   MAJOR_FAMILIES,
   type MajorFamily,
 } from "@/data/majors";
+import { Opportunities } from "@/components/roadmap/Opportunities";
 
 /**
  * "What changes for your major" — shown above the grade roadmap.
@@ -136,6 +137,14 @@ export function MajorLens({ grade }: { grade: number }) {
               ))}
             </ul>
           </div>
+
+          {/* Real, researched programs (5B). Grade-gated: showing a 7th
+              grader a rising-senior application deadline is noise. */}
+          {grade >= 9 && (
+            <div className="border-t border-line pb-5 pt-5">
+              <Opportunities familyId={family.id} familyLabel={family.label} />
+            </div>
+          )}
 
           {/* Explicitly naming what we do NOT know for them. */}
           <div className="border-t border-line pb-5 pt-5">

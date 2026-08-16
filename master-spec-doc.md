@@ -453,6 +453,25 @@ Verified: `/s/` is public, an invalid token renders the "this link isn't active"
 
 ---
 
+## 16J. V2 Step 5 Part B — Researched Opportunities (started Aug 16, 2026)
+
+`src/data/major-opportunities.ts`, `components/roadmap/Opportunities.tsx`, surfaced inside `MajorLens` for grades 9+.
+
+**4 of 8 families researched and shipped:** engineering-cs, health-medicine, humanities, natural-sciences. Every program was verified against its official site by live web search on 2026-08-16 and carries a `verifiedOn` stamp. Programs included: MITES Summer, RSI, CS4CS, MIT BWSI, Stanford SIMR, NIH SIP, Telluride TASS, Princeton Summer Journalism Program.
+
+**4 families deliberately left undone** — arts-design, business, social-sciences, education — and listed by name in `UNRESEARCHED_FAMILIES`. The UI renders "we haven't researched this yet, and we'd rather say that than list things we haven't checked" instead of an empty section. An empty list reads as *there is nothing out there for you*, which is both false and discouraging for exactly the students this app exists for.
+
+**The rules this file is built on, written into its header because this is where fabrication does the most damage:**
+1. Never add a program without checking its official site *now*. A student who builds a summer around a program that doesn't exist has lost something they can't get back.
+2. Never state a deadline without the year, and always pair it with "confirm on the site" — these move every cycle.
+3. **Free and funded only.** Filling this with pay-to-attend programs would quietly tell a family who can't spend $6,000 on a summer that they aren't the audience. Cost is the first line rendered on every card, not a footnote.
+4. Selective programs are framed as worth *applying* to, never as things to plan around. Most applicants don't get in, and RSI takes ~100 students worldwide.
+5. Re-verify or remove when `verifiedOn` passes a year.
+
+Deliberately absent: competition rankings, "students like you got in", admissions odds, or any claim about what a program does for someone's chances.
+
+---
+
 ## 17. Handoff Notes for Any New Claude Session
 
 If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is.
