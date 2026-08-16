@@ -4,6 +4,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { PageFrame } from "@/components/PageFrame";
 import { Backdrop } from "@/components/backdrop/Backdrop";
 import { KineticText } from "@/components/KineticText";
+import { WhereYouAre } from "@/components/roadmap/WhereYouAre";
 
 export const metadata = { title: "Roadmap — PathFinder" };
 
@@ -34,7 +35,13 @@ export default function RoadmapIndex() {
           </p>
         </FadeIn>
 
-        <div className="mt-14 space-y-12">
+        {/* Renders only for a signed-in student who has told us their grade;
+            otherwise the plain grade picker below stands on its own. */}
+        <div className="mt-14">
+          <WhereYouAre />
+        </div>
+
+        <div className="space-y-12">
           {gradeGroups.map((group, gi) => (
             <div key={group.label}>
               <FadeIn delay={gi * 0.1}>
