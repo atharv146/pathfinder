@@ -6,6 +6,7 @@ import {
   MODEL,
 } from "@/lib/ai/guard";
 import { INTERVIEW_PROMPT } from "@/lib/ai/interview-prompt";
+import { tolerateMissingColumn } from "@/lib/db/resilient";
 
 /**
  * The activities interview (V2 step 3).
@@ -45,23 +46,30 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: history } = await supabase
-    .from("chat_messages")
-    .select("role, content")
-    .eq("user_id", user.id)
-    .eq("kind", "interview")
-    .order("created_at", { ascending: false })
-    .limit(HISTORY_TURNS);
+  const { data: history } = await tolerateMissingColumn(
+    () =>
+      supabase
+        .from("chat_messages")
+        .select("role, content")
+        .eq("user_id", user.id)
+        .eq("kind", "interview")
+        .order("created_at", { ascending: false })
+        .limit(HISTORY_TURNS),
+    // No `kind` column yet (migration 0005). Return nothing rather than the
+    // Ask AI transcript — a chat history replayed into the interviewer would
+    // make it behave like a different feature entirely.
+    async () => ({ data: [] as { role: string; content: string }[], error: null })
+  );
 
   const priorTurns = (history ?? []).reverse();
 
   if (message) {
-    await supabase.from("chat_messages").insert({
-      user_id: user.id,
-      role: "user",
-      content: message,
-      kind: "interview",
-    });
+    const row = { user_id: user.id, role: "user", content: message };
+    await tolerateMissingColumn(
+      () =>
+        supabase.from("chat_messages").insert({ ...row, kind: "interview" }),
+      () => supabase.from("chat_messages").insert(row)
+    );
   }
 
   // Gemini names the assistant role "model".
@@ -132,12 +140,12 @@ export async function POST(request: Request) {
         controller.enqueue(encoder.encode(note));
       }
 
-      await supabase.from("chat_messages").insert({
-        user_id: user.id,
-        role: "assistant",
-        content: answer,
-        kind: "interview",
-      });
+      const row = { user_id: user.id, role: "assistant", content: answer };
+      await tolerateMissingColumn(
+        () =>
+          supabase.from("chat_messages").insert({ ...row, kind: "interview" }),
+        () => supabase.from("chat_messages").insert(row)
+      );
 
       controller.close();
     },

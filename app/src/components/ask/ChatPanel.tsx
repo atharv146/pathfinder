@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { FLAG_RESOURCES, type FlagTopic } from "@/lib/ai/flags";
+import { tolerateMissingColumn } from "@/lib/db/resilient";
 
 type Message = {
   role: "user" | "assistant";
@@ -43,15 +44,25 @@ export function ChatPanel() {
 
     (async () => {
       const supabase = createClient();
-      const { data } = await supabase
-        .from("chat_messages")
-        .select("role, content, flagged_topics")
-        // Must match the server route's filter. Without this the activities
-        // interview turns bleed into the Ask AI transcript — the exact thing
-        // migration 0005's `kind` column exists to prevent.
-        .eq("kind", "chat")
-        .order("created_at", { ascending: true })
-        .limit(40);
+      // Must match the server route's filter — without `kind` the interview
+      // turns bleed into this transcript, which is what migration 0005
+      // prevents. Falls back to unfiltered if that migration hasn't run, so a
+      // missing column degrades the separation instead of emptying the page.
+      const { data } = await tolerateMissingColumn(
+        () =>
+          supabase
+            .from("chat_messages")
+            .select("role, content, flagged_topics")
+            .eq("kind", "chat")
+            .order("created_at", { ascending: true })
+            .limit(40),
+        () =>
+          supabase
+            .from("chat_messages")
+            .select("role, content, flagged_topics")
+            .order("created_at", { ascending: true })
+            .limit(40)
+      );
 
       if (!cancelled && data) {
         setMessages(

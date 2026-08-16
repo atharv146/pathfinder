@@ -7,6 +7,7 @@ import {
 } from "@/lib/ai/guard";
 import { SYSTEM_PROMPT, buildContextBlock } from "@/lib/ai/system-prompt";
 import { flagTopics } from "@/lib/ai/flags";
+import { tolerateMissingColumn } from "@/lib/db/resilient";
 
 /**
  * Ask AI — the server-side model call.
@@ -85,13 +86,26 @@ export async function POST(request: Request) {
     .eq("id", user.id)
     .maybeSingle();
 
-  const { data: history } = await supabase
-    .from("chat_messages")
-    .select("role, content")
-    .eq("user_id", user.id)
-    .eq("kind", "chat")
-    .order("created_at", { ascending: false })
-    .limit(HISTORY_TURNS);
+  // Degrades rather than dies if migration 0005 hasn't been applied — see
+  // lib/db/resilient.ts. Without `kind` the history is unseparated, which is
+  // worse than correct but far better than the chat appearing broken.
+  const { data: history } = await tolerateMissingColumn(
+    () =>
+      supabase
+        .from("chat_messages")
+        .select("role, content")
+        .eq("user_id", user.id)
+        .eq("kind", "chat")
+        .order("created_at", { ascending: false })
+        .limit(HISTORY_TURNS),
+    () =>
+      supabase
+        .from("chat_messages")
+        .select("role, content")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(HISTORY_TURNS)
+  );
 
   const priorTurns = (history ?? [])
     .reverse()
@@ -105,13 +119,16 @@ export async function POST(request: Request) {
   // Persist the question before calling the model, so a failed or abandoned
   // generation still counts against the cap and still leaves the escalation
   // flag on record. RLS scopes this insert to the signed-in user.
-  await supabase.from("chat_messages").insert({
+  const userRow = {
     user_id: user.id,
     role: "user",
     content: message,
     flagged_topics: flags,
-    kind: "chat",
-  });
+  };
+  await tolerateMissingColumn(
+    () => supabase.from("chat_messages").insert({ ...userRow, kind: "chat" }),
+    () => supabase.from("chat_messages").insert(userRow)
+  );
 
   const contextBlock = buildContextBlock({
     grade: profile?.grade ?? null,
@@ -215,13 +232,19 @@ export async function POST(request: Request) {
       }
 
       if (answer) {
-        await supabase.from("chat_messages").insert({
+        const assistantRow = {
           user_id: user.id,
           role: "assistant",
           content: answer,
           flagged_topics: flags,
-          kind: "chat",
-        });
+        };
+        await tolerateMissingColumn(
+          () =>
+            supabase
+              .from("chat_messages")
+              .insert({ ...assistantRow, kind: "chat" }),
+          () => supabase.from("chat_messages").insert(assistantRow)
+        );
       }
 
       controller.close();

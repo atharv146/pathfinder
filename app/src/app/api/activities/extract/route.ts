@@ -6,6 +6,7 @@ import {
   MODEL,
 } from "@/lib/ai/guard";
 import { EXTRACT_PROMPT } from "@/lib/ai/interview-prompt";
+import { tolerateMissingColumn } from "@/lib/db/resilient";
 
 /**
  * Turns the interview transcript into draft activity entries.
@@ -57,13 +58,17 @@ export async function POST() {
   if (!guard.ok) return guard.response;
   const { supabase, user, ai } = guard;
 
-  const { data: history } = await supabase
-    .from("chat_messages")
-    .select("role, content")
-    .eq("user_id", user.id)
-    .eq("kind", "interview")
-    .order("created_at", { ascending: true })
-    .limit(60);
+  const { data: history } = await tolerateMissingColumn(
+    () =>
+      supabase
+        .from("chat_messages")
+        .select("role, content")
+        .eq("user_id", user.id)
+        .eq("kind", "interview")
+        .order("created_at", { ascending: true })
+        .limit(60),
+    async () => ({ data: [] as { role: string; content: string }[], error: null })
+  );
 
   if (!history || history.length < 2) {
     return NextResponse.json(
