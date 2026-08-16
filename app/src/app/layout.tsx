@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Figtree, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import { SiteNav, SiteFooter } from "@/components/SiteNav";
 import { MotionProvider } from "@/components/MotionProvider";
+import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
 import { Starfield } from "@/components/Starfield";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
@@ -61,6 +62,7 @@ export default function RootLayout({
         <Starfield />
         <CustomCursor />
         <ScrollProgress />
+        <LanguageProvider>
         <MotionProvider>
           <SmoothScroll>
             <SiteNav />
@@ -68,6 +70,7 @@ export default function RootLayout({
             <SiteFooter />
           </SmoothScroll>
         </MotionProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

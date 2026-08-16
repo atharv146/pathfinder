@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { FLAG_RESOURCES, type FlagTopic } from "@/lib/ai/flags";
 
@@ -26,6 +27,14 @@ export function ChatPanel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // ?q= lets other pages hand a question straight in — used by the
+  // "Explain this in Spanish" button on guide articles. Fired once, and only
+  // after history has loaded so the new turn lands at the end of the
+  // transcript rather than being overwritten by it.
+  const searchParams = useSearchParams();
+  const prefill = searchParams.get("q");
+  const prefillSent = useRef(false);
+
   // Prior conversation. The route replays history to the model server-side, so
   // without this the assistant would remember a conversation the user can't
   // see — which reads as broken. RLS scopes the read to this user.
@@ -37,6 +46,10 @@ export function ChatPanel() {
       const { data } = await supabase
         .from("chat_messages")
         .select("role, content, flagged_topics")
+        // Must match the server route's filter. Without this the activities
+        // interview turns bleed into the Ask AI transcript — the exact thing
+        // migration 0005's `kind` column exists to prevent.
+        .eq("kind", "chat")
         .order("created_at", { ascending: true })
         .limit(40);
 
@@ -124,6 +137,12 @@ export function ChatPanel() {
     },
     [streaming]
   );
+
+  useEffect(() => {
+    if (!prefill || prefillSent.current || loadingHistory) return;
+    prefillSent.current = true;
+    send(prefill);
+  }, [prefill, loadingHistory, send]);
 
   const isEmpty = messages.length === 0 && !loadingHistory;
 

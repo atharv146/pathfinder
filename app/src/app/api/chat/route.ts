@@ -80,7 +80,7 @@ export async function POST(request: Request) {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "grade, major, major_undecided, account_type, gpa, gpa_scale, sat_score, act_score, course_rigor, target_colleges, first_gen, home_language, status_category"
+      "grade, major, major_undecided, account_type, preferred_language, gpa, gpa_scale, sat_score, act_score, course_rigor, target_colleges, first_gen, home_language, status_category"
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -118,6 +118,7 @@ export async function POST(request: Request) {
     major: profile?.major ?? null,
     majorUndecided: profile?.major_undecided ?? false,
     accountType: profile?.account_type ?? "student",
+    language: profile?.preferred_language ?? "en",
     gpa: profile?.gpa ?? null,
     gpaScale: profile?.gpa_scale ?? null,
     satScore: profile?.sat_score ?? null,

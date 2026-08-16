@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { guideArticles, getGuideArticleBySlug, slugify } from "@/data/guide";
 import { ArticleView } from "@/components/ArticleView";
 import { FreshnessStamp } from "@/components/FreshnessStamp";
+import { ExplainInSpanish } from "@/components/i18n/ExplainInSpanish";
 
 export function generateStaticParams() {
   return guideArticles.map((a) => ({ slug: slugify(a.title) }));
@@ -41,6 +42,11 @@ export default async function GuideArticlePage({
             unstamped article says so, because a missing stamp that looks like
             a verified one is exactly how stale content hides. */}
         <div className="mx-auto max-w-2xl">
+          {/* Bridge to Spanish. The articles stay in English on purpose —
+              see lib/i18n/strings.ts for why bulk-translating verified aid
+              and immigration content without a bilingual reviewer is a bad
+              trade. */}
+          <ExplainInSpanish title={article.title} />
           <FreshnessStamp slug={slug} />
         </div>
       </section>

@@ -299,7 +299,7 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 | 7 | ~~**Fee waiver checker**~~ **DONE Aug 15, 2026** — `/tools`, `FeeWaiverChecker`, `data/fee-waivers.ts`. Never returns "you don't qualify". (Net price comparison still open — `CostReveal` exists but isn't wired to a real multi-school compare.) — "based on what you've told us, you likely qualify for X, here's how to ask." Net price via the existing `CostReveal`, using the COA-minus-gift-aid method already documented in the 12th-grade content. | Saves families real money, builds real trust, cheap to build. Can jump earlier if a quick win is wanted. | Low |
 | 8 | ~~**Policy freshness system**~~ **DONE Aug 15, 2026** — `data/freshness.ts` + `FreshnessStamp` on every guide article. — visible "verified [date]" stamps on time-sensitive claims. | Directly solves the staleness problem found Aug 15, and doubles as a trust signal no competitor offers. | Low |
 | 9 | **Counselor / mentor share link** — student-initiated and revocable, per the July 21 decision protecting student autonomy. | The distribution unlock: counselors are Section 10's #1 channel, and this puts the app in front of them via students. | None |
-| 10 | **Parent mode / in-language** — parent-side view, translation of core content. | Promotes Section 3's deferred translation item. Highest reach-per-effort for this specific audience. | Medium–High |
+| 10 | ~~**Parent mode / in-language**~~ **DONE Aug 15, 2026** — account-type UI + Spanish. See §16H. — parent-side view, translation of core content. | Promotes Section 3's deferred translation item. Highest reach-per-effort for this specific audience. | Medium–High |
 
 **Explicitly recommended AGAINST (do not build without revisiting):**
 - **Chancing / admissions-odds calculator** — CollegeVine owns this, it needs real admissions data, it's frequently wrong, and it's demoralizing for exactly this audience.
@@ -408,6 +408,28 @@ Three cheap, high-value items shipped together, all on the new public `/tools` p
 **Step 8 — policy freshness stamps.** `data/freshness.ts`, `components/FreshnessStamp.tsx`, rendered on every guide article. Exists because of the real Aug 15 incident, not as decoration: an audit of already-revised content found two plausible-sounding dating errors. **The stamp renders in both states** — a verified article shows the date, what was checked, and a watch-list of claims most likely to have moved; an unverified article says "not recently re-checked" rather than looking identical to a verified one, because a missing stamp indistinguishable from a present one is exactly how stale content hides. Only the two articles genuinely re-verified this session carry dates. **Never bump a date without actually re-verifying against a primary source** — doing so makes this worse than no stamp at all.
 
 `/tools` is public, like `/guide`: neither tool stores anything server-side, and gating money-saving information behind a signup is the wrong trade for this audience.
+
+---
+
+## 16H. V2 Step 10 — Parent Mode & Spanish (built Aug 15, 2026)
+
+Migration `0006_language_preference.sql` (run it), `lib/i18n/*`, `LanguageAndRole`, `ExplainInSpanish`.
+
+**Parent mode.** `account_type` has existed since migration 0001 and had **no UI**, so every account has silently been a student account. There is now a selector on `/account`. It carries the July 21, 2026 decision as visible copy rather than only a schema comment: parent accounts are standalone and deliberately not linked to a student's progress. A parent reading it should understand they get their own guidance, not a dashboard of their child — this app is not a monitoring tool. The chat already branched on `account_type`; it now actually receives a value other than the default.
+
+**Spanish — and the deliberate refusal at the centre of it.**
+
+Translated: navigation, buttons, labels, settings copy. Short, bounded, safe.
+
+**NOT translated: the roadmap items and guide articles.** That is a refusal, not an unfinished task. Those pages carry researched claims about aid eligibility and immigration status, and a machine translation that quietly shifts "may qualify" into "qualifies", or softens a hedge about enforcement risk, would produce exactly the harm this app is built to prevent — in the language of the families most exposed to it. Bulk-translating verified content with no bilingual reviewer who knows U.S. admissions would be worse than leaving it in English.
+
+What was built instead: **`ExplainInSpanish`** on every guide article, which hands the reader to the AI with a pre-filled request to explain that article in Spanish. The model already speaks Spanish natively, it can take follow-up questions, and the UI says plainly that this is *an explanation, not an official translation* — a parent making a financial decision deserves to know which one they have. The chat honours the language preference via `buildContextBlock`, with an instruction to keep U.S. proper nouns (FAFSA, Common App, community college) in English with a Spanish gloss, because those are the names that appear on the actual forms.
+
+**Verified with a real call**, a parent-account context in Spanish asking what the FAFSA is: replied in natural, non-machine-translated Spanish, kept FAFSA/Pell Grant/work-study in English with glosses, correctly told them grade 11 is too early to file, and **the enforcement-reassurance guardrail held in Spanish** — worth re-testing in both languages after any prompt change, since a safety rule verified in English is not automatically verified in Spanish.
+
+**Real bug found and fixed in the same pass:** `ChatPanel`'s client-side history query had no `kind` filter, so the activities-interview turns would have appeared in the Ask AI transcript — precisely what migration 0005's `kind` column exists to prevent. The server route filtered correctly; the client did not. Fixed, and the two filters must stay in sync.
+
+**When real translated content happens** it needs a human bilingual pass and its own freshness stamps (`data/freshness.ts`), not a bulk model run.
 
 ---
 

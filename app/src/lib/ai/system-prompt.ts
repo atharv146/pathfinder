@@ -65,6 +65,8 @@ One thing worth knowing because this audience systematically undersells it: a pa
  */
 export type ChatProfile = {
   grade: number | null;
+  /** ISO 639-1. Drives the language the answer comes back in. */
+  language?: string;
   major: string | null;
   majorUndecided: boolean;
   accountType: string;
@@ -99,6 +101,17 @@ export function buildContextBlock(profile: ChatProfile): string {
   const lines: string[] = [
     `Today's date: ${new Date().toISOString().slice(0, 10)}.`,
   ];
+
+  // Language instruction goes first and is stated firmly: a parent who set
+  // Spanish and gets English back has been told, in effect, that the app isn't
+  // for them. Note the app's own articles remain in English, so the model is
+  // told it may be explaining English source material in Spanish — that's the
+  // intended use, not an error to apologise for.
+  if (profile.language === "es") {
+    lines.push(
+      "IMPORTANT: Reply entirely in Spanish (español). Use clear, warm, everyday Spanish — not formal or academic register, and not machine-translation phrasing. Keep U.S. proper nouns in English with a short Spanish gloss the first time (for example: FAFSA, Common App, community college), because those are the names they will actually see on forms and websites. PathFinder's own guide articles are currently written in English; if they ask about one, explain it in Spanish rather than telling them to read it in English."
+    );
+  }
 
   lines.push(
     profile.accountType === "parent"

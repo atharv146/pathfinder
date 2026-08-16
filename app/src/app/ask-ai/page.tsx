@@ -2,6 +2,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { PageFrame } from "@/components/PageFrame";
 import { Backdrop } from "@/components/backdrop/Backdrop";
 import { KineticText } from "@/components/KineticText";
+import { Suspense } from "react";
 import { ChatPanel } from "@/components/ask/ChatPanel";
 
 export const metadata = { title: "Ask AI — PathFinder" };
@@ -40,7 +41,12 @@ export default function AskAiPage() {
           </FadeIn>
 
           <FadeIn delay={0.35}>
-            <ChatPanel />
+            {/* ChatPanel reads ?q= via useSearchParams, which needs a
+                Suspense boundary to avoid opting the whole route out of
+                static rendering. */}
+            <Suspense fallback={null}>
+              <ChatPanel />
+            </Suspense>
           </FadeIn>
         </div>
       </section>

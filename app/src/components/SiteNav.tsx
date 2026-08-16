@@ -1,18 +1,24 @@
+"use client";
+
 import Link from "next/link";
 import { AuthNav } from "@/components/auth/AuthNav";
 import { MobileNav } from "@/components/MobileNav";
+import { useLanguage } from "@/lib/i18n/LanguageProvider";
 
-const links = [
+const LINK_KEYS = [
   // Explicit Home link — relying on the wordmark alone hides the way back
   // from anyone who doesn't already know that convention.
-  { href: "/", label: "Home" },
-  { href: "/roadmap", label: "Roadmap" },
-  { href: "/ask-ai", label: "Ask AI" },
-  { href: "/guide", label: "Guide" },
-  { href: "/tools", label: "Tools" },
+  { href: "/", key: "navHome" },
+  { href: "/roadmap", key: "navRoadmap" },
+  { href: "/ask-ai", key: "navAskAi" },
+  { href: "/guide", key: "navGuide" },
+  { href: "/tools", key: "navTools" },
 ];
 
 export function SiteNav() {
+  const { t } = useLanguage();
+  const links = LINK_KEYS.map((l) => ({ href: l.href, label: t(l.key) }));
+
   return (
     <header className="relative z-20 flex items-center justify-between border-b border-line px-6 py-5 sm:px-10">
       <Link href="/" className="flex items-baseline gap-2">
