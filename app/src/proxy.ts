@@ -72,10 +72,6 @@ export async function proxy(request: NextRequest) {
     path === "/signup" ||
     path === "/guide" ||
     path.startsWith("/guide/") ||
-    // /tools is public for the same reason /guide is: the fee-waiver
-    // information saves families real money, and neither tool stores anything
-    // server-side. Putting that behind a signup would be the wrong trade.
-    path === "/tools" ||
     path.startsWith("/auth");
 
   // API routes authenticate themselves and answer with a JSON status code.

@@ -407,7 +407,9 @@ Three cheap, high-value items shipped together, all on the new public `/tools` p
 
 **Step 8 — policy freshness stamps.** `data/freshness.ts`, `components/FreshnessStamp.tsx`, rendered on every guide article. Exists because of the real Aug 15 incident, not as decoration: an audit of already-revised content found two plausible-sounding dating errors. **The stamp renders in both states** — a verified article shows the date, what was checked, and a watch-list of claims most likely to have moved; an unverified article says "not recently re-checked" rather than looking identical to a verified one, because a missing stamp indistinguishable from a present one is exactly how stale content hides. Only the two articles genuinely re-verified this session carry dates. **Never bump a date without actually re-verifying against a primary source** — doing so makes this worse than no stamp at all.
 
-`/tools` is public, like `/guide`: neither tool stores anything server-side, and gating money-saving information behind a signup is the wrong trade for this audience.
+**Revised the same day, at the user's direction: `/tools` is sign-in required.** Their reasoning is sound and worth recording — most students come for the roadmap, not to think about fees or essays, and those two tools serve a narrower slice (fee waivers matter most to lower-income families; essay work only applies in grades 11–12). They are support for the roadmap, not the front door.
+
+Two consequences: the public surface is now just the landing page, `/guide`, and the auth pages — everything that *is* the app sits behind an account, which makes the funnel consistent. And rather than leaving the tools to be discovered in the nav, `src/data/item-tools.ts` surfaces them **from inside the relevant roadmap items** — the fee-waiver checker appears at the items where the roadmap raises cost (grades 7, 10, 11, 12), the essay exercises at the two items that call for them (11-5, 12-4), and nowhere else. A student reading "what do I do this year" now meets the tool at the moment it's useful instead of hunting for it.
 
 ---
 

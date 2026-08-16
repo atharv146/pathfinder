@@ -10,10 +10,11 @@ export const metadata = { title: "Tools — PathFinder" };
 /**
  * Two things a student can sit down and actually do, rather than read.
  *
- * Public on purpose: neither tool stores anything server-side, and the
- * fee-waiver information in particular is worth reaching someone who hasn't
- * signed up. Gating money-saving information behind an account would be the
- * wrong trade for this audience.
+ * Sign-in required (user decision, Aug 15 2026). These are support tools
+ * around the roadmap rather than the front door — the roadmap is the product,
+ * and the public surface is the landing page plus /guide. Keeping /tools
+ * gated also keeps the funnel consistent: everything that is "the app" sits
+ * behind an account, and only the explainer content is open.
  */
 export default function ToolsPage() {
   return (
@@ -36,17 +37,21 @@ export default function ToolsPage() {
           </KineticText>
           <FadeIn delay={0.2}>
             <p className="mt-4 max-w-xl text-ash">
-              Not more reading. Two things that save real money and real time,
-              and neither one asks you to sign in.
+              Not more reading. Two things that save real money and real
+              time, for when your roadmap says it&rsquo;s time for them.
             </p>
           </FadeIn>
 
           <div className="mt-14 flex flex-col gap-10">
             <FadeIn delay={0.3}>
-              <FeeWaiverChecker />
+              <div id="fee-waivers" className="scroll-mt-24">
+                <FeeWaiverChecker />
+              </div>
             </FadeIn>
             <FadeIn delay={0.35}>
-              <EssayBrainstorm />
+              <div id="essay" className="scroll-mt-24">
+                <EssayBrainstorm />
+              </div>
             </FadeIn>
           </div>
         </div>

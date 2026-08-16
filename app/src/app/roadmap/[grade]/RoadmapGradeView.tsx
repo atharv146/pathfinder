@@ -7,6 +7,8 @@ import type { RoadmapItem } from "@/data/roadmap";
 import { categoryMeta, categoryOrder, accentClasses } from "@/data/categories";
 import { FadeIn } from "@/components/FadeIn";
 import { fetchProgress, setItemDone } from "@/lib/db/progress";
+import Link from "next/link";
+import { toolForItem } from "@/data/item-tools";
 
 /**
  * Progress is now account-backed, so it follows a student from their phone to
@@ -142,6 +144,28 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                         </div>
                       ))}
                     </div>
+
+                    {/* A tool, only where the roadmap actually calls for one.
+                        The roadmap is the product; the tools support it, and a
+                        student shouldn't have to go find them in another tab
+                        at the moment they're relevant. */}
+                    {(() => {
+                      const tool = toolForItem(item.id);
+                      if (!tool) return null;
+                      return (
+                        <Link
+                          href={tool.href}
+                          className="mt-5 block rounded-xl border border-accent/40 bg-accent/[0.06] px-4 py-3 transition-colors hover:border-accent"
+                        >
+                          <span className="block text-[0.9rem] font-semibold text-chalk">
+                            {tool.label} →
+                          </span>
+                          <span className="mt-1 block text-[0.82rem] leading-relaxed text-ash">
+                            {tool.why}
+                          </span>
+                        </Link>
+                      );
+                    })()}
 
                     <button
                       onClick={() => toggleDone(item.id)}
