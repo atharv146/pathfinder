@@ -170,6 +170,30 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 };
 
+/**
+ * Programs that matter regardless of major — and that matter *most* for this
+ * app's audience specifically. Kept separate because filing LEDA under a
+ * single major family would hide it from the students it was built for.
+ *
+ * Same verification rules as above.
+ */
+export const CROSS_CUTTING: FamilyOpportunities = {
+  verifiedOn: "2026-08-16",
+  items: [
+    {
+      name: "LEDA Scholars",
+      org: "Leadership Enterprise for a Diverse America",
+      what: "A five-week summer institute plus year-round support with college admissions, essays and applications — built specifically for high-achieving students from under-resourced backgrounds. The ongoing support after the summer is the part that makes it unusual; most programs end when the summer does.",
+      cost: "Free for selected Scholars.",
+      eligibility:
+        "High school juniors from under-resourced backgrounds. This is the closest thing on this page to a program designed for exactly the students PathFinder is for.",
+      timing:
+        "Applications have historically run in the autumn/winter of junior year. Confirm current dates on the site.",
+      url: "https://www.ledascholars.org/",
+    },
+  ],
+};
+
 export function opportunitiesFor(familyId: string): FamilyOpportunities | null {
   return MAJOR_OPPORTUNITIES[familyId] ?? null;
 }
