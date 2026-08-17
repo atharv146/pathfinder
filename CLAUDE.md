@@ -17,12 +17,14 @@ A free, student-owned app guiding immigrant and first-generation students (and t
 
 **What's next, in order — full detail in `master-spec-doc.md` Section 16K and Section 15:**
 1. ~~`/major` — dedicated page for major-specific content~~ — **BUILT Aug 16, 2026 (later session). See Section 16L.** New route + `src/data/major-pathways.ts` (course ladders, 4 grade stages, structure facts per family), an interactive grade timeline, a course-chain diagram, an 8-family comparison grid, `azure` accent + `orbits` backdrop. `MajorLens` on the roadmap is now a one-line pointer, and Opportunities moved to `/major`.
-2. Tools become individual pages instead of sections on `/tools` ← **start here**
-3. Settings/stats page + **real new schema for a per-course list** (resolved Aug 16 — not a reuse of the coarse `course_rigor` bucket)
-4. The flagship "Profile Analysis" tool — **partially blocked, see below**
-5. New OpenRouter (resume text) + Claude Sonnet (Profile Analysis) provider paths
+2. ~~Tools become individual pages instead of sections on `/tools`~~ — **BUILT Aug 16, 2026. See Section 16M.** `/tools` is an index over `src/data/tools.ts`; `/tools/fee-waivers` and `/tools/essay-brainstorm` are their own routes; `item-tools.ts` deep links now build from `toolHref()` (no hash links remain). Add `/tools/profile-analysis` to the `TOOLS` array when that ships.
+3. **Scholarships / internships / programs hub** ← **start here.** User-requested, and the natural home for researched opportunities that aren't major-specific. Needs real web research per the `major-opportunities.ts` rules — do not improvise entries.
+4. Settings/stats page + **real new schema for a per-course list** (resolved Aug 16 — not a reuse of the coarse `course_rigor` bucket). Prerequisite for #5 doing anything beyond guessing.
+5. The flagship "Profile Analysis" tool — **partially blocked, see below**
+6. New OpenRouter (resume text) + Claude Sonnet (Profile Analysis) provider paths
+7. Guide-articles depth pass — still the original unmodified Aug 11 port, the last big untouched content area
 
-**One decision blocks part of #4 and must not be skipped:** the user proposed a homegrown ML admissions-chancing model and hasn't yet chosen whether its predictions go into the live dream-college comparison feature, stay a side project, or get replaced by structural NCES-aggregate data instead. Read the Aug 16 addendum inside master-spec-doc.md §16K before touching that specific piece — everything else in #4 (resume reframing, recommendations) is unblocked.
+**One decision blocks part of #5 (Profile Analysis) and must not be skipped:** the user proposed a homegrown ML admissions-chancing model and hasn't yet chosen whether its predictions go into the live dream-college comparison feature, stay a side project, or get replaced by structural NCES-aggregate data instead. Read the Aug 16 addendum inside master-spec-doc.md §16K before touching that specific piece — everything else in #5 (resume reframing, recommendations) is unblocked.
 
 **Also fixed this session, not yet load-bearing knowledge above:** a real AI reliability bug (Gemini free tier 429/503 failures — now a 3-model fallback chain, see the Model choice bullet below) and a real scroll bug (Lenis's cached scroll height going stale when content grew after mount — fixed with a ResizeObserver). Both are in the bullets below; flagged here so they're not missed by only skimming this box.
 
