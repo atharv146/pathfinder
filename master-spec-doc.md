@@ -670,3 +670,28 @@ Step 2 of the §16K build order. `/tools` was one page with both tools stacked o
 - Verified: `tsc --noEmit` and `npm run build` clean; all three routes return 200 with correct titles; the checker mounts; no horizontal overflow at 375px.
 
 ---
+
+## 16N. V2 §16K Step 3 — Scholarships Hub + the ML Decision (Aug 16, 2026)
+
+### The ML chancing model — RESOLVED
+
+**User decision, explicit: the model stays a side project and does NOT ship into PathFinder.** The dream-college comparison in Profile Analysis is therefore unblocked, and should be built on the **NCES / Common Data Set aggregate middle path** that was proposed in the §16K addendum. The brother's ML project remains worth building on its own terms (see that addendum for why the honest framing is the resume-stronger one) — it simply never feeds a user-facing number.
+
+**Framing rules for when the NCES comparison is built.** These are the whole reason the aggregate path is safe where a model isn't:
+
+1. A published range is a **description of a school's last admitted class**, not a prediction about this student. Render it as "the middle 50% of admitted students scored X–Y", never as a verdict, a percentage, a colour-coded match, or anything a nervous 17-year-old could read as a probability.
+2. **The test-optional caveat is mandatory and most sites omit it.** Since testing went optional, published score ranges generally reflect only the applicants who chose to submit scores — which skews them upward. A student comparing themselves against a range that already excludes non-submitters is comparing against the wrong population. Say so wherever a range appears.
+3. Reach / target / safety, if used, stays the **student's own categorisation** or published non-probabilistic context — reuse the language already in roadmap item `11-2` rather than inventing new definitions.
+4. Flag **structural** gaps only (a required course missing, a language sequence too short, an unplanned testing requirement). Never a holistic judgement.
+
+### The scholarships hub — BUILT
+
+New gated route `/scholarships`, accent `lime`, backdrop `swarm`, nav entry `navScholarships` ("Money" / "Becas"). Data in `src/data/scholarships.ts`, all five entries verified on official sites on 2026-08-16.
+
+- **Verified and live:** The Gates Scholarship, Cooke College Scholarship Program (Jack Kent Cooke), QuestBridge College Prep Scholars, Dell Scholars, TheDream.US National Scholarship.
+- **Open-right-now sorts to the top**, via `cycleStatus()`. For a student with twenty minutes, a five-item list where two are open is really a two-item list, and ordering by what is actionable today is what turns a reference page into an application.
+- **`cycleStatus()` is deliberately conservative** — it never invents a date, only labels stored ISO dates, and the UI always renders the written `cycle` text plus "confirm on the site" beside it. A computed badge must never be the only thing a student relies on.
+- **`sensitive: true` on TheDream.US** renders a note that states no assurance in either direction about immigration risk, pointing to the organisation's own policies and to an immigration attorney. This follows `system-prompt.ts`'s standing rule to the letter: listing awards for undocumented students is correct and high-value, but **reassuring anyone about enforcement risk is never ours to do.**
+- Notable verification catch: Dell and TheDream.US cycles had already closed at the time of writing, and both say so explicitly rather than showing a stale deadline as if live.
+
+---
