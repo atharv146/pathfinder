@@ -47,6 +47,31 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 2b. Workflow-scope guard.
+# ---------------------------------------------------------------------------
+# The GitHub token in the macOS keychain does not carry the `workflow` scope,
+# so ANY push containing a change under .github/workflows/ is rejected — and
+# GitHub rejects the whole push, not just that file, so one workflow tweak
+# silently blocks an entire session's work.
+#
+# Catching it here turns a confusing remote rejection into an explanation.
+# The CI workflow itself currently lives on the `ci-workflow-pending` branch
+# for exactly this reason.
+if git log "origin/$BRANCH..$BRANCH" --name-only --pretty=format: 2>/dev/null \
+  | grep -q '^\.github/workflows/'; then
+  echo "✗ These commits touch .github/workflows/, which this token cannot push."
+  echo "  GitHub rejects the entire push, not just that file."
+  echo
+  echo "  Fix the token (one time):"
+  echo "    github.com → Settings → Developer settings → Personal access tokens"
+  echo "    → add the 'workflow' scope, then: git credential-osxkeychain erase"
+  echo
+  echo "  Or move the workflow commit aside:"
+  echo "    git branch ci-workflow-pending && git rebase --onto <before> <commit>"
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
 # 3. Push. Nothing to do if we're already in sync.
 # ---------------------------------------------------------------------------
 if [[ -z "$(git log "origin/$BRANCH..$BRANCH" --oneline 2>/dev/null)" ]]; then

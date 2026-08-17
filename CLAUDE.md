@@ -22,7 +22,8 @@ Runs `typecheck → lint → test → build` and **refuses to push if any of it 
 
 - `cd app && npm run verify` runs the same checks without pushing.
 - `npm test` (vitest) — **30 tests, pure logic and data integrity only**, no DOM/render tests. Both bugs that shipped on Aug 17 have regression tests. The freshness tests will start failing on their own once scholarship/opportunity data passes a year old — that is deliberate, and the fix is to re-verify the data, never to bump the date.
-- CI (`.github/workflows/verify.yml`) runs the same checks on every push/PR as a second line of defence. ⚠️ It is committed locally but **may not be pushed yet** — the stored token lacks the `workflow` scope (see above).
+- **CI exists but is NOT on `master` yet.** `.github/workflows/verify.yml` lives on the local branch **`ci-workflow-pending`**, because the stored GitHub token lacks the `workflow` scope and GitHub rejects the *entire push* when one is present — it blocked a whole session's work once already. `ship.sh` now detects this and explains rather than failing cryptically.
+  - **To land CI:** add the `workflow` scope to the token at github.com → Settings → Developer settings → Personal access tokens, run `git credential-osxkeychain erase`, then `git cherry-pick ci-workflow-pending` and push. Or paste the file into GitHub's web editor, which bypasses the scope entirely.
 - **Vercel Analytics + Speed Insights are live** (cookieless, no key, no personal data). Deliberately not product analytics — per Section 7, we measure whether pages load, never what a student entered or asked.
 
 ## 🔑 Session handoff (Aug 17, 2026, third session — read this first)
