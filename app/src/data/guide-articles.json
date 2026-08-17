@@ -22,11 +22,37 @@
         ]
       },
       {
+        "heading": "Where applications actually get submitted",
+        "paragraphs": [
+          "There isn't one national application website. Most private colleges and many public ones use the Common Application — one account, one essay, one activities list, sent to many schools. But large public systems often run their own portals entirely: the University of California system, California State University, and Texas's ApplyTexas are all separate applications with their own essays and their own deadlines. A student applying to a mix will genuinely be filling in more than one system.",
+          "The Common App caps how many colleges one account can apply to — it has been 20 for several years. That is far more than most students need, but it matters if someone is applying very broadly: the fix is to use a college's own portal for some schools, not to open a second account.",
+          "The practical takeaway is to check, for every school on the list, which application it wants. Finding out in December that a school never accepted the Common App is a genuinely bad week, and it happens most often to families doing this for the first time without a counselor walking them through it."
+        ]
+      },
+      {
+        "heading": "Deadline types — and the one that is legally binding",
+        "paragraphs": [
+          "Applications don't all have one deadline. There are four common types, and the differences are not cosmetic.",
+          "Regular Decision is the standard route: apply by the winter deadline, hear back in the spring. Rolling admission means the college reads applications as they arrive and answers within a few weeks — earlier is genuinely better there, because seats and aid fill up over time.",
+          "Early Action means applying in the autumn and hearing back early. It is not binding: a student can still compare offers and say no. Some schools run a restricted or single-choice version, which limits applying early elsewhere — that restriction is a rule you agree to, so read what the specific school says.",
+          "Early Decision is the one to understand properly. It is a binding commitment: if the college accepts you, you agree to attend and to withdraw your other applications. Students, parents, and a school counselor all sign it.",
+          "That binding piece matters most for exactly the families this guide is for. Applying Early Decision means committing before you can compare financial aid offers side by side. Colleges will generally release a student who genuinely cannot afford the aid package, but you are negotiating from a much weaker position than a student holding three competing offers in April. If cost is going to decide where your child enrolls — and for most families it is — Early Decision is a real trade-off, not a free head start. Early Action carries no such catch."
+        ]
+      },
+      {
         "heading": "The different types of schools — and why none of them is \"lesser\"",
         "paragraphs": [
           "Community college is a 2-year school with open enrollment, meaning there's no competitive application process to get in, and it costs significantly less than a 4-year school. A large number of students complete their first two years at a community college, then transfer into a 4-year university to finish their degree — the diploma at the end carries no disadvantage or mark of having started this way, and the money saved can be substantial. This is a genuinely respected, common path, not a fallback.",
           "Public university means a school funded partly by a state government. It's generally cheaper for residents of that state (\"in-state\" students) than for students from other states or countries.",
           "Private university means a school that isn't state-funded. These almost always have a higher listed price than public schools — but, confusingly, they often give out significantly more financial aid, which means the actual price a family pays can end up lower than a public school's. The listed price is frequently not the real price at all, which is the single most important idea in this whole article (more below)."
+        ]
+      },
+      {
+        "heading": "Starting at community college without losing ground",
+        "paragraphs": [
+          "The worry families raise about community college is whether credits actually carry over. In many states this is a formal, written arrangement rather than a hope: articulation agreements and guaranteed-transfer programs commit specific public universities to accept specific community college coursework, and sometimes to admit students who finish an associate degree with a certain GPA.",
+          "These arrangements are state-specific and program-specific, so the only reliable version is the one written down for your state and your intended major. Ask a community college's transfer or counseling office directly — this is the exact thing they exist to answer, and the answer is usually a document rather than an opinion.",
+          "Two years of tuition at community-college prices, followed by a degree from the four-year university, is one of the few genuinely large cost savings available in this system. The diploma at the end names the university that granted the degree."
         ]
       },
       {
@@ -96,6 +122,18 @@
       {
         "term": "Early Decision",
         "definition": "An earlier, binding application option — if accepted, the student commits to attending that school."
+      },
+      {
+        "term": "Early Decision (ED)",
+        "definition": "A binding early application — if you're accepted, you must attend and withdraw other applications. It means committing before you can compare aid offers."
+      },
+      {
+        "term": "Early Action (EA)",
+        "definition": "An early application that is NOT binding. You hear back sooner and can still compare offers and decline. Some schools restrict applying early elsewhere."
+      },
+      {
+        "term": "Articulation agreement",
+        "definition": "A written arrangement between a community college and a university guaranteeing that specific credits transfer — the reason starting at community college needn't cost you ground."
       }
     ]
   },
@@ -128,6 +166,14 @@
         ]
       },
       {
+        "heading": "The CSS Profile — the second form, and who has to care",
+        "paragraphs": [
+          "Some colleges, mostly private ones with large endowments, ask for a second form called the CSS Profile in addition to the FAFSA. It goes into more detail than the FAFSA does — home equity, small-business assets, and often a separate section for a parent who doesn't live with the student.",
+          "It normally costs money to submit, unlike the FAFSA, which is always free. But the College Board states that the CSS Profile is free for families making up to $100,000 a year, and fee waivers exist beyond that. If a school on your child's list asks for it, cost should not be the reason it doesn't get filed — check the waiver first.",
+          "Only some colleges use it. Check each school's financial aid page rather than filling it in speculatively."
+        ]
+      },
+      {
         "heading": "What's changed in FAFSA rules — and what's next",
         "paragraphs": [
           "A few real, current rule changes are worth knowing before your family files or compares offers, since they can shift what you're actually expected to pay compared to what an older sibling's experience — or an outdated article — might suggest.",
@@ -143,6 +189,22 @@
         "paragraphs": [
           "After a family submits the FAFSA, the government produces a number called the Student Aid Index, or SAI. This replaced an older term, \"Expected Family Contribution\" (EFC) — same basic idea, new name and formula. The SAI is an estimate of what the government calculates a family can reasonably contribute toward college costs, based on income, assets, and family size. Colleges then use this number, along with their own total cost of attendance, to build a financial aid offer meant to help cover the gap between the two.",
           "It's important to understand what the SAI is not: it is not a bill, and it is not a guarantee of what a family will actually pay. It's an input used in a calculation — the real number that matters is what appears in the final financial aid offer letter from each individual college, since how well a school actually closes that gap varies a lot from one college to another."
+        ]
+      },
+      {
+        "heading": "The actual numbers: what federal aid can and can't cover",
+        "paragraphs": [
+          "It helps to know the real size of these programs, because families often imagine federal aid is either enormous or negligible, and it is neither.",
+          "The Federal Pell Grant is the largest federal grant for undergraduates and does not have to be repaid. For the 2026–27 award year — July 1, 2026 through June 30, 2027 — the maximum award is $7,395 and the minimum is $740. Most students who receive it get somewhere between those figures, based on their Student Aid Index, cost of attendance, and whether they're enrolled full-time.",
+          "Federal student loans are capped by year, and the caps are lower than most families expect. A dependent undergraduate can borrow $5,500 in first year, $6,500 in second year, and $7,500 in each year after that — with a lifetime cap of $31,000. Within those figures, only part can be subsidized (meaning the government covers the interest while the student is in school): up to $3,500, $4,500 and $5,500 respectively, with a $23,000 lifetime subsidized maximum.",
+          "Read those two paragraphs together and something important falls out. Pell plus federal student loans does not add up to the sticker price of most four-year colleges. The gap is filled — or isn't — by the college's own grant aid, which is why the *institution's* aid offer matters more than the federal forms, and why a more expensive school with generous aid can genuinely cost a family less than a cheaper one without it."
+        ]
+      },
+      {
+        "heading": "If you're selected for verification, you are not in trouble",
+        "paragraphs": [
+          "Some FAFSA filers are asked afterwards to prove what they reported — tax transcripts, identity documents, a signed statement. This is called verification, and being selected for it is routine. It is not an accusation, and it is not triggered by anything about your immigration status.",
+          "What matters is answering it quickly. Aid is not disbursed until verification finishes, and a family that sets the request aside for a month can find a real award sitting unpaid while a tuition deadline passes. If a request arrives and you're unsure what's being asked for, the college's financial aid office is the right place to ask — that is the office that sent it."
         ]
       },
       {
@@ -203,6 +265,18 @@
       {
         "term": "CSS Profile",
         "definition": "A more detailed financial aid form required by roughly 200 colleges, in addition to the FAFSA."
+      },
+      {
+        "term": "CSS Profile",
+        "definition": "A second, more detailed aid form used by some (mostly private) colleges. Free for families making up to $100,000 a year, per the College Board."
+      },
+      {
+        "term": "Verification",
+        "definition": "A routine request to document what you reported on the FAFSA. Not an accusation — but aid isn't paid out until it's completed."
+      },
+      {
+        "term": "Subsidized loan",
+        "definition": "A federal student loan where the government pays the interest while the student is in school. Only part of a student's borrowing limit can be subsidized."
       }
     ]
   },
@@ -241,6 +315,22 @@
         ]
       },
       {
+        "heading": "Who submits what — and why a student can't do it all alone",
+        "paragraphs": [
+          "An application is assembled from several people, and only some of the parts are the student's to send. The student submits the application itself, the essays and the activities list. Teachers submit their own recommendation letters directly — a student never sees or handles them. The school counselor submits the transcript, the school profile, and usually a counselor letter.",
+          "That last piece is the one families miss. The transcript does not send itself, and at a large or under-staffed high school the counselor may be handling hundreds of students at once. The student needs to formally request transcripts through whatever system the school uses, and to do it well before the deadline rather than the week of.",
+          "It is also why the counselor relationship matters more than it looks. A counselor who has met your child is a counselor who can write about them specifically. Encouraging a student to introduce themselves early — in autumn of junior year, not November of senior year — is one of the highest-value, lowest-cost things a parent can prompt."
+        ]
+      },
+      {
+        "heading": "Deadlines are a calendar, not a date",
+        "paragraphs": [
+          "Families tend to picture one deadline. There are several, and they arrive in a sequence: early applications in the autumn, most regular deadlines around the turn of the year, financial aid forms on their own separate schedule, and mid-year grade reports going out after the first semester ends.",
+          "Missing the aid deadline while hitting the admissions one is a specific and painful failure mode, because the application succeeds and the money doesn't. Some colleges have priority aid deadlines that fall *earlier* than their admissions deadline. These dates are published on each college's own admissions and financial aid pages, and they differ per school.",
+          "A single shared calendar with every school's dates on it — admission, aid, and any scholarship deadlines — is genuinely the most useful thing a parent can build. It's also a task that doesn't require knowing anything about the U.S. system, which makes it a real contribution rather than a symbolic one."
+        ]
+      },
+      {
         "heading": "Building the activities list — quality over quantity",
         "paragraphs": [
           "Colleges reading an activities list generally aren't looking for the longest possible list — they're looking for genuine involvement and, ideally, some real depth or leadership shown over time. (This connects directly to the \"spike\" concept covered in the Extracurriculars guide: one area of real, sustained depth generally reads better than many shallow, unrelated entries.)",
@@ -251,6 +341,15 @@
         "heading": "A parent's role, realistically",
         "paragraphs": [
           "You don't need to write anything, extensively edit essays, or fully understand every platform to help meaningfully. What genuinely helps: protecting time — applications take real, focused hours, so helping create quiet space at home for that matters, especially in a busy or multigenerational household. Asking about deadlines rather than content — \"what's due this week?\" is more useful and less pressuring than \"what did you write about?\" Helping gather logistics rather than prose — things like birth certificates or ID documents if a form asks for them, past home addresses, or family income documents needed for financial aid forms are exactly the kind of concrete, practical help a parent is often best positioned to provide. And normalizing the stress of this season without minimizing it — acknowledging that this is genuinely a lot, rather than adding pressure about outcomes, tends to help more than pushing harder."
+        ]
+      },
+      {
+        "heading": "What changes when your child turns 18",
+        "paragraphs": [
+          "There's a legal shift most families don't see coming. Under FERPA — the U.S. federal law covering education records — the rights over a student's records transfer from the parent to the student when the student turns 18 or enrols in a college, whichever happens first. The Department of Education describes the student at that point as an \"eligible student.\"",
+          "In practice this means a college may decline to discuss your child's grades, bills or records with you, even if you are paying the tuition. It is not the college being obstructive, and it isn't about you. It is the default the law sets.",
+          "There are exceptions — a college is permitted to share records with parents of a student who is a dependent for tax purposes, and in health or safety emergencies — but permitted is not required, and each institution sets its own practice. Most colleges have a form a student can sign to grant a parent access.",
+          "The useful thing to know is that this is a conversation to have *with your child*, before it becomes an emergency at a billing office. It's also worth naming what it reflects: from the moment they enrol, the system treats your child as the responsible adult in their own education. That is a big shift for many families, and being ready for it is easier than being surprised by it."
         ]
       },
       {
@@ -282,6 +381,18 @@
       {
         "term": "Activities list",
         "definition": "A structured summary of a student's extracurriculars, jobs, and leadership roles submitted with the application."
+      },
+      {
+        "term": "FERPA",
+        "definition": "The federal law over education records. Rights transfer from parent to student at 18 or on enrolling in college — after that a college may decline to discuss records with a parent, even a paying one."
+      },
+      {
+        "term": "School profile",
+        "definition": "A document your child's high school sends with the transcript, describing what courses and opportunities the school actually offers — the context that stops a small school's transcript being read as a large one's."
+      },
+      {
+        "term": "Priority aid deadline",
+        "definition": "A financial aid deadline that at some colleges falls EARLIER than the admissions deadline. Missing it can mean getting in without the money."
       }
     ]
   },
@@ -314,6 +425,15 @@
         ]
       },
       {
+        "heading": "Colleges often recalculate the GPA anyway",
+        "paragraphs": [
+          "Here is the part that resolves a lot of anxiety about the weighted-versus-unweighted question: many colleges do not simply take the number printed on the transcript. They recalculate it themselves, on their own scale, so that applicants from thousands of different high schools can be compared on something consistent.",
+          "How they recalculate varies. A common approach is to strip out the weighting, count only academic subjects, and ignore things like physical education. Some add their own weighting back for advanced courses. Each college decides for itself, and many publish what they do.",
+          "Two consequences worth holding onto. First, a school that inflates GPAs with heavy weighting doesn't gain its students as much as it appears to. Second — and this matters more for the families this guide is for — a student at a school with no weighting at all is not being penalised the way it feels like they are. The recalculation exists precisely to compare across unequal schools.",
+          "This is also why the transcript is read alongside the school profile: the list of what your child's school actually offers. A rigorous schedule at a school with four AP classes is read as a rigorous schedule. It is not compared against a school offering twenty-five as though the student chose not to take them."
+        ]
+      },
+      {
         "heading": "Why course difficulty matters as much as the grade itself",
         "paragraphs": [
           "This has become more important, not less, as testing requirements have grown inconsistent from school to school (see the \"How the U.S. College System Works\" guide) — with fewer colleges requiring a single common test score from every applicant, GPA and course rigor together end up carrying more of the weight in how an application gets read overall. Because of this, \"take the most challenging classes you're genuinely prepared for\" tends to be more useful advice than \"just get all A's\" — a transcript full of only the easiest available classes, even with perfect grades, can actually work against a student compared to a more rigorous course load with slightly lower grades. That said, this is a balance, not an extreme in either direction: a schedule so difficult that grades collapse across multiple classes isn't the goal either. (The full reasoning behind how to strike this balance is in the student roadmap's \"Choosing your course load\" guide, in 9th grade.)"
@@ -329,6 +449,15 @@
         "heading": "Can a bad grade or a rough semester be recovered from?",
         "paragraphs": [
           "Yes — genuinely, and this is worth saying clearly, because a lot of families worry unnecessarily about this. Colleges see a student's full, multi-year transcript, not a single isolated moment. An upward trend — grades that improve meaningfully over time — is generally viewed positively, and a single difficult semester, whether caused by illness, a family circumstance, or the adjustment to a harder class, rarely defines an entire application on its own, especially when a student's other semesters show real effort and improvement."
+        ]
+      },
+      {
+        "heading": "How grades reach colleges — and when they stop mattering",
+        "paragraphs": [
+          "Grades don't get sent once. On many applications a student first self-reports their coursework and grades; the official transcript comes from the school. Those two need to match, and a student guessing at a grade they half-remember is creating a problem for themselves — the correct move is to work from an actual copy of the transcript.",
+          "After applying, most colleges ask for a mid-year report with first-semester senior grades, and later a final transcript once the student graduates. This is the concrete answer to whether senior-year grades count: they do, and they keep arriving after decisions are made.",
+          "That last transcript is not a formality. Admission offers are conditional on finishing the year in good standing, and colleges do occasionally rescind an offer over a serious collapse in final grades. It's rare, and it takes a dramatic drop rather than a slightly worse semester — but it is the reason \"we're done, nothing counts now\" is bad advice in the spring of senior year.",
+          "If a genuinely rough semester happened for a real reason — illness, a family crisis, a period without stable housing, arriving mid-year from another country and learning the language — that context belongs in the application rather than being left to look like indifference. Most applications have a dedicated space for exactly this, and a counselor can also address it in their letter. Explaining plainly what happened and what changed afterwards is not making excuses; it is the difference between a reader seeing a pattern and a reader seeing a bad year."
         ]
       },
       {
@@ -354,6 +483,14 @@
       {
         "term": "Class rank",
         "definition": "A student's position compared to their whole grade, based on GPA — used by some but not all schools."
+      },
+      {
+        "term": "Recalculated GPA",
+        "definition": "A college's own version of a student's GPA, computed on its own scale so applicants from very different high schools can be compared consistently."
+      },
+      {
+        "term": "Mid-year report",
+        "definition": "First-semester senior grades, sent to colleges after applications go in. Proof that senior year still counts."
       }
     ]
   },
@@ -376,6 +513,16 @@
         "heading": "The simple definition",
         "paragraphs": [
           "An extracurricular activity is anything a student does outside of regular class time that isn't required schoolwork — sports, school clubs, a paying job, volunteering, art, music, religious or cultural groups, and family responsibilities all fall under this umbrella. Colleges ask about these specifically because grades alone don't show who a student is as a person or what they genuinely care about."
+        ]
+      },
+      {
+        "heading": "What the form actually looks like",
+        "paragraphs": [
+          "It helps to know the shape of the thing being filled in, because it explains most of the advice that otherwise sounds arbitrary.",
+          "On the Common Application, the activities section gives a student ten slots. Each one has a short field for their position or role, a short field for the organisation, and a description of roughly 150 characters — about a sentence and a half. There are also fields for how many hours a week and how many weeks a year the activity takes.",
+          "Ten slots is a ceiling, not a target. Plenty of strong applications use six. Nobody counts them, and a list padded to ten with things a student did once reads exactly as what it is.",
+          "The 150-character limit is the reason \"be specific\" is the standard advice. There is no room for adjectives. \"Passionate about helping my community\" spends a third of the space saying nothing; \"Interpret for my parents at medical and school appointments; handle bills and forms in English\" uses the same space to say something only that student could say.",
+          "The hours and weeks fields are worth filling in honestly rather than impressively. They are also where an activity that sounds small turns out not to be — fifteen hours a week of childcare across the whole year is a larger commitment than a club that meets twice a month, and the numbers are what make that visible."
         ]
       },
       {
@@ -406,6 +553,15 @@
         ]
       },
       {
+        "heading": "Summer is the part that's actually open",
+        "paragraphs": [
+          "During the school year, most of what looks like an impressive activity is gated by the school itself — whether it has the club, the team, the lab, the teacher who runs it. Summer is the stretch where that gate opens, and where a student at an under-resourced school is on more even footing.",
+          "Some of the strongest options cost nothing. Free, funded summer programs at universities exist specifically for students from under-resourced backgrounds and cover housing and food. Public libraries, community organisations, local government offices and religious institutions take volunteers year-round without an application process. A paid summer job is not a lesser use of a summer than a program is — it is real work with real responsibility, and a student supporting their family through one is describing something an admissions reader can understand immediately.",
+          "The thing that separates a useful summer from an empty one is usually continuity rather than prestige: the same commitment appearing across two or three summers says considerably more than one impressive-sounding week.",
+          "One caution worth stating plainly, because this audience is targeted for it: there is an entire industry of summer programs that cost thousands of dollars and imply that attending improves admission chances. Paying to attend a program at a university is not the same as being selected by that university, and admissions readers know the difference. If money is tight, that money is better spent almost anywhere else."
+        ]
+      },
+      {
         "heading": "A parent's role here",
         "paragraphs": [
           "Help your child notice responsibilities they might not think to \"count\" on their own — caregiving, translating, working — these are real and belong on the list, not hidden out of a sense that they aren't \"official\" enough. Support consistency in an activity over multiple years rather than encouraging a new one every semester. And if cost is a concern for something your child genuinely wants to try, ask directly about waivers before assuming it's simply out of reach."
@@ -424,6 +580,14 @@
       {
         "term": "Fee waiver",
         "definition": "A way to reduce or eliminate the cost of a program, club, or application fee for families who need it — often under-advertised."
+      },
+      {
+        "term": "Activities section",
+        "definition": "The part of the application listing what a student does outside class — ten slots on the Common App, each with a role, an organisation, about 150 characters of description, and hours per week."
+      },
+      {
+        "term": "Pay-to-attend program",
+        "definition": "A summer program you get into by paying rather than by being selected. Being on a university campus is not the same as being chosen by that university, and readers know the difference."
       }
     ]
   },
@@ -468,6 +632,16 @@
         ]
       },
       {
+        "heading": "In-state tuition and how residency is actually decided",
+        "paragraphs": [
+          "At public universities, the same seat has two prices: in-state and out-of-state. The difference is frequently tens of thousands of dollars a year, which makes residency one of the largest single financial variables in this entire process — larger, often, than any scholarship a student will win.",
+          "Residency is not decided by the admissions office and it is not the same question as immigration status. It is decided by the university's residency or registrar's office under rules set by the state, and those rules typically turn on things like how long the family has physically lived in the state, whether they file state taxes there, and whether the student graduated from a high school in that state.",
+          "That last one matters here. A number of states have provisions allowing students who attended and graduated from a high school in the state to pay the in-state rate, on the basis of where they actually grew up. Which states, and on what exact terms, varies — and these provisions have been changed by legislatures and challenged in courts, so anything you read about them (including this) can go out of date.",
+          "So the reliable move is not to trust a general article. It is to ask the specific university's residency office what documentation they require, and to ask early: many require proof covering a year or more before enrolment, which means the paperwork question arrives long before the tuition bill does.",
+          "We can explain how residency classification works. We can't tell you what any particular office will decide in your situation, and you should be sceptical of any free website that claims it can. For anything status-specific, a licensed immigration attorney or an accredited non-profit legal representative is the right person — not a college website, not us, and not a notario."
+        ]
+      },
+      {
         "heading": "On disclosing immigration status on college applications",
         "paragraphs": [
           "Many colleges do not require a student to disclose their immigration status simply to apply, and policies about whether or how status might affect an admission decision vary by school. If a family is uncertain, contacting a school's admissions office directly, or a nonprofit that specializes in exactly this question, is a safer path than guessing based on general assumptions or something read online."
@@ -483,6 +657,16 @@
         "heading": "Credential and experience translation for parents",
         "paragraphs": [
           "If a parent holds a degree or has professional experience from another country, it may not automatically translate into a recognized U.S. equivalent — and this can sometimes affect practical things like how income needs to be documented on financial aid forms, or a parent's own goals around further education in the U.S. Credential evaluation services exist specifically to formally assess and \"translate\" a foreign degree or credential into its U.S. equivalent, and a college's financial aid office can often advise on how to correctly document foreign income or credentials on aid forms."
+        ]
+      },
+      {
+        "heading": "What documents to start gathering, and when",
+        "paragraphs": [
+          "A recurring, avoidable problem: a deadline arrives and a document is in another country, or in another language, or was never obtained in the first place. Gathering these is slow, unglamorous work that can be done years early, and it is one of the few parts of this process entirely within a family's control.",
+          "The kinds of things applications and aid offices ask for include prior school records and transcripts, including any from schools outside the U.S.; proof of residency such as leases, utility bills or state tax filings; and income documentation for aid forms.",
+          "Two things make this slower than families expect. Records from another country often need certified translation, and sometimes a formal credential evaluation, both of which take weeks and cost money. And a school that has closed, or is in a country the family left under difficult circumstances, may take months to produce anything at all.",
+          "Starting a folder — physical or digital — in ninth or tenth grade is not premature. It is the difference between a document being a task and a document being an emergency.",
+          "If a document genuinely cannot be obtained, say so rather than going quiet. Colleges and financial aid offices have processes for missing documentation, because they encounter it regularly. Asking the financial aid office what alternatives they accept is a normal request, not a special favour."
         ]
       },
       {
@@ -514,6 +698,14 @@
       {
         "term": "\"Notario\"",
         "definition": "An unlicensed, informal immigration consultant — never a substitute for a licensed attorney; some are predatory."
+      },
+      {
+        "term": "In-state tuition",
+        "definition": "The lower price a public university charges residents of its own state — often tens of thousands less per year. Decided by the university's residency office under state rules, not by admissions."
+      },
+      {
+        "term": "Credential evaluation",
+        "definition": "A formal assessment of schooling completed outside the U.S., translating it into U.S. equivalents. Takes weeks and costs money, which is why it's worth starting early."
       }
     ]
   }
