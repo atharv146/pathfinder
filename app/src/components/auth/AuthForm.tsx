@@ -240,7 +240,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         {isSignup ? "Already have an account? " : "New here? "}
         <Link
           href={isSignup ? "/login" : "/signup"}
-          className="text-chalk underline underline-offset-4 hover:text-accent"
+          className="tap-target inline-block text-chalk underline underline-offset-4 hover:text-accent"
         >
           {isSignup ? "Sign in" : "Create one"}
         </Link>

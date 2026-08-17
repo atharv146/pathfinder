@@ -201,7 +201,7 @@ export function OnboardingFlow() {
               <button
                 type="button"
                 onClick={() => finish(true)}
-                className="micro text-smoke transition-colors hover:text-chalk"
+                className="tap-target micro text-smoke transition-colors hover:text-chalk"
               >
                 Skip for now
               </button>
@@ -254,14 +254,14 @@ export function OnboardingFlow() {
               <button
                 type="button"
                 onClick={() => setStep(0)}
-                className="micro text-smoke transition-colors hover:text-chalk"
+                className="tap-target micro text-smoke transition-colors hover:text-chalk"
               >
                 Back
               </button>
               <button
                 type="button"
                 onClick={() => finish(true)}
-                className="micro text-smoke transition-colors hover:text-chalk"
+                className="tap-target micro text-smoke transition-colors hover:text-chalk"
               >
                 Skip for now
               </button>
@@ -335,7 +335,7 @@ export function OnboardingFlow() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="micro text-smoke transition-colors hover:text-chalk"
+                className="tap-target micro text-smoke transition-colors hover:text-chalk"
               >
                 Back
               </button>

@@ -169,7 +169,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
 
                     <button
                       onClick={() => toggleDone(item.id)}
-                      className="mt-4 font-mono text-[11px] uppercase tracking-widest text-smoke transition-colors hover:text-signal"
+                      className="tap-target mt-4 font-mono text-[11px] uppercase tracking-widest text-smoke transition-colors hover:text-signal"
                     >
                       {isDone ? "✓ Done — mark as not done" : "Mark as done"}
                     </button>

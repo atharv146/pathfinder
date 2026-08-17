@@ -33,7 +33,7 @@ export default function FeeWaiversPage() {
           <FadeIn>
             <Link
               href="/tools"
-              className="micro text-smoke transition-colors hover:text-chalk"
+              className="tap-target micro text-smoke transition-colors hover:text-chalk"
             >
               &larr; Tools
             </Link>

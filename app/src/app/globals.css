@@ -516,6 +516,41 @@ section > .absolute:not(.aurora):not(.aurora-accent):not([data-decor]) {
   margin-bottom: -0.2em;
 }
 
+/* ---------------------------------------------------------------------------
+   Touch targets — added Aug 17, 2026 after a documented mobile audit.
+
+   The audit walked all 17 routes at 375px. Horizontal overflow: none. iOS
+   input zoom: none (every field is >= 16px). The one real finding was small
+   touch targets: inline text links and text buttons measured 14-21px tall,
+   against the 44px that a finger actually needs. That included "Mark as done"
+   on the roadmap — the single most-used control in the product.
+
+   This expands the HIT AREA without touching layout or type size, so the
+   editorial look is unchanged and only the tappable region grows. The dot
+   control on the roadmap already did this with `before:-inset-3`; this is the
+   same idea as a reusable class.
+
+   ⚠️ Use it on controls with clear space around them. On a tight vertical
+   list the expanded region of one item can overlap its neighbour and steal
+   the tap — which is worse than a small target, not better.
+   --------------------------------------------------------------------------- */
+.tap-target {
+  position: relative;
+}
+
+.tap-target::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  min-height: 44px;
+  /* Purely a hit area — never paints, never affects layout. */
+  pointer-events: auto;
+}
+
 /* Film grain. A true-black page is optically flat; a barely-there noise field
    gives it surface without becoming visible texture. Fixed so it doesn't
    travel with scroll, which would read as crawling static. */

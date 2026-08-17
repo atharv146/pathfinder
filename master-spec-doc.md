@@ -940,6 +940,46 @@ Onboarding now opens with a role question, and branches:
 
 ---
 
+## 16T. Documented Mobile/Responsive Audit (Aug 17, 2026)
+
+*The audit Next Steps step 4 has been asking for since Aug 3. Previous mobile work was real but symptom-driven — three separate fix commits, no systematic pass. This is the systematic pass, and its findings are recorded whether or not they needed fixing.*
+
+### Method
+
+All **17 routes** walked at **375 × 812** (iPhone-class viewport), each checked for three things:
+
+1. **Horizontal overflow** — `documentElement.scrollWidth > clientWidth`, plus any element whose right edge crosses the viewport, excluding `position: fixed` and `[data-decor]` decoration.
+2. **Touch targets** — every `a`, `button`, `select`, `input`, `textarea` measuring under 40px tall.
+3. **iOS input zoom** — any form field with a computed `font-size` below 16px, which makes Safari zoom the page on focus.
+
+Routes: `/`, `/roadmap`, `/roadmap/9`, `/guide`, a guide article, `/major`, `/opportunities`, `/tools`, all three tool pages, `/stats`, `/account`, `/activities`, `/ask-ai`, `/onboarding`, `/login`, `/signup`.
+
+### Results
+
+**Horizontal overflow: none.** Every route measured `375/375`. The elements the sweep flagged as "wide" were all absolutely-positioned decorative glow spans inside `overflow-hidden` parents — clipped, not scrollable. Nothing to fix.
+
+**iOS input zoom: none.** Every form field on every route is at or above 16px. The earlier symptom-driven fix held.
+
+**Touch targets: the one real finding.** Inline text links and text buttons measured 14–21px tall against the 44px a finger needs. The important one was **"Mark as done" on the roadmap — the single most-used control in the product — at 17px.**
+
+### The fix, and why it isn't a restyle
+
+A `.tap-target` utility that expands the **hit area** via an `::after` pseudo-element with `min-height: 44px`, leaving layout, type size and spacing untouched. The design is unchanged; only the tappable region grows. This is the same technique the roadmap's completion dot already used (`before:-inset-3`), promoted to a reusable class.
+
+Applied to: the roadmap's "Mark as done" text button, the three tool-page back links, onboarding's Back/Skip controls, and the login/signup switch link.
+
+**The class carries a warning in the CSS**: only use it where there is clear space around the control. On a tight vertical list, one item's expanded region can overlap its neighbour and steal the tap — which is worse than a small target, not better.
+
+### Verified functionally, not by measurement
+
+Measuring the box would have proved nothing, since the whole point is that the box doesn't change. Verified instead with `document.elementFromPoint()` probing above and below each control: "Mark as done" now receives hits at ±20px from its centre (a 17px control with a 44px hit area), and on the signup page the switch link hits at ±18px **while the submit button 28px above remains fully hittable** — confirming the expansion didn't steal its neighbour's taps.
+
+### Note on the audit method itself
+
+The sweep over-reports: it measures element bounding boxes, so any control that already had a pseudo-element hit-area expansion looks like a violation. The roadmap's completion dot was flagged for exactly this reason and needed no change. Any future run of this audit should treat the touch-target list as candidates to check, not a defect list.
+
+---
+
 ## 17. Handoff Notes for Any New Claude Session
 
 If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is. If the user asks about the brother's ML project, its full build plan (verified datasets, methodology, limitations-section content, repo presentation, resume framing) is Section 16O — read it before improvising any of that, the dataset claims in it were verified by live web research and shouldn't be re-guessed from training data.
