@@ -170,8 +170,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   "arts-design": {
-    verifiedOn: "2026-08-16",
-    stillResearching: true,
+    verifiedOn: "2026-08-17",
     items: [
       {
         name: "YoungArts National Arts Competition",
@@ -185,6 +184,19 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         timing:
           "The 2027 competition opened July 21, 2026 and closes October 6, 2026 at 8pm ET — so unlike most things on this page, this one is open right now. Confirm on the site.",
         url: "https://youngarts.org/apply/",
+      },
+      {
+        name: "Scholastic Art & Writing Awards",
+        kind: "competition",
+        org: "Alliance for Young Artists & Writers",
+        what: "The country's longest-running recognition programme for creative teens, across 29 categories of art and writing. Work is judged regionally first, and regional award winners move on to national judging.",
+        cost:
+          "$15 per individual entry, $40 per portfolio (portfolios are seniors only). ⚠️ Fee waivers are available for teens who can't afford the fee, and the Awards state plainly that they trust you to be honest about financial need — you are not required to provide proof of it in the portal. That is unusually low-friction; do not let the fee stop a submission.",
+        eligibility:
+          "Teens in grades 7–12, ages 13 and up. One of the very few things on this page open to middle schoolers.",
+        timing:
+          "Entries open in the autumn. Deadlines are set by region and begin in December, so yours depends on where you live — find your region on the site rather than assuming a national date.",
+        url: "https://www.artandwriting.org/awards/how-to-enter/",
       },
       {
         name: "The Saturday Program",
@@ -202,9 +214,21 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   business: {
-    verifiedOn: "2026-08-16",
-    stillResearching: true,
+    verifiedOn: "2026-08-17",
     items: [
+      {
+        name: "DECA",
+        kind: "program",
+        org: "DECA Inc.",
+        what: "A career and technical student organisation running school chapters in marketing, finance, hospitality and management, with nearly 60 competitive events across six career categories. Members run school-based enterprises, do community service and attend conferences.",
+        cost:
+          "DECA doesn't publish a national membership fee — chapters set it, and it varies by school and state. Ask your school's DECA advisor directly what it costs and whether the chapter or school covers it; that is a normal question, not a favour.",
+        eligibility:
+          "High school students at a school with a chapter. If your school has no chapter, that itself is worth asking a business or CTE teacher about — starting one is a real, documentable leadership project.",
+        timing:
+          "Runs across the school year, with district, state and international competition rounds. Joining happens at the start of the year through your school.",
+        url: "https://www.deca.org/high-school-programs/",
+      },
       {
         name: "Global High School Investment Competition",
         kind: "competition",
@@ -241,9 +265,21 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   education: {
-    verifiedOn: "2026-08-16",
-    stillResearching: true,
+    verifiedOn: "2026-08-17",
     items: [
+      {
+        name: "Educators Rising",
+        kind: "program",
+        org: "Educators Rising",
+        what: "A career and technical student organisation for students who want to teach — school-based chapters with a teaching curriculum, state and national competitions, and a direct line into teacher preparation programmes at universities.",
+        cost:
+          "Not published nationally; chapters and state affiliates set their own dues. Ask the teacher who would advise a chapter what it costs and whether the school covers it.",
+        eligibility:
+          "Middle and high school students at a school with a chapter, plus a separate college division. If your school has none, ask a teacher about starting one — this is the field where founding the chapter is itself the relevant experience.",
+        timing:
+          "Runs across the school year, with competitions at state level and a national conference.",
+        url: "https://www.educatorsrising.org/",
+      },
       {
         name: "Breakthrough Teaching Fellowship",
         kind: "internship",

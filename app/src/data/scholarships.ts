@@ -338,24 +338,81 @@ export const SCHOLARSHIPS: Scholarship[] = [
       "⚠️ When we checked on August 17, 2026 the site still showed the previous cycle (deadline November 2, 2025) and had not posted the next one. Their deadlines have historically fallen in early November — check the site in the autumn, and do not treat that pattern as a date.",
     url: "https://hispanicheritage.org/programs/leadership/youth-awards/",
   },
+
+  // \u2500\u2500 Added Aug 17, 2026 on re-check. Both were deliberately LEFT OUT
+  // earlier the same day because their official sites were ambiguous or
+  // incomplete. Re-checking resolved Ron Brown (two official pages now agree on
+  // award, eligibility and deadlines) and did NOT resolve Golden Door \u2014
+  // which is listed anyway, with the gap stated on the card rather than papered
+  // over, because it is the single highest-value entry here for undocumented
+  // students and silence would serve them worse than an honest "we could not
+  // verify this; here is who to ask".
+  {
+    id: "ron-brown",
+    grades: [12],
+    tags: ["need", "status", "full-ride", "support"],
+    name: "Ron Brown Signature Scholarship",
+    org: "Ron Brown Scholar Program",
+    award:
+      "20 four-year $40,000 scholarships ($10,000 each year), plus a lifelong network \u2014 the programme's alumni community is a large part of what it actually offers.",
+    whoItsFor:
+      "Black/African American seniors. Only twenty are awarded, so it belongs on a list alongside other applications rather than as a plan \u2014 but the application is free and the award is one of the largest available to a high schooler.",
+    eligibility: [
+      "Current high school senior at the time of application",
+      "Must be Black/African American",
+      "U.S. citizen or hold a permanent resident visa card",
+      "Demonstrated academic excellence, leadership potential and community service",
+      "Financial need is considered",
+    ],
+    cycle:
+      "For students graduating in 2027: applications are due December 1, 2026, counselor recommendation letters by December 15, 2026, and winners are notified April 1, 2027. \u26A0\uFE0F On the day we checked (August 17, 2026) the site showed both \u201Capplication is now open\u201D and \u201Cthe 2026 competition is now closed\u201D on different pages \u2014 it labels cycles by award year. Confirm the live deadline on the site before relying on this.",
+    closesOn: "2026-12-01",
+    url: "https://ronbrown.org/ron-brown-scholarship/",
+    sensitive: true,
+  },
+  {
+    id: "golden-door",
+    grades: [12],
+    tags: ["need", "status", "support"],
+    name: "Golden Door Scholarship",
+    org: "Golden Door Scholars",
+    award:
+      "Scholarship funding toward a degree at a partner school, plus career coaching \u2014 every scholar meets monthly with a student career coach \u2014 mentorship and a scholar community. The programme reports 206 active scholars across more than 100 colleges and 464 graduates since 2013.",
+    whoItsFor:
+      "Undocumented students. This is one of the very few national programmes built specifically for students without lawful status, which is exactly why it is listed here despite the gaps below.",
+    eligibility: [
+      "\u26A0\uFE0F The programme's official page did not publish its eligibility criteria on the day we checked (August 17, 2026) \u2014 it described the audience only as students with high financial need and limited opportunity.",
+      "Third-party summaries describe wider criteria, and we deliberately do not repeat them here: for an award whose whole audience is status-dependent, second-hand eligibility is not good enough to act on.",
+      "Email the programme directly at info@goldendoorscholars.org to ask what this cycle requires.",
+    ],
+    cycle:
+      "The application was closed when we checked on August 17, 2026, and the site listed no dates for the next cycle. Ask the programme directly, or check back \u2014 we have not guessed at a deadline for this one.",
+    url: "https://roadtohire.org/golden-door-scholars",
+    sensitive: true,
+  },
 ];
 
 /**
- * ── DELIBERATELY NOT LISTED, and why (Aug 17, 2026) ────────────────────────
+ * ── PREVIOUSLY NOT LISTED, and how that resolved (Aug 17, 2026) ───────────
  * Both of these are real and would be valuable here. Neither is listed because
  * rule 1 wasn't satisfiable on the day, and a half-verified scholarship entry
  * is exactly the kind of confident wrongness this file exists to prevent.
  *
- *  • Golden Door Scholars — for students with DACA, TPS or no lawful status.
- *    Their site had moved to roadtohire.org and the live page showed only
- *    "Applications are Closed" with no eligibility criteria and no next cycle.
- *    Third-party summaries carry details; those are not a source we use for an
- *    award whose whole audience is status-dependent. Re-check for the next
- *    cycle and add it then — this is the highest-value missing entry.
- *  • Ron Brown Scholar Program — $40,000 over four years for Black students.
- *    The official page showed contradictory cycle status on the same screen
- *    (both "now open" and "the 2026 competition is now closed"), so the
- *    deadline could not be stated honestly. Re-check.
+ * BOTH WERE RE-CHECKED AND RESOLVED ON AUG 17, 2026, and both are now listed
+ * above. Kept as a record of how these rules are meant to bite in practice.
+ *
+ *  • Ron Brown — RESOLVED. Two official pages now agree on the award, the
+ *    eligibility and the December 1 / December 15 deadlines. The site's own
+ *    contradictory cycle labelling is stated on the card rather than resolved
+ *    by guessing at which one is right.
+ *  • Golden Door — STILL UNRESOLVED, and listed anyway with the gap visible on
+ *    the card. Its official page publishes no eligibility criteria and no next
+ *    cycle. Third-party summaries do carry details; we do not repeat them,
+ *    because second-hand eligibility is not good enough for an award whose
+ *    entire audience is status-dependent. The entry says exactly that and
+ *    points at the programme's own email instead. The alternative — omitting
+ *    it — would have left the single highest-value award for undocumented
+ *    students invisible, which serves them worse than an honest gap.
  */
 
 /**
