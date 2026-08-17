@@ -245,8 +245,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   "social-sciences": {
-    verifiedOn: "2026-08-16",
-    stillResearching: true,
+    verifiedOn: "2026-08-17",
     items: [
       {
         name: "Boys State and Girls State",
@@ -260,6 +259,58 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         timing:
           "One week in summer. Selection usually happens through your school in winter or early spring, so the year to ask is your sophomore or junior year.",
         url: "https://www.legion.org/get-involved/youth-programs/boys-state-boys-nation",
+      },
+      {
+        name: "Telluride Association Summer Seminar (TASS)",
+        kind: "program",
+        org: "Telluride Association",
+        what: "A free six-week, college-level summer seminar exploring how power and social structures work, through one of two tracks: TASS-CBS (history, politics and culture of African-descended communities) or TASS-AOS (systems of power and oppression, examined through literature, history and art). Includes three hours of seminar daily plus democratic self-governance of the community you live in.",
+        cost:
+          "Genuinely free — Telluride Association covers tuition, books, room, board and field trips for every student, plus travel assistance and a subsidy to replace summer job earnings for students who need it. This is one of the very few selective summer programs with zero cost even for travel.",
+        eligibility:
+          "Rising juniors and rising seniors, age 15 at the start of the program and no older than 17 at the end. Open to both US and international students. Selective — worth applying to, not something to expect.",
+        timing:
+          "The 2026 cycle's window has closed (applications opened Oct 15, 2025, closed Dec 3, 2025; program ran June 21–July 25, 2026). Based on that pattern, expect the 2027 cycle to open mid-October 2026 — confirm exact dates on the site rather than assuming they repeat exactly.",
+        url: "https://tellurideassociation.org/our-programs/high-school-students/",
+      },
+      {
+        name: "National Economics Challenge",
+        kind: "competition",
+        org: "Council for Economic Education",
+        what: "A team economics competition — a 30-question exam on micro/macroeconomics and the world economy, taken in 35 minutes. Teams of three or four, coached by a teacher or an economics professional, move from state competition through National Semi-Finals to the National Finals.",
+        cost:
+          "Free to enter through your school. National finalists' trip to the National Finals is fully funded except travel; cash awards go to the top four national teams.",
+        eligibility:
+          "High school students, entering as a school team (a coach/teacher is required to register a team — ask whoever teaches economics or AP Macro/Micro at your school). Two divisions: Adam Smith for AP/IB/Honors students and returning competitors, David Ricardo for students in their first year of the competition who've taken at most one economics course — the Ricardo division exists specifically so newcomers aren't up against veterans.",
+        timing:
+          "The 2027 season's registration runs roughly June through early December 2026, with the online Regional round in mid-December and National Finals in late May — confirm exact dates on the site.",
+        url: "https://www.councilforeconed.org/programs/for-students/national-economic-challenge/",
+      },
+      {
+        name: "Congressional Award",
+        kind: "program",
+        org: "U.S. Congress (administered by the Congressional Award Foundation)",
+        what: "A self-paced, non-competitive recognition program, not a class or a cohort — you set your own goals across four areas (voluntary public service, personal development, physical fitness, and expedition/exploration), log the hours yourself, and earn Bronze, Silver and Gold certificates and medals as you go. Nobody is rejected; the only requirement is doing what you said you'd do.",
+        cost:
+          "A one-time registration fee — a state affiliate council cites $25; a third-party guide cites $35, so confirm the exact current figure when you register rather than trusting either number here. Financial assistance is available for students for whom even that is a barrier.",
+        eligibility:
+          "Ages 13½ to 23. No GPA requirement, no application or acceptance process — you register and start logging your own goals.",
+        timing:
+          "Rolling and self-paced. You can register starting at 13½ and submit your first completed record once you turn 14; there is no deadline to miss.",
+        url: "https://www.congressionalaward.org/the-program/",
+      },
+      {
+        name: "We the People: The Citizen and the Constitution",
+        kind: "competition",
+        org: "Center for Civic Education",
+        what: "A constitutional-law curriculum run inside a government or civics class, culminating in a simulated congressional hearing: teams of three to six research one of six units, deliver a four-minute statement on a historical or current constitutional question, and field follow-up questions from a panel of judges acting as members of Congress.",
+        cost:
+          "Not published anywhere as a per-student fee — this runs as part of a class using curriculum materials from the Center for Civic Education, so any cost is whatever your school sets, if anything. Ask your government or civics teacher whether your school runs a team; if it doesn't, a teacher can start one.",
+        eligibility:
+          "High school students enrolled in a class running the program. There's no individual application — the entry point is your school having, or starting, a team.",
+        timing:
+          "State-level competitions run through fall and winter; the National Finals are held every spring in the Washington, D.C. area (the 2026 Finals ran April 17–19). Confirm your state's specific dates with your state's civic education coordinator.",
+        url: "https://www.civiced.org/we-the-people",
       },
     ],
   },
