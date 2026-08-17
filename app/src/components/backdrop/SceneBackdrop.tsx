@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useCanvasActive } from "@/lib/useCanvasActive";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";

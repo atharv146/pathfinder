@@ -1,8 +1,8 @@
 "use client";
 
-import { shouldAnimateAggressively, getMotionLevel } from "@/lib/motion";
+import { getMotionLevel } from "@/lib/motion";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Cursor-as-torch section: the generic advice everyone already hears sits on

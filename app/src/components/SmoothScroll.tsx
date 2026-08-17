@@ -4,7 +4,7 @@ import { shouldAnimateAggressively } from "@/lib/motion";
 
 import { ReactLenis, type LenisRef } from "lenis/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
 /**
  * Site-wide inertial smooth scrolling (Lenis), driven by GSAP's ticker.

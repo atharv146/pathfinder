@@ -9,6 +9,8 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { IntroLoader } from "@/components/IntroLoader";
 import { MotionToggle } from "@/components/MotionToggle";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 /**
@@ -71,6 +73,25 @@ export default function RootLayout({
           </SmoothScroll>
         </MotionProvider>
         </LanguageProvider>
+
+        {/* Added Aug 17, 2026. Until now there was NO way to know whether
+            anything worked in production — a broken page for a real student
+            was only discoverable if they thought to tell us, which for this
+            audience means never.
+
+            Both are cookieless and collect no personal data: Analytics counts
+            page views and Speed Insights samples real-device load performance
+            (the thing the Aug 17 perf pass was fixing blind). Neither needs an
+            API key — Vercel injects the project id at build time — and neither
+            runs at all in local development.
+
+            ⚠️ Deliberately NOT a general product-analytics tool. Nothing here
+            records who a student is, what they entered, or what they asked the
+            AI. Section 7 governs that: this audience is right to be wary of
+            being measured, and the only thing we need to know is whether the
+            pages load and work. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { shouldAnimateAggressively, getMotionLevel } from "@/lib/motion";
+import { getMotionLevel } from "@/lib/motion";
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
