@@ -5,19 +5,20 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
-export type BackdropVariant = "grid" | "sheets" | "swarm";
+export type BackdropVariant = "grid" | "sheets" | "swarm" | "orbits";
 
 /**
  * Per-route 3D background.
  *
- * Deliberately three genuinely different geometries rather than one scene in
- * three colours — the brief was that each page should feel like its own place.
+ * Deliberately four genuinely different geometries rather than one scene in
+ * four colours — the brief was that each page should feel like its own place.
  *
  *   grid   — a digital terrain of instanced blocks rolling on a sine field
  *   sheets — drifting planes, like pages caught mid-air
  *   swarm  — a particle field that leans toward the cursor
+ *   orbits — nested tilted rings turning at different rates (/major)
  *
- * All three use InstancedMesh: one draw call for hundreds of objects, which is
+ * All four use InstancedMesh: one draw call for hundreds of objects, which is
  * what makes this affordable as a *background* rather than the main event.
  * Everything sits far back with low bloom so type stays the focus.
  */
@@ -160,6 +161,78 @@ function Swarm({ color }: { color: string }) {
   );
 }
 
+/**
+ * Nested rings, each tilted differently and turning at its own rate.
+ *
+ * Chosen for /major specifically: the page is about one shared roadmap seen
+ * through eight different lenses, and concentric rings around a common centre
+ * is that idea as geometry — separate paths, same origin. It also reads as
+ * distinct from the other three at a glance, which is the actual requirement.
+ *
+ * One InstancedMesh for every dot across every ring, so the whole thing is a
+ * single draw call regardless of ring count.
+ */
+function Orbits({ color }: { color: string }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const RINGS = 5;
+  const PER_RING = 64;
+  const count = RINGS * PER_RING;
+
+  const rings = useMemo(
+    () =>
+      Array.from({ length: RINGS }, (_, i) => ({
+        radius: 2.4 + i * 1.35,
+        // Alternating tilt direction stops the set reading as one solid dome.
+        tilt: 0.5 + i * 0.16 * (i % 2 === 0 ? 1 : -1),
+        yaw: i * 0.42,
+        // Outer rings turn slower — the parallax that makes it read as depth.
+        speed: 0.16 - i * 0.022,
+        size: 0.075 - i * 0.007,
+      })),
+    []
+  );
+
+  useFrame(({ clock }) => {
+    const mesh = ref.current;
+    if (!mesh) return;
+    const t = clock.elapsedTime;
+
+    let i = 0;
+    for (let r = 0; r < RINGS; r++) {
+      const ring = rings[r];
+      const cosT = Math.cos(ring.tilt);
+      const sinT = Math.sin(ring.tilt);
+      const cosY = Math.cos(ring.yaw);
+      const sinY = Math.sin(ring.yaw);
+
+      for (let p = 0; p < PER_RING; p++) {
+        const a = (p / PER_RING) * Math.PI * 2 + t * ring.speed;
+        const x0 = Math.cos(a) * ring.radius;
+        const z0 = Math.sin(a) * ring.radius;
+
+        // Tilt about X, then yaw about Y. Written out rather than using
+        // Object3D.rotation so the ring can stay a flat circle in its own
+        // frame while the instance itself needs no orientation at all.
+        const y1 = -z0 * sinT;
+        const z1 = z0 * cosT;
+
+        dummy.position.set(x0 * cosY + z1 * sinY, y1, -x0 * sinY + z1 * cosY);
+        dummy.scale.setScalar(ring.size);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i++, dummy.matrix);
+      }
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, count]} rotation={[0.22, 0, 0.1]}>
+      <sphereGeometry args={[1, 6, 6]} />
+      <meshBasicMaterial color={color} transparent opacity={0.7} />
+    </instancedMesh>
+  );
+}
+
 export default function SceneBackdrop({
   variant,
   color,
@@ -177,6 +250,7 @@ export default function SceneBackdrop({
       {variant === "grid" && <Grid color={color} />}
       {variant === "sheets" && <Sheets color={color} />}
       {variant === "swarm" && <Swarm color={color} />}
+      {variant === "orbits" && <Orbits color={color} />}
       <EffectComposer>
         <Bloom intensity={0.55} luminanceThreshold={0.15} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>

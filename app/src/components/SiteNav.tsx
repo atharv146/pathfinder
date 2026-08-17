@@ -10,6 +10,7 @@ const LINK_KEYS = [
   // from anyone who doesn't already know that convention.
   { href: "/", key: "navHome" },
   { href: "/roadmap", key: "navRoadmap" },
+  { href: "/major", key: "navMajor" },
   { href: "/ask-ai", key: "navAskAi" },
   { href: "/guide", key: "navGuide" },
   { href: "/tools", key: "navTools" },

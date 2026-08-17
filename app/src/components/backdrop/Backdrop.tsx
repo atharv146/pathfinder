@@ -13,6 +13,7 @@ const ACCENT_HEX: Record<string, string> = {
   lime: "#d4ff4f",
   coral: "#ff7a4d",
   violet: "#b18cff",
+  azure: "#5ab8ff",
 };
 
 /**

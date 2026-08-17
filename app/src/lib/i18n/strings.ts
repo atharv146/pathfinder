@@ -38,6 +38,9 @@ export const STRINGS: Dict = {
   // Navigation
   navHome: { en: "Home", es: "Inicio" },
   navRoadmap: { en: "Roadmap", es: "Guía por grado" },
+  // "Carrera" is the standard term for a degree programme/major across Latin
+  // American Spanish — "especialidad" reads as a medical specialism.
+  navMajor: { en: "Major", es: "Carrera" },
   navAskAi: { en: "Ask AI", es: "Pregúntale a la IA" },
   navGuide: { en: "Guide", es: "Guía para padres" },
   navTools: { en: "Tools", es: "Herramientas" },

@@ -9,24 +9,29 @@ import {
   MAJOR_FAMILIES,
   type MajorFamily,
 } from "@/data/majors";
-import { Opportunities } from "@/components/roadmap/Opportunities";
+import { MajorGlyph } from "@/components/major/MajorGlyph";
 
 /**
- * "What changes for your major" — shown above the grade roadmap.
+ * The pointer from a grade roadmap out to /major.
  *
- * The general roadmap stays the spine; this is a lens over it, not a
- * replacement. That's deliberate: the shared advice is the same for almost
- * everyone, and pretending otherwise would mean writing seven near-identical
- * roadmaps and quietly inventing the differences.
+ * ⚠️ THIS USED TO BE THE WHOLE FEATURE. Until Aug 16, 2026 this component
+ * carried every piece of major-specific content — notes, the grade phase,
+ * counselor questions, researched programs, the per-school verify list — inside
+ * an expandable card sitting above the grade roadmap. That was the right shape
+ * when there were three bullet points; it stopped being right once there was a
+ * course ladder and a comparison table to show, and it could only ever render
+ * the student's own major, which is useless to the many students still
+ * deciding.
  *
- * Undecided is treated as a legitimate answer with its own content, not as an
- * empty state — it's the most common answer at this age.
+ * So per master-spec-doc §16K it is now deliberately ONE LINE. The general
+ * roadmap is the spine and stays uncluttered; /major is the place that content
+ * lives. Resist re-growing this — if something needs saying about a major, it
+ * belongs on /major, not here.
  */
 export function MajorLens({ grade }: { grade: number }) {
   const [family, setFamily] = useState<MajorFamily | null>(null);
   const [undecided, setUndecided] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -51,143 +56,56 @@ export function MajorLens({ grade }: { grade: number }) {
 
   if (!loaded) return null;
 
+  // No major set, or explicitly undecided. Both point at /major rather than at
+  // /account: browsing the fields is now possible without choosing one, and
+  // sending an undecided student to a settings form to "pick" is the wrong ask.
   if (undecided || !family) {
     return (
-      <div className="mb-12 border-l-2 border-line-bright pl-5 sm:pl-6">
-        <p className="micro mb-2 text-smoke">Your major</p>
-        <p className="mb-4 text-[0.95rem] leading-relaxed text-ash">
-          {undecided
-            ? "You picked “not sure yet”, which is the most common answer and costs you nothing. Everything on this page applies regardless of major."
-            : "Set a major and this page will show what changes for it."}
-        </p>
-        <Link
-          href="/account"
-          className="micro text-chalk underline underline-offset-4 hover:text-accent"
-        >
-          {undecided ? "Change it any time" : "Choose a major"}
-        </Link>
-      </div>
+      <Link
+        href="/major"
+        className="group mb-12 flex items-center gap-4 border-l-2 border-line-bright pl-5 transition-colors hover:border-accent/60 sm:pl-6"
+      >
+        <div className="min-w-0">
+          <p className="micro mb-1.5 text-smoke">Your major</p>
+          <p className="text-[0.95rem] leading-relaxed text-ash">
+            {undecided
+              ? "You picked “not sure yet”, which is the most common answer and costs you nothing — everything on this page applies regardless."
+              : "You haven’t set a major, which is fine."}{" "}
+            <span className="text-chalk underline underline-offset-4 transition-colors group-hover:text-accent">
+              Compare what changes across the eight fields
+            </span>
+          </p>
+        </div>
+      </Link>
     );
   }
 
-  const relevant = grade >= family.actFrom;
   const phase = phaseForGrade(family, grade);
+  const relevant = grade >= family.actFrom;
 
   return (
-    <div className="mb-12 border-l-2 border-accent/50 pl-5 sm:pl-6">
-      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-        <p className="micro text-accent">What changes for {family.label}</p>
-        {!relevant && (
-          <span className="micro text-smoke">
-            · mostly matters from grade {family.actFrom}
+    <Link
+      href="/major"
+      className="group mb-12 flex items-center gap-4 border-l-2 border-accent/50 pl-5 transition-colors hover:border-accent sm:pl-6"
+    >
+      <MajorGlyph
+        id={family.id}
+        className="hidden h-9 w-9 shrink-0 text-accent/70 transition-colors group-hover:text-accent sm:block"
+      />
+      <div className="min-w-0">
+        <p className="micro mb-1.5 text-accent">{family.label}</p>
+        <p className="text-[0.95rem] leading-relaxed text-chalk">
+          {phase
+            ? phase.label
+            : relevant
+              ? family.summary
+              : `Mostly starts mattering from grade ${family.actFrom}`}
+          <span className="ml-2 inline-block text-ash underline underline-offset-4 transition-colors group-hover:text-accent">
+            what changes for grade {grade} →
           </span>
-        )}
-      </div>
-
-      <p className="mb-5 text-[1rem] leading-relaxed text-chalk">{family.summary}</p>
-
-      <div
-        className="grid transition-all duration-500 ease-out"
-        style={{ gridTemplateRows: expanded ? "1fr" : "0fr", opacity: expanded ? 1 : 0 }}
-      >
-        <div className="overflow-hidden">
-          <ul className="space-y-4 pb-5">
-            {family.notes.map((n) => (
-              <li key={n} className="flex items-start gap-3">
-                <span className="mt-[0.5rem] h-1 w-1 shrink-0 rounded-full bg-accent" />
-                <span className="text-[0.92rem] leading-relaxed text-ash">{n}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* The grade-phased pathway — only the phase covering THIS grade.
-              Showing all four at once turns a pathway back into a wall of
-              text, which is what the grade pages already do well. */}
-          {phase && (
-            <div className="border-t border-line pb-5 pt-5">
-              <p className="micro mb-1 text-accent">
-                Grade {grade} · {phase.label}
-              </p>
-              <ul className="mt-3 space-y-3">
-                {phase.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-3">
-                    <span className="mt-[0.5rem] h-1 w-1 shrink-0 rounded-full bg-accent" />
-                    <span className="text-[0.92rem] leading-relaxed text-ash">
-                      {pt}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Questions, not answers. The answers are school-specific and we'd
-              be guessing; the question itself is the thing a better-resourced
-              classmate already knows to ask. */}
-          <div className="border-t border-line pb-5 pt-5">
-            <p className="micro mb-3 text-smoke">Worth asking your counselor</p>
-            <ul className="space-y-2">
-              {family.askCounselor.map((q) => (
-                <li
-                  key={q}
-                  className="rounded-lg border border-line bg-ink px-4 py-2.5 text-[0.88rem] leading-snug text-chalk"
-                >
-                  &ldquo;{q}&rdquo;
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Real, researched programs (5B). Grade-gated: showing a 7th
-              grader a rising-senior application deadline is noise. */}
-          {grade >= 9 && (
-            <div className="border-t border-line pb-5 pt-5">
-              <Opportunities familyId={family.id} familyLabel={family.label} />
-            </div>
-          )}
-
-          {/* Explicitly naming what we do NOT know for them. */}
-          <div className="border-t border-line pb-5 pt-5">
-            <p className="micro mb-3 text-smoke">
-              Check these per school — they genuinely differ
-            </p>
-            <ul className="space-y-2">
-              {family.verify.map((v) => (
-                <li key={v} className="flex items-start gap-3">
-                  <span className="mt-[0.5rem] h-1 w-1 shrink-0 rounded-full bg-smoke" />
-                  <span className="text-[0.88rem] leading-relaxed text-ash">
-                    {v}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          aria-expanded={expanded}
-          className="micro text-chalk transition-colors hover:text-accent"
-        >
-          {expanded
-            ? "— Hide details"
-            : `+ What this means for grade ${grade}`}
-        </button>
-        <Link href="/account" className="micro text-smoke transition-colors hover:text-chalk">
-          Change major
-        </Link>
-      </div>
-
-      {expanded && (
-        <p className="micro mt-5 leading-relaxed text-smoke">
-          General guidance for this field — individual schools set their own requirements,
-          so confirm anything specific on their admissions page.
         </p>
-      )}
-    </div>
+      </div>
+    </Link>
   );
 }
 

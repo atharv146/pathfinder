@@ -86,7 +86,28 @@ export async function proxy(request: NextRequest) {
   // verifying the session itself, so this is not a hole.
   const isApi = path.startsWith("/api/");
 
-  if (!user && !isPublic && !isApi) {
+  // Local-dev-only bypass: skip the gate entirely when running `next dev`.
+  //
+  // WHY THIS IS SAFE TO LEAVE IN: it keys off `NODE_ENV === "development"`,
+  // which `next dev` sets automatically and which a Vercel deployment (which
+  // always runs a production build, for both the Production and Preview
+  // environments) can never produce. There is no env var to forget to unset —
+  // the gate is architecturally off in every deployed context, not just
+  // configured off.
+  //
+  // WHY IT EXISTS: Google sign-in on localhost silently bounces to the
+  // production Site URL, because Supabase's allowed redirect list and the
+  // Google Cloud OAuth client are configured for the production origin only —
+  // that's a dashboard setting, not something a code change can fix, and it
+  // would need `http://localhost:3000/auth/callback` added on both sides to
+  // work. Rather than block local UI review on that, unauthenticated requests
+  // just pass through in dev. Client components still call
+  // `supabase.auth.getUser()` and correctly see no user, so this shows the
+  // signed-out/no-profile state of gated pages — real login is still the only
+  // way to review a personalized view locally.
+  const devBypass = process.env.NODE_ENV === "development";
+
+  if (!user && !isPublic && !isApi && !devBypass) {
     const url = request.nextUrl.clone();
     url.pathname = "/signup";
     // Remember where they were headed so they land there after signing up

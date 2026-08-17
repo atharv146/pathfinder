@@ -232,6 +232,23 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
   - **Major-family lens scope-checked against Section 3B and cleared:** `src/data/majors.ts` / `MajorLens.tsx` is a filter over the one shared roadmap (8 hardcoded buckets, structurally-safe notes only — no admissions odds, rankings, or per-major sequences), not a V3 multi-year-pathway build. The file's own header comment already names this boundary. No correction needed here, just confirmed.
   - **Real gap surfaced, not yet a decision:** onboarding (`OnboardingFlow.tsx`) only collects grade + major-family, both skippable — it does not collect target college, GPA, test scores, immigration status, first-gen flag, or home language from Section 4's data model, and `account_type` always defaults to `student` with no UI path to register as a parent account despite Section 14's "parent accounts are standalone" decision. This may be an intentional "keep onboarding light" choice (consistent with the Lovable-era "N/A is okay" lesson) rather than an oversight, but it hasn't been decided out loud — worth a deliberate call before building more account-dependent features on top of it.
 
+- **Aug 16, 2026 (later session) — built §16K step 1: the `/major` page.** First item off the §16K extension queue, and the first one that was unblocked. Route `/major`, gated by the existing proxy rules with no change needed there (it isn't on the public list, so it inherits the gate — verified signed-out lands on `/signup?next=/major`). What shipped, and the decisions inside it:
+  - **New content layer, `src/data/major-pathways.ts`** — per family: course ladders, a 4-stage grade-by-grade breakdown (courses / outside-class / narrative angle), and structural facts for the comparison grid. Written in the same register `majors.ts` already establishes — "commonly true of this field", never "this is what got someone in" — and the file header lists what is *banned* in it (odds, rankings, statistics, claims about what admissions readers think, named programs with deadlines). Named programs stay in `major-opportunities.ts`, which has the dated `verifiedOn` discipline; nothing was moved across that line.
+  - **Activity lists lead with what's free**, same rule as `major-opportunities.ts` rule 3, and paid work / family caregiving / family-business work are named as real experience — consistent with the activities interview's refusal to treat them as lesser.
+  - **`MajorLens` was cut from ~195 lines to a one-line pointer.** It used to carry every piece of major content inside an expandable card above the grade roadmap. That shape could only ever render the student's *own* major, which is useless to the many students still deciding, and it couldn't grow without crowding the roadmap. Per §16K the roadmap now keeps a slim link out and `/major` is the one home. The component's header says this explicitly so a future session doesn't re-grow it.
+  - **Opportunities moved to `/major`, and the grade≥9 gate was deliberately lifted there.** On the roadmap that gate was right (a rising-senior deadline is noise inside a 7th grader's checklist); on a page the student navigated to *on purpose*, knowing these exist years early is the advantage the app is for.
+  - **New page identity:** accent `azure` (#5ab8ff, the open slot on the hue wheel — teal ~170°, lime ~75°, coral ~15°, violet ~260°), and a new `orbits` backdrop variant, per the standing rule that a new page gets its own geometry rather than a recolour.
+  - **⚠️ REAL BUG FOUND AND FIXED IN VERIFICATION, worth knowing about generally: `<AnimatePresence mode="wait">` can strand the wrong content on screen.** `mode="wait"` holds the OUTGOING child mounted until its exit animation finishes, and exit animations run on requestAnimationFrame. Anywhere rAF is frozen — a backgrounded tab, and the preview pane where this was caught — the exit never completes, so the incoming child never mounts. The observed symptom was not a missing animation: the page rendered **Engineering / CS courses and narrative underneath the "Arts & Design" heading**, confidently mislabelled, which is precisely the failure this app exists to not commit. Replaced with a CSS `.swap-in` keyframe plus a React `key` (same reasoning as IntroLoader being CSS at all). **Standing rule to add to the existing "never author reveal-dependent content with inline opacity: 0" one: don't use `AnimatePresence mode="wait"` for content swaps either.**
+  - **Related, and the reason `.swap-in` starts at opacity 0.55 rather than 0:** Chrome throttles CSS animations in a hidden document too, so a hidden tab freezes the animation on its FIRST keyframe. `from { opacity: 0 }` would park the panel at invisible. 0.55 measures ~6.3:1 on the black sections and ~4.9:1 on the bone section, so even the frozen state clears WCAG AA. Same family of bug as the Aug 3 contrast finding — check the computed number, don't eyeball it.
+  - **Also fixed in the same pass:** the counselor-question list was written as `motion.li` with `initial={{opacity:0}}` + `whileInView`, i.e. real text behind a scroll trigger with no failsafe. Swapped to `FadeIn`, which already owns the documented force-reveal timer.
+  - **Verified:** `npm run build` and `tsc --noEmit` both clean; family switching, stage switching, and compare-row→switcher sync all confirmed programmatically; mobile at 375px has no horizontal overflow and every touch target measures well above 44px; the compare grid drops to cards below `md` rather than horizontally scrolling.
+
+- **Aug 16, 2026 (same day, follow-up pass) — added Radix, fixed a bug it exposed, and a local-dev auth bypass.**
+  - **`@radix-ui/react-tabs` and `@radix-ui/react-tooltip` installed — first Radix use in the project.** Both are headless behaviour primitives with zero visual opinion, so they slot into the existing look instead of imposing one. `MajorSwitcher` and `PathwayTimeline`'s stage buttons were hand-rolled `role="radiogroup"`/`aria-pressed` controls with manual keyboard handlers; both are now `Tabs.List`/`Tabs.Trigger`, relying on an ancestor `Tabs.Root` owned by `MajorView` (which also renders the matching `Tabs.Content`). Gets roving-tabindex arrow-key navigation, Home/End, and correct ARIA for free — verified programmatically: arrow-right cycles through all 8 family tabs in DOM order, all 4 stage tabs switch and update the gist/courses/narrative correctly, and the compare-table row click still drives the same underlying `selectedId` state.
+  - **New `src/components/ui/Tooltip.tsx`**, a house-styled Radix Tooltip wrapper. Used once so far — on the "Locked in early" column header in `MajorCompare` — to put the "this rates the field, not you" caveat right where a reader might misread the meter, not just in the paragraph below the whole table. **Found and fixed a real a11y bug while wiring it up:** the trigger was a bare `<span>`, which isn't focusable, so Radix's keyboard-accessible `onFocus` reveal path had nothing to attach to — a keyboard user could never see the tooltip at all. Fixed with `tabIndex={0}` on the trigger; verified via `dispatchEvent(focus)` that the tooltip now opens on keyboard focus, not just mouse hover.
+  - **⚠️ Verification note for future sessions, not a code bug:** while testing the Radix refactor, a scripted click using cached element coordinates from an earlier `read_page` call appeared to fail to switch tabs. Root cause was the coordinates going stale after the page re-rendered, not Radix or the app — re-reading live coordinates via `getBoundingClientRect()` immediately before clicking fixed it. Worth remembering: this preview tool's `computer` click coordinates are in the *screenshot's* pixel space, not the raw CSS viewport's, so converting via the screenshot/viewport size ratio matters when clicking by raw coordinate rather than by `ref`.
+  - **New local-dev auth bypass in `src/proxy.ts`.** Google sign-in on localhost bounces to the production Site URL because Supabase's allowed redirect list and the Google Cloud OAuth client are configured for the production origin only — a dashboard setting, not a code fix (would need `http://localhost:3000/auth/callback` added on both sides to resolve properly). Rather than block local UI review on that, the proxy now skips its auth gate entirely when `process.env.NODE_ENV === "development"` — which `next dev` sets automatically and a Vercel deployment (always a production build, for both Production and Preview) can never produce, so there's no env var to leak and nothing to remember to unset. Client components still correctly see no user, so this shows pages in their signed-out/no-profile state; reviewing a personalized view locally still needs a real session.
+
 ---
 
 ## 15. Current Build Status
@@ -585,8 +602,8 @@ A real architecture decision, not an implementation detail — worth its own hea
 
 ### Build order, if/when this proceeds
 
-Not yet approved to start — proposed order, updated Aug 16, 2026 now that the courses/OpenRouter questions are resolved:
-1. `/major` page (contained, no new schema, reuses 5B data)
+Updated Aug 16, 2026 (later session) — **step 1 is now BUILT and shipped**; see the Decisions Log entry for that date and Section 16L. Steps 2–8 remain as proposed:
+1. ~~`/major` page (contained, no new schema, reuses 5B data)~~ — **DONE.** Shipped with a new content layer (`major-pathways.ts`), a course-ladder diagram, an interactive grade timeline, an eight-family comparison grid, the `azure` accent and the `orbits` backdrop. `MajorLens` is now a one-line pointer; Opportunities moved here. See Section 16L.
 2. Tools-as-pages restructure (mechanical, low risk)
 3. Settings/stats page relocation **+ the new courses-list schema** (real scope now, per the resolution above — this is a prerequisite for step 6, not just a page move)
 4. Structural "what's offered/expected" comparison data per school/major (needed for step 6's course-gap flagging; likely extends `majors.ts`'s existing structural-pattern approach rather than per-school scraping)
@@ -594,6 +611,41 @@ Not yet approved to start — proposed order, updated Aug 16, 2026 now that the 
 6. Profile Analysis tool itself — **blocked on the Aug 16 addendum decision above.** The resume-reframing and recommendation parts of this tool can proceed once 1–5 are done; the dream-college comparison part specifically must not ship until the user has explicitly chosen between the ML-model path, the side-project-only path, or the NCES-aggregate middle path.
 7. Homepage promotion of Profile Analysis
 8. (Later, unscoped) AI essay feedback, scholarship/internship finder — see addendum
+
+---
+
+## 16L. V2 §16K Step 1 — The `/major` Page (BUILT Aug 16, 2026)
+
+*Step 1 of the §16K build order. Everything below exists in code and is verified. Steps 2–8 of that order are still unbuilt.*
+
+### Files
+
+| File | What it is |
+| --- | --- |
+| `src/app/major/page.tsx` | Route. Server-rendered hero, accent `azure`, index `A06`. |
+| `src/data/major-pathways.ts` | **New content layer.** Ladders, 4 grade stages, structure facts, per family. |
+| `src/components/major/MajorView.tsx` | Client orchestrator — owns the two pieces of shared state (family, stage). |
+| `src/components/major/MajorSwitcher.tsx` | The 8-family board. A `radiogroup` with roving tabindex, not a `<select>`. |
+| `src/components/major/MajorGlyph.tsx` | 8 hand-drawn hairline SVG glyphs, one construction each. |
+| `src/components/major/PathwayTimeline.tsx` | Grades 6–12 spine + proportionally-sized stage buttons. |
+| `src/components/major/CourseLadder.tsx` | The course sequence drawn as a connected chain. |
+| `src/components/major/MajorCompare.tsx` | All 8 families side by side. Table on desktop, cards below `md`. |
+
+Also touched: `PageFrame` (new `azure` accent), `globals.css` (`azure` tokens, `.swap-in`), `SceneBackdrop` + `Backdrop` (new `orbits` variant), `SiteNav` + `i18n/strings.ts` (nav entry, `navMajor` / "Carrera"), `roadmap/MajorLens.tsx` (cut to a pointer).
+
+### The rules these components are built around
+
+These are the things most likely to get "cleaned up" by a future session that doesn't know why they're there:
+
+1. **Nothing on this page may read as a score.** `PathwayTimeline` is not a progress bar and `CourseLadder` is not a checklist — no fill proportional to completion, no step styled as missing or red, no "behind". A student who joins in 11th grade sees earlier stages as *history*, not *debt*. Same rule as `JourneyArc` and `WhereYouAre`, and a timeline is the easiest place on the site to break it by accident.
+2. **The `LockedMeter` in the comparison grid measures the FIELD, not the student.** It says how sequence-dependent a subject is. It has nothing to do with how the student is doing, and every value ships with a one-line reason so the bar is never the whole claim.
+3. **Course ladders are the common U.S. sequence, not a universal one.** The caveat renders as part of the diagram, not as fine print under it, and no step is stated as a requirement. A school that stops at Algebra 2 is a context-section note, not a failure.
+4. **Browsing other fields is the feature.** The switcher defaults to the student's own major but never locks to it — most of this audience is deciding, not decided.
+5. **Don't re-grow `MajorLens`.** If something needs saying about a major, it goes on `/major`.
+
+### Known-good verification commands
+
+`npm run build` and `npx tsc --noEmit` both pass. Note that `/major` is gated, so verifying it in the preview pane requires either a real session or temporarily moving `app/.env.local` aside (which makes `proxy.ts` return early and skips gating — `MajorView` renders fine without Supabase). If you do that, **restore the file immediately.**
 
 ---
 
