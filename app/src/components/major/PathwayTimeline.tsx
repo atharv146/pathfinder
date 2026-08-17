@@ -229,8 +229,8 @@ export function PathwayTimeline({
 
       {grade != null && (
         <p className="micro mt-3 text-smoke">
-          You&rsquo;re in grade {grade} — starting later isn&rsquo;t starting
-          behind.
+          You&rsquo;re in grade {grade}{" "}
+          &mdash; starting later isn&rsquo;t starting behind.
         </p>
       )}
     </div>

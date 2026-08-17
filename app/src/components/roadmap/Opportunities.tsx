@@ -76,11 +76,19 @@ export function Opportunities({
       <>
         <div className="mt-6 rounded-xl border border-line bg-ink px-5 py-4">
           <p className="micro mb-2 text-smoke">Programs — not yet researched</p>
+          {/* NOTE: the space before "yet" is an explicit {" "} on purpose.
+              Written as plain text after {familyLabel} it renders as
+              "Social Sciencesyet" — the compiler strips the leading space of a
+              text run that wraps across lines. See CLAUDE.md. */}
           <p className="text-[0.85rem] leading-relaxed text-ash">
-            We haven&rsquo;t done the research for {familyLabel} yet, and
-            we&rsquo;d rather say that than list things we haven&rsquo;t
-            checked. Ask your counselor what students from your school have
-            done, and ask PathFinder&rsquo;s AI what to search for.
+            We haven&rsquo;t finished researching programs for {familyLabel}
+            {" "}
+            yet. We&rsquo;d rather say so than pad this page with things we
+            haven&rsquo;t checked ourselves &mdash; but that is about us, not
+            about the field: there are real programs out there for it. Two ways
+            to find them now: ask your counselor what students from your school
+            have actually done, and ask PathFinder&rsquo;s AI what search terms
+            to use.
           </p>
         </div>
         {crossCutting}
@@ -90,13 +98,16 @@ export function Opportunities({
 
   return (
     <div className="mt-6">
-      <p className="micro mb-1 text-accent">
-        Programs worth knowing about — {familyLabel}
+      <p className="micro mb-2 text-accent">
+        Real programs you can apply to — {familyLabel}
       </p>
-      <p className="mb-4 text-[0.82rem] leading-relaxed text-smoke">
-        All of these are free or paid, not pay-to-attend. Most are competitive,
-        so treat them as worth applying to rather than as a plan. Deadlines
-        shift every year — always confirm on the program&rsquo;s own site.
+      <p className="mb-5 max-w-2xl text-[0.9rem] leading-relaxed text-ash">
+        These are specific, named programs that actually exist, each one checked
+        on its own official site. <span className="text-chalk">Every one is
+        free or pays you</span> — nothing on this page charges thousands to
+        attend. Most are competitive, so treat them as worth applying to rather
+        than as a plan, and always confirm dates on the program&rsquo;s own site
+        because they shift every year.
       </p>
 
       <div className="flex flex-col gap-3">
@@ -142,6 +153,16 @@ export function Opportunities({
           </div>
         ))}
       </div>
+
+      {/* A short list must not read as a closed one — see `stillResearching`
+          in major-opportunities.ts. */}
+      {data.stillResearching && (
+        <p className="mt-4 rounded-lg border border-line bg-ink px-4 py-3 text-[0.82rem] leading-relaxed text-ash">
+          This list is short because we&rsquo;re still researching this field,
+          not because there&rsquo;s little out there. More coming — and the ones
+          here have been checked.
+        </p>
+      )}
 
       <p className="mt-4 text-[0.78rem] leading-relaxed text-smoke">
         Checked against official sources on{" "}

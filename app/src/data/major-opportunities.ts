@@ -42,6 +42,13 @@ export type FamilyOpportunities = {
   /** ISO date these entries were last checked against official sources. */
   verifiedOn: string;
   items: Opportunity[];
+  /**
+   * Set when the list is real but thin, so the UI can say "here's what we've
+   * checked so far, and we're still looking" instead of implying this is the
+   * complete set of what exists for the field. Honest either way — the failure
+   * mode we're avoiding is a short list reading as a closed one.
+   */
+  stillResearching?: boolean;
 };
 
 export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
@@ -145,6 +152,91 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     ],
   },
 
+  "arts-design": {
+    verifiedOn: "2026-08-16",
+    stillResearching: true,
+    items: [
+      {
+        name: "YoungArts National Arts Competition",
+        org: "National YoungArts Foundation",
+        what: "A national award across ten disciplines — visual arts, design, film, photography, writing, dance, theater, voice, classical music and jazz. Winners receive cash awards; those selected with distinction get an all-expenses-paid week in Miami working with professional artists.",
+        cost:
+          "$35 per application, and the fee is waived on request. The waiver is unusually easy: a short letter from a parent, teacher, counselor or principal saying you need the fee waived — it does not have to be on letterhead and does not have to give a reason. National YoungArts Week itself costs nothing; airfare, hotel and meals are covered.",
+        eligibility:
+          "Ages 15–18 and in grades 10–12 as of December 1, 2026. U.S. citizens, permanent residents, or anyone legally able to receive taxable income in the U.S.",
+        timing:
+          "The 2027 competition opened July 21, 2026 and closes October 6, 2026 at 8pm ET — so unlike most things on this page, this one is open right now. Confirm on the site.",
+        url: "https://youngarts.org/apply/",
+      },
+      {
+        name: "The Saturday Program",
+        org: "The Cooper Union, New York City",
+        what: "Free art and architecture classes on Saturdays in Cooper Union's own studios — drawing, painting, sculpture, graphic design, sound, architecture, and a dedicated portfolio preparation course. Taught by Cooper undergraduates with faculty and visiting artists.",
+        cost: "Free, and has been for over 55 years.",
+        eligibility:
+          "New York City public high school students, grades 9–12. Admission includes an artwork review. This one is genuinely local — if you're not in New York it won't apply to you, but it's worth knowing that free university outreach programs like this exist, and asking whether any college near you runs one.",
+        timing:
+          "Saturdays, 9–5, for 6–8 weeks. Fall, winter and spring sessions. Confirm current dates on the site.",
+        url: "https://cooper.edu/academics/outreach-and-pre-college/saturday-program",
+      },
+    ],
+  },
+
+  business: {
+    verifiedOn: "2026-08-16",
+    stillResearching: true,
+    items: [
+      {
+        name: "Global High School Investment Competition",
+        org: "Wharton Global Youth Program, University of Pennsylvania",
+        what: "A ten-week team competition. Your team manages a simulated $500,000 portfolio for a fictional client with real stated goals, then writes up the strategy behind your decisions. Fifty semifinalist teams present virtually and ten reach a finale at Wharton.",
+        cost: "Free. There is no registration fee.",
+        eligibility:
+          "High school students worldwide, in teams of four to six from the same school. The team leader must be 16 by the competition's first day.",
+        timing:
+          "⚠️ A teacher has to register the team — you cannot register yourself — so the real first step is asking one, and that takes lead time. For 2026–27, registration opened August 10 and closes September 11, 2026, with the competition running September 28 to December 4. Confirm on the site.",
+        url: "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/",
+      },
+    ],
+  },
+
+  "social-sciences": {
+    verifiedOn: "2026-08-16",
+    stillResearching: true,
+    items: [
+      {
+        name: "Boys State and Girls State",
+        org: "The American Legion / American Legion Auxiliary",
+        what: "A week-long, hands-on simulation of state government, running since 1935. You run for office, caucus, pass bills and staff a mock state. Two delegates from each state program go on to Boys Nation or Girls Nation in Washington, D.C.",
+        cost:
+          "Usually sponsored, but this genuinely varies by state and you should ask rather than assume. Maryland's is fully funded with no cost to families. New Jersey charges a $50 fee when a Legion post sponsors you. Arizona's true cost is roughly $650, with about $425 typically covered by a sponsorship. Asking your school or a local American Legion post about sponsorship is the normal route here, not a favour.",
+        eligibility:
+          "High school juniors, in the summer before senior year. Programs run in every state except Hawaii, which runs Girls State only.",
+        timing:
+          "One week in summer. Selection usually happens through your school in winter or early spring, so the year to ask is your sophomore or junior year.",
+        url: "https://www.legion.org/get-involved/youth-programs/boys-state-boys-nation",
+      },
+    ],
+  },
+
+  education: {
+    verifiedOn: "2026-08-16",
+    stillResearching: true,
+    items: [
+      {
+        name: "Breakthrough Teaching Fellowship",
+        org: "Breakthrough Collaborative (25 affiliate sites)",
+        what: "Breakthrough runs summer academic programs for middle schoolers that are taught largely by student teaching fellows, mentored by professional educators. It is real teaching — planning lessons and running a classroom — not shadowing or filing.",
+        cost: "Free to participate, and the national fellowship pays a living stipend.",
+        eligibility:
+          "⚠️ Check your local site before planning on this one. The NATIONAL fellowship is for undergraduates only. Some individual affiliates do take high schoolers — Breakthrough Summerbridge in San Francisco states plainly that its teaching fellows are high school and college students — but that is site by site, not a national rule. Find your nearest affiliate and ask them directly.",
+        timing:
+          "Summer, around nine weeks nationally. Applications generally run in winter and early spring.",
+        url: "https://breakthroughcollaborative.org/apply-fellow/",
+      },
+    ],
+  },
+
   "natural-sciences": {
     verifiedOn: "2026-08-16",
     items: [
@@ -199,14 +291,16 @@ export function opportunitiesFor(familyId: string): FamilyOpportunities | null {
 }
 
 /**
- * Families with no researched entries yet. Named explicitly so the UI can say
- * "we haven't researched this one yet" instead of showing an empty section
- * that reads as "there's nothing out there" — which would be false and
- * discouraging.
+ * Families with no researched entries yet.
+ *
+ * Empty as of Aug 16, 2026 — all eight families now have at least one verified
+ * entry. Kept rather than deleted because the mechanism is the honest one: if
+ * a future family is added (or entries are pulled after failing re-verification
+ * under rule 5), the UI must be able to say "we haven't researched this yet"
+ * instead of rendering an empty list, which reads as "there's nothing out there
+ * for you" and is false and discouraging.
+ *
+ * Note the related-but-different `stillResearching` flag on each family, which
+ * covers the more common case: a list that is real but short.
  */
-export const UNRESEARCHED_FAMILIES = [
-  "arts-design",
-  "business",
-  "social-sciences",
-  "education",
-];
+export const UNRESEARCHED_FAMILIES: string[] = [];

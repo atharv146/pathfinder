@@ -15,6 +15,7 @@ import { MajorGlyph } from "./MajorGlyph";
 import { PathwayTimeline } from "./PathwayTimeline";
 import { CourseLadder } from "./CourseLadder";
 import { MajorCompare } from "./MajorCompare";
+import { Activities, GeneralPrinciples } from "./Activities";
 
 /**
  * The body of /major — everything below the page hero.
@@ -307,11 +308,89 @@ export function MajorView() {
         </section>
       )}
 
-      {/* ── Questions and unknowns ────────────────────────────────────── */}
+      {/* ── Outside the classroom ─────────────────────────────────────────
+          Deliberately the largest section on the page: this is the part of an
+          application the app previously said nothing about. See the header
+          note in data/major-activities.ts. */}
+      <section className="relative border-t border-line px-6 py-20 sm:px-10 sm:py-24">
+        <div className="mx-auto max-w-5xl">
+          <FadeIn>
+            <p className="micro mb-5 text-smoke">(05) &nbsp;Outside the classroom</p>
+          </FadeIn>
+          <KineticText as="h2" className="display max-w-3xl text-4xl sm:text-5xl">
+            Courses are half of it. This is the{" "}
+            <span className="glow-accent italic">other half.</span>
+          </KineticText>
+          <FadeIn delay={0.1}>
+            <p className="mt-4 max-w-2xl text-ash">
+              What you do outside class is a large part of an application, and
+              almost none of the good options cost money. Here&rsquo;s what
+              tends to fit {family.label}, and what to make.
+            </p>
+          </FadeIn>
+
+          <div className="mt-12">
+            <Activities familyId={family.id} familyLabel={family.label} />
+          </div>
+        </div>
+      </section>
+
+      {/* ── The universal part ───────────────────────────────────────────
+          Its own section, not folded into the block above, because these are
+          true whatever you study — rendering them inside the family-specific
+          area would imply they change when you switch fields. */}
       <section className="texture-dots relative border-t border-line px-6 py-20 sm:px-10">
         <div className="mx-auto max-w-5xl">
           <FadeIn>
-            <p className="micro mb-5 text-smoke">(05) &nbsp;What to ask, what we don&rsquo;t know</p>
+            <p className="micro mb-5 text-smoke">
+              (06) &nbsp;True whatever you study
+            </p>
+          </FadeIn>
+          <KineticText as="h2" className="display max-w-3xl text-4xl sm:text-5xl">
+            Seven things nobody{" "}
+            <span className="glow-accent italic">tells you.</span>
+          </KineticText>
+          <FadeIn delay={0.1}>
+            <p className="mt-4 max-w-2xl text-ash">
+              These don&rsquo;t change with your major. Several of them exist to
+              contradict advice you&rsquo;ll hear elsewhere.
+            </p>
+          </FadeIn>
+
+          <div className="mt-14">
+            <GeneralPrinciples />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Real programs (moved here from MajorLens) ─────────────────── */}
+      <section className="relative border-t border-line px-6 py-20 sm:px-10">
+        <div className="mx-auto max-w-5xl">
+          <FadeIn>
+            <p className="micro mb-5 text-smoke">(07) &nbsp;Real programs</p>
+          </FadeIn>
+          <KineticText as="h2" className="display max-w-2xl text-4xl sm:text-5xl">
+            Checked, dated, and{" "}
+            <span className="glow-accent italic">free.</span>
+          </KineticText>
+          <FadeIn delay={0.1}>
+            <div className="mt-10">
+              {/* Grade gate lifted deliberately: on /roadmap this was hidden
+                  below grade 9 because a rising-senior deadline is noise inside
+                  a 7th grader's checklist. Here, a student who navigated to a
+                  page about their field is browsing on purpose, and knowing
+                  these exist years early is the advantage this app is for. */}
+              <Opportunities familyId={family.id} familyLabel={family.label} />
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── Questions and unknowns ────────────────────────────────────── */}
+      <section className="relative border-t border-line px-6 py-20 sm:px-10">
+        <div className="mx-auto max-w-5xl">
+          <FadeIn>
+            <p className="micro mb-5 text-smoke">(08) &nbsp;What to ask, what we don&rsquo;t know</p>
           </FadeIn>
 
           <div className="grid gap-10 md:grid-cols-2">
@@ -381,34 +460,11 @@ export function MajorView() {
         </div>
       </section>
 
-      {/* ── Real programs (moved here from MajorLens) ─────────────────── */}
-      <section className="relative border-t border-line px-6 py-20 sm:px-10">
-        <div className="mx-auto max-w-5xl">
-          <FadeIn>
-            <p className="micro mb-5 text-smoke">(06) &nbsp;Real programs</p>
-          </FadeIn>
-          <KineticText as="h2" className="display max-w-2xl text-4xl sm:text-5xl">
-            Checked, dated, and{" "}
-            <span className="glow-accent italic">free.</span>
-          </KineticText>
-          <FadeIn delay={0.1}>
-            <div className="mt-10">
-              {/* Grade gate lifted deliberately: on /roadmap this was hidden
-                  below grade 9 because a rising-senior deadline is noise inside
-                  a 7th grader's checklist. Here, a student who navigated to a
-                  page about their field is browsing on purpose, and knowing
-                  these exist years early is the advantage this app is for. */}
-              <Opportunities familyId={family.id} familyLabel={family.label} />
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
       {/* ── Compare all eight ─────────────────────────────────────────── */}
       <section className="texture-grid relative border-t border-line px-6 py-20 sm:px-10">
         <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <p className="micro mb-5 text-smoke">(07) &nbsp;Side by side</p>
+            <p className="micro mb-5 text-smoke">(09) &nbsp;Side by side</p>
           </FadeIn>
           <KineticText as="h2" className="display max-w-3xl text-4xl sm:text-5xl">
             How the eight fields actually{" "}

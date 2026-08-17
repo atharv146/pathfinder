@@ -192,8 +192,8 @@ export function OnboardingFlow() {
 
             {migrated > 0 && (
               <p className="micro mt-8 text-signal">
-                ✓ Brought {migrated} completed item{migrated === 1 ? "" : "s"} over from this
-                browser
+                ✓ Brought {migrated} completed item{migrated === 1 ? "" : "s"}{" "}
+                over from this browser
               </p>
             )}
 

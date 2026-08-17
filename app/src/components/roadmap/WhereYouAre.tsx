@@ -79,8 +79,8 @@ export function WhereYouAre() {
           <>
             There {remaining === 1 ? "is" : "are"}{" "}
             <span className="text-chalk">{remaining}</span>{" "}
-            {remaining === 1 ? "thing" : "things"} on your grade {grade} list.
-            None of it is urgent today, and none of it is a test.
+            {remaining === 1 ? "thing" : "things"} on your grade {grade}{" "}
+            list. None of it is urgent today, and none of it is a test.
           </>
         )}
       </p>
