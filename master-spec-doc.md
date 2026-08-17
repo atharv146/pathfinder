@@ -652,3 +652,21 @@ These are the things most likely to get "cleaned up" by a future session that do
 ## 17. Handoff Notes for Any New Claude Session
 
 If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is.
+
+## 16M. V2 §16K Step 2 — Tools as Pages (BUILT Aug 16, 2026)
+
+Step 2 of the §16K build order. `/tools` was one page with both tools stacked on it, deep-linked from roadmap items via hash fragments. Now:
+
+| Route | What |
+| --- | --- |
+| `/tools` | Index/gallery, maps over the registry |
+| `/tools/fee-waivers` | Fee-waiver checker |
+| `/tools/essay-brainstorm` | Essay brainstorming |
+
+- **`src/data/tools.ts` is the registry and the single source of truth for tool URLs.** `item-tools.ts` now builds its roadmap deep links with `toolHref(slug)` instead of hardcoding `/tools#fee-waivers`, which is what stops the two drifting apart the next time a tool moves. No hash links remain anywhere in `src/`.
+- **Each tool's `promise` — what it refuses to do — renders ABOVE the tool, not below it.** That's the reason these are separate pages rather than sections: a student arriving from a money-related roadmap item needs to know *before* answering questions that the checker will never tell them they don't qualify, and a student about to write about family hardship needs to know *before* typing that nothing is uploaded and nothing is written for them. Both facts change behaviour only if read first.
+- Section keeps the coral accent (tools read as one place); each page takes its own `Backdrop` variant (`sheets` / `grid` / `swarm`) per the standing rule that a new page gets its own geometry.
+- `/tools/profile-analysis` is deliberately NOT listed yet — it isn't built, and an index entry linking to nothing is a dead end. Add it to `TOOLS` when it ships.
+- Verified: `tsc --noEmit` and `npm run build` clean; all three routes return 200 with correct titles; the checker mounts; no horizontal overflow at 375px.
+
+---

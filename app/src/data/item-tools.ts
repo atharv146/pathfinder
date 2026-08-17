@@ -12,6 +12,8 @@
  * the roadmap and should stay that way.
  */
 
+import { toolHref } from "@/data/tools";
+
 export type ItemTool = {
   href: string;
   label: string;
@@ -22,34 +24,34 @@ export type ItemTool = {
 export const ITEM_TOOLS: Record<string, ItemTool> = {
   // Fee waivers — surfaced wherever the roadmap raises cost.
   "g7-fee-waiver-awareness": {
-    href: "/tools#fee-waivers",
+    href: toolHref("fee-waivers"),
     label: "Check which fee waivers you could get",
     why: "Nothing to do yet, but you can see now what this unlocks later.",
   },
   "10-6": {
-    href: "/tools#fee-waivers",
+    href: toolHref("fee-waivers"),
     label: "Check which fee waivers you could get",
     why: "Test and application fees are waivable. Worth knowing before you pay any.",
   },
   "11-7": {
-    href: "/tools#fee-waivers",
+    href: toolHref("fee-waivers"),
     label: "Check which fee waivers you could get",
     why: "Same idea as scholarships — money you don't have to spend counts as money found.",
   },
   "12-2": {
-    href: "/tools#fee-waivers",
+    href: toolHref("fee-waivers"),
     label: "Check which fee waivers you could get",
     why: "The FAFSA is free, but application and test fees aren't. These often are.",
   },
 
   // Essay work — 11th and 12th only.
   "11-5": {
-    href: "/tools#essay",
+    href: toolHref("essay-brainstorm"),
     label: "Start brainstorming your essay",
     why: "Three exercises for the part everyone gets stuck on: finding the story.",
   },
   "12-4": {
-    href: "/tools#essay",
+    href: toolHref("essay-brainstorm"),
     label: "Brainstorming exercises",
     why: "Same exercises work for supplements — start from a real moment, not a theme.",
   },
