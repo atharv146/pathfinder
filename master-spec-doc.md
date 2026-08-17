@@ -266,6 +266,8 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
   - **Profile Analysis ships with no score of any kind**, per the §16N resolution. Course-path matching is deterministic and checkable; the only model call rewrites the student's own activity text under the never-inflate rule; the college section teaches the Common Data Set and the net price calculator instead of printing a statistic we haven't verified.
   - **A false-positive course match was caught in verification** ("Algebra I" satisfying the "Algebra 2" step) and is now guarded with a comment explaining why digits are disqualifying. Marking a class complete that a student hasn't taken is precisely the confidently-wrong behaviour this app exists to avoid, and it would have shipped silently.
 
+- **Aug 17, 2026 (third session) — merged scholarships into a real opportunities directory, per direct user feedback that the page was wrongly scoped and wrongly labelled. Full detail in Section 16R.** `/opportunities` now unifies scholarships (`data/scholarships.ts`) with the internships/programs/competitions that already existed in `data/major-opportunities.ts` but were stranded inside `/major`. Nav renamed from "Money" to "Opportunities". `/scholarships` redirects rather than 404s. **A duplicate-key bug was caught live in verification** — RSI and NIH SIP are each intentionally listed under two major families, and the naive `opportunity:${name}` id silently dropped one copy via a React key collision; fixed by keying on name+family together. Lesson for this file specifically: a name shared across two families needs a family-qualified key.
+
 ## 15. Current Build Status
 
 *(Update after every session — this is what you paste into a new AI tool to catch it up instantly. This section was found significantly stale on Aug 15, 2026 and again needed a full rewrite on Aug 16 — see the Decisions Log — so treat any gap between this section and `git log` as a signal to re-audit, not as "nothing happened.")*
@@ -844,6 +846,36 @@ The page is now a filterable directory: full-text search across eligibility (stu
 ### Verified
 
 `tsc --noEmit`, `npm run build` and `eslint` all clean. Descender clipping measured before/after. Course matching verified against a fixture (the Algebra bug was found this way). Directory filtering verified live (12 of 12 → 2 of 12 on "Before senior year"). No horizontal overflow at 375px on either new page; filter chips measured 38px and were raised to 44px. **Not verified: the signed-in view** (localhost holds no session) and the 3D backdrops (the preview pane reports a zero-width viewport, so the ≥640px ambient gate never opens).
+
+---
+
+## 16R. Scholarships Merged Into a Real Opportunities Directory (BUILT Aug 17, 2026)
+
+*Third build session that day, direct user feedback: "the scholarship was supposed to be an entire directory for internships, scholarships, programs — not in money, it should be a entire section just for that, not in fucking money."*
+
+### What was actually wrong
+
+Two real problems, not a style complaint:
+
+1. **The nav link to the scholarships page was literally labelled "Money"** (`navScholarships: { en: "Money" }` in `lib/i18n/strings.ts`). That undersold the page even when it was scholarships-only, and became actively misleading once it needed to also cover internships and programs.
+2. **Internships and summer programs already existed** — 15 real, verified entries in `data/major-opportunities.ts` — but lived only inside `/major`, gated behind picking a specific field first. A student who wanted to browse money and opportunities in general, not majors, had no single page for it. Scholarships and programs were two disconnected systems.
+
+### What shipped
+
+- **`lib/opportunities.ts`** — a merge layer, not a rewrite. `data/scholarships.ts` and `data/major-opportunities.ts` keep their own headers, verification disciplines and dating rules exactly as they were; this module only combines both into one `UnifiedEntry[]` for display. Splitting the merge from the sources means neither file's verification contract gets diluted by the other.
+- **`Opportunity` (major-opportunities.ts) gained a `kind` field** — `"program" | "internship" | "competition"` — tagged by hand per entry (RSI and the NIH programs are internships; MITES, CS4CS, BWSI, TASS etc. are programs; YoungArts and the Wharton competition are competitions). This is what makes the directory's kind filter real rather than guessed at render time.
+- **`/opportunities`** — new route, `OpportunityDirectory.tsx`. Search, a kind filter (Scholarship / Internship / Program / Competition), the existing grade and open-now filters, scholarship facet tags rendered as chips on scholarship cards. 28 entries total (12 scholarships + 15 major-opportunities entries + 1 cross-cutting).
+- **`/scholarships` is now a permanent redirect to `/opportunities`** (`redirect()` in a server component) rather than deleted, so an old link or bookmark still lands somewhere real.
+- **Nav label renamed** `"Money"` → `"Opportunities"` (`"Becas"` → `"Oportunidades"` in Spanish).
+- **`/major`'s per-family Opportunities section is UNCHANGED.** It's still the right surface for a student already reading about their field — `/opportunities` is the browse-everything alternative, not a replacement.
+
+### A real bug caught in verification
+
+RSI (Research Science Institute) and the NIH Summer Internship Program are each deliberately listed under **two** major families in the source data (a genuine crossover — RSI matters to both engineering-cs and natural-sciences students, NIH SIP to both health-medicine and natural-sciences). The unified entry's id was originally just `opportunity:${name}`, which collided as a React list key across the two copies — confirmed via a live console key-collision warning during verification, and it silently dropped one of the two rows from the rendered list. Fixed by keying on `name + familyLabel` together. Worth remembering if this file is extended: **any name that appears under two families needs a key that includes which family**, not just the name.
+
+### Verified
+
+`tsc --noEmit`, `eslint`, `npm run build` all clean. Confirmed live: 28/28 entries render, the Internship filter returns exactly the 6 correct rows (both RSI and both NIH SIP copies present, not deduped), the redirect from `/scholarships` lands on `/opportunities`, nav shows "Opportunities" in both the desktop links and the mobile sheet, zero console errors on a fresh tab.
 
 ---
 

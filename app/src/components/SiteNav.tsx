@@ -13,7 +13,7 @@ const LINK_KEYS = [
   { href: "/major", key: "navMajor" },
   { href: "/ask-ai", key: "navAskAi" },
   { href: "/guide", key: "navGuide" },
-  { href: "/scholarships", key: "navScholarships" },
+  { href: "/opportunities", key: "navScholarships" },
   { href: "/tools", key: "navTools" },
 ];
 

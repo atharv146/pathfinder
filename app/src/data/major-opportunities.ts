@@ -23,9 +23,18 @@
  * admissions odds, or any claim about what a program does for your chances.
  */
 
+/**
+ * program      — coursework, a seminar, a summer institute. You attend and learn.
+ * internship   — real placed work, usually paid, in an actual lab or role.
+ * competition  — a judged submission or contest with an award at the end.
+ */
+export type OpportunityKind = "program" | "internship" | "competition";
+
 export type Opportunity = {
   name: string;
   org: string;
+  /** Added Aug 17, 2026 for the unified opportunities directory. */
+  kind: OpportunityKind;
   /** What it actually is, plainly. */
   what: string;
   /** Cost reality — the first thing this audience needs to know. */
@@ -57,6 +66,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "MITES Summer",
+        kind: "program",
         org: "MIT",
         what: "Six-week residential STEM program built specifically for students from underrepresented and underserved backgrounds — coursework, projects, and a real sense of whether engineering is for you.",
         cost: "Free. MIT and its donors cover program, food and housing. You pay only travel to MIT.",
@@ -67,6 +77,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "Research Science Institute (RSI)",
+        kind: "internship",
         org: "Center for Excellence in Education, hosted at MIT",
         what: "About 100 students worldwide spend a week in intensive STEM classes, then five weeks on an individual research project with a working scientist.",
         cost: "Free — classes, housing and dining all covered.",
@@ -78,6 +89,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "CS4CS",
+        kind: "program",
         org: "NYU Tandon School of Engineering",
         what: "Three-week introduction to cybersecurity and computer science — ethical hacking, cryptography, digital forensics. No prior coding experience required, which is the point.",
         cost: "Tuition-free.",
@@ -87,6 +99,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "Beaver Works Summer Institute (BWSI)",
+        kind: "program",
         org: "MIT Lincoln Laboratory",
         what: "Project-based summer courses in areas like autonomous vehicles, robotics and machine learning, with an online prerequisite course you complete first.",
         cost: "Free for accepted students.",
@@ -103,6 +116,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "Stanford Institutes of Medicine Summer Research Program (SIMR)",
+        kind: "internship",
         org: "Stanford Medicine",
         what: "Eight-week paid research internship in one of several areas — immunology, neurobiology, cancer biology, bioengineering, genetics and others — working in an actual lab.",
         cost: "Free to attend, and participants receive a stipend.",
@@ -114,6 +128,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "NIH Summer Internship Program (SIP)",
+        kind: "internship",
         org: "National Institutes of Health",
         what: "Paid summer research at NIH labs. One of the largest and most established high-school research pipelines in the country.",
         cost: "Paid — a stipend scaled to education level.",
@@ -131,6 +146,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "Telluride Association Summer Seminar (TASS)",
+        kind: "program",
         org: "Telluride Association",
         what: "A free, discussion-based seminar in humanities and social sciences — closer to a college seminar than a summer camp. Two tracks: one centred on Black studies, one on critical inquiry into power and social structures.",
         cost: "Completely free. Tuition, books, room, board and field trips all covered.",
@@ -142,6 +158,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "Princeton Summer Journalism Program",
+        kind: "program",
         org: "Princeton University",
         what: "Free journalism and college-readiness program for high-achieving juniors from lower-income backgrounds, including reporting, writing and a college application component.",
         cost: "Tuition-free, aimed specifically at students from limited-income families.",
@@ -158,6 +175,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "YoungArts National Arts Competition",
+        kind: "competition",
         org: "National YoungArts Foundation",
         what: "A national award across ten disciplines — visual arts, design, film, photography, writing, dance, theater, voice, classical music and jazz. Winners receive cash awards; those selected with distinction get an all-expenses-paid week in Miami working with professional artists.",
         cost:
@@ -170,6 +188,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "The Saturday Program",
+        kind: "program",
         org: "The Cooper Union, New York City",
         what: "Free art and architecture classes on Saturdays in Cooper Union's own studios — drawing, painting, sculpture, graphic design, sound, architecture, and a dedicated portfolio preparation course. Taught by Cooper undergraduates with faculty and visiting artists.",
         cost: "Free, and has been for over 55 years.",
@@ -188,6 +207,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "Global High School Investment Competition",
+        kind: "competition",
         org: "Wharton Global Youth Program, University of Pennsylvania",
         what: "A ten-week team competition. Your team manages a simulated $500,000 portfolio for a fictional client with real stated goals, then writes up the strategy behind your decisions. Fifty semifinalist teams present virtually and ten reach a finale at Wharton.",
         cost: "Free. There is no registration fee.",
@@ -206,6 +226,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "Boys State and Girls State",
+        kind: "program",
         org: "The American Legion / American Legion Auxiliary",
         what: "A week-long, hands-on simulation of state government, running since 1935. You run for office, caucus, pass bills and staff a mock state. Two delegates from each state program go on to Boys Nation or Girls Nation in Washington, D.C.",
         cost:
@@ -225,6 +246,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "Breakthrough Teaching Fellowship",
+        kind: "internship",
         org: "Breakthrough Collaborative (25 affiliate sites)",
         what: "Breakthrough runs summer academic programs for middle schoolers that are taught largely by student teaching fellows, mentored by professional educators. It is real teaching — planning lessons and running a classroom — not shadowing or filing.",
         cost: "Free to participate, and the national fellowship pays a living stipend.",
@@ -242,6 +264,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
     items: [
       {
         name: "NIH Summer Internship Program (SIP)",
+        kind: "internship",
         org: "National Institutes of Health",
         what: "Paid summer research placement in an NIH lab across the full range of biomedical science.",
         cost: "Paid stipend.",
@@ -251,6 +274,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
       },
       {
         name: "Research Science Institute (RSI)",
+        kind: "internship",
         org: "Center for Excellence in Education, hosted at MIT",
         what: "Five weeks of individual scientific research with a mentor, after a week of intensive classes.",
         cost: "Free, including housing and dining.",
@@ -274,6 +298,7 @@ export const CROSS_CUTTING: FamilyOpportunities = {
   items: [
     {
       name: "LEDA Scholars",
+      kind: "program",
       org: "Leadership Enterprise for a Diverse America",
       what: "A five-week summer institute plus year-round support with college admissions, essays and applications — built specifically for high-achieving students from under-resourced backgrounds. The ongoing support after the summer is the part that makes it unusual; most programs end when the summer does.",
       cost: "Free for selected Scholars.",

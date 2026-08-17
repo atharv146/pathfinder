@@ -44,7 +44,10 @@ export const STRINGS: Dict = {
   navAskAi: { en: "Ask AI", es: "Pregúntale a la IA" },
   navGuide: { en: "Guide", es: "Guía para padres" },
   navTools: { en: "Tools", es: "Herramientas" },
-  navScholarships: { en: "Money", es: "Becas" },
+  // Renamed from "Money" (Aug 17, 2026) — the page stopped being
+  // scholarships-only when it merged with internships/programs into a real
+  // directory at /opportunities, and "Money" undersold that.
+  navScholarships: { en: "Opportunities", es: "Oportunidades" },
   navActivities: { en: "Activities", es: "Actividades" },
   navAccount: { en: "Account", es: "Mi cuenta" },
   navLogIn: { en: "Log in", es: "Iniciar sesión" },

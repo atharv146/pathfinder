@@ -11,7 +11,16 @@ A free, student-owned app guiding immigrant and first-generation students (and t
 - Hosting: **Vercel — live at https://pathfinder-atharv.vercel.app, auto-deploying on every push to `master`.** Project name `pathfinder`, connected to the GitHub repo via the Vercel GitHub App. Root Directory is explicitly set to `app` (don't let it revert to auto-detect — breaks path aliases on git-triggered builds). SSO/Deployment Protection is off (public app). See `master-spec-doc.md` Decisions Log, Aug 11 entry, for the full setup story if this ever needs revisiting.
 - Repo: `atharv146/pathfinder` (public) — https://github.com/atharv146/pathfinder
 
-## 🔑 Session handoff (Aug 17, 2026, later session — read this first)
+## 🔑 Session handoff (Aug 17, 2026, third session — read this first)
+
+**Scholarships merged into a real opportunities directory — `/opportunities`, not `/scholarships`.** Direct user correction: the page was scholarships-only and the nav literally called it "Money", when it should have been one directory covering scholarships, internships and programs together. Full detail in `master-spec-doc.md` **Section 16R**.
+- `lib/opportunities.ts` merges `data/scholarships.ts` (12 entries) with `data/major-opportunities.ts` (15 entries, now tagged with a `kind: "program" | "internship" | "competition"` field) into one filterable list at `/opportunities`. Neither source file was rewritten — their verification disciplines stay intact.
+- `/scholarships` is now a redirect to `/opportunities`, not deleted.
+- Nav label is `"Opportunities"`, not `"Money"`. **Do not rename it back to "Money" or re-split it into a scholarships-only page** — that was the exact thing corrected this session.
+- `/major`'s per-family Opportunities section is untouched — it's the in-context surface, `/opportunities` is browse-everything.
+- **A real bug shipped and was caught live:** RSI and NIH SIP are deliberately listed under two major families each; a name-only id collided as a React key and silently dropped one copy. Any new entry appearing under multiple families needs a family-qualified key, not just the name.
+
+## Session handoff (Aug 17, 2026, second session)
 
 **Migration 0008 has been run by the user (confirmed Aug 17, 2026) — `/stats` is live.**
 
