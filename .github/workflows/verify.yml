@@ -1,0 +1,61 @@
+name: Verify
+
+# Runs the same checks `scripts/ship.sh` runs locally, on every push and PR.
+#
+# WHY: pushes to master auto-deploy straight to production — there is no
+# staging environment and no review gate. The local script is the first line of
+# defence and this is the second, for the case where someone (or some future
+# session) pushes without running it. Free for public repos.
+#
+# Deliberately does NOT deploy anything. Vercel owns deployment; this only
+# reports whether the code is sound.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      # `npm ci` rather than `npm install`: installs exactly the lockfile, so
+      # CI can't quietly pass on a different dependency tree than the one that
+      # actually ships.
+      - name: Install
+        working-directory: app
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: app
+        run: npm run typecheck
+
+      - name: Lint
+        working-directory: app
+        run: npm run lint
+
+      - name: Tests
+        working-directory: app
+        run: npm run test
+
+      # The build needs the public Supabase vars to exist, but never real ones:
+      # this job builds and discards, it does not run against the database. The
+      # placeholders keep `next build` from failing on a missing env var while
+      # guaranteeing CI can't touch production data even by accident.
+      - name: Build
+        working-directory: app
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key-for-build-only
+        run: npm run build
+
