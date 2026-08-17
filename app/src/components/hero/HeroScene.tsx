@@ -2,6 +2,7 @@
 
 import { Suspense, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useCanvasActive } from "@/lib/useCanvasActive";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
@@ -148,18 +149,24 @@ function Rig() {
 }
 
 export default function HeroScene() {
+  const { ref, active } = useCanvasActive<HTMLCanvasElement>();
+
   return (
     <Canvas
+      ref={ref}
+      // Stops rendering once scrolled past, and in a hidden tab — see
+      // lib/useCanvasActive.ts.
+      frameloop={active ? "always" : "never"}
       // Cap DPR — retina at full resolution is the single biggest cost here and
       // is not visually necessary for hairline geometry.
-      dpr={[1, 1.75]}
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0, 4.6], fov: 42 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       style={{ background: "transparent" }}
     >
       <Suspense fallback={null}>
         <Rig />
-        <EffectComposer>
+        <EffectComposer multisampling={0}>
           <Bloom intensity={0.35} luminanceThreshold={0.18} luminanceSmoothing={0.9} mipmapBlur />
         </EffectComposer>
       </Suspense>

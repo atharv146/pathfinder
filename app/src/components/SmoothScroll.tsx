@@ -87,7 +87,11 @@ function LenisRoot({ children }: { children: ReactNode }) {
     <ReactLenis
       root
       ref={lenisRef}
-      options={{ duration: 1.05, lerp: 0.1, smoothWheel: true }}
+      // Snappier than the original 1.05 / 0.1. Inertial scrolling that takes
+      // too long to settle reads as *lag* rather than smoothness — which is
+      // exactly the word the user used (Aug 17, 2026). The wheel should feel
+      // like it's attached to the page.
+      options={{ duration: 0.85, lerp: 0.14, smoothWheel: true }}
     >
       {children}
     </ReactLenis>

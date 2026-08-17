@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useCanvasActive } from "@/lib/useCanvasActive";
 import * as THREE from "three";
 
 /**
@@ -55,9 +56,13 @@ function Cage({ color, lines = 96 }: { color: string; lines?: number }) {
 }
 
 export default function WireCage({ color = "#f4f3f0" }: { color?: string }) {
+  const { ref, active } = useCanvasActive<HTMLCanvasElement>();
+
   return (
     <Canvas
-      dpr={[1, 1.6]}
+      ref={ref}
+      frameloop={active ? "always" : "never"}
+      dpr={[1, 1.3]}
       camera={{ position: [0, 0, 9.5], fov: 45 }}
       gl={{ antialias: true, alpha: true }}
       style={{ background: "transparent" }}

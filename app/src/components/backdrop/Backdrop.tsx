@@ -14,6 +14,7 @@ const ACCENT_HEX: Record<string, string> = {
   coral: "#ff7a4d",
   violet: "#b18cff",
   azure: "#5ab8ff",
+  rose: "#ff5fa2",
 };
 
 /**

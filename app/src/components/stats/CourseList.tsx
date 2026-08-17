@@ -97,6 +97,10 @@ export function CourseList({ grade }: { grade: number | null }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [missingTable, setMissingTable] = useState(false);
+  // Seeded once from the student's own grade. Deliberately NOT re-synced from
+  // the prop afterwards: someone entering a 9th-grade transcript from 11th
+  // grade has picked a year on purpose, and re-syncing would undo that choice
+  // on every re-render.
   const [draft, setDraft] = useState<CourseDraft>(() => emptyDraft(grade));
   const [adding, setAdding] = useState(false);
 
@@ -116,11 +120,6 @@ export function CourseList({ grade }: { grade: number | null }) {
     };
   }, []);
 
-  // The student's own grade is the sensible default for a new row, but only
-  // until they pick a different one — re-syncing after that would fight them.
-  useEffect(() => {
-    setDraft((d) => (d.grade === null ? { ...d, grade } : d));
-  }, [grade]);
 
   const submit = useCallback(async () => {
     const title = draft.title.trim();
@@ -397,7 +396,7 @@ export function CourseList({ grade }: { grade: number | null }) {
                           level: (e.target.value || null) as CourseLevel | null,
                         })
                       }
-                      className="rounded border border-line bg-ink px-2 py-1 text-[0.78rem] text-ash outline-none focus:border-accent"
+                      className="min-h-[38px] rounded border border-line bg-ink px-2 py-1.5 text-[0.78rem] text-ash outline-none focus:border-accent"
                     >
                       <option value="">Level —</option>
                       {LEVELS.map((l) => (
@@ -413,7 +412,7 @@ export function CourseList({ grade }: { grade: number | null }) {
                       onChange={(e) =>
                         patch(c.id, { status: e.target.value as CourseStatus })
                       }
-                      className="rounded border border-line bg-ink px-2 py-1 text-[0.78rem] text-ash outline-none focus:border-accent"
+                      className="min-h-[38px] rounded border border-line bg-ink px-2 py-1.5 text-[0.78rem] text-ash outline-none focus:border-accent"
                     >
                       {STATUSES.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -426,7 +425,7 @@ export function CourseList({ grade }: { grade: number | null }) {
                       type="button"
                       onClick={() => remove(c.id)}
                       aria-label={`Remove ${c.title}`}
-                      className="rounded px-2 py-1 text-[0.78rem] text-smoke transition-colors hover:text-[#ff7a6b]"
+                      className="min-h-[38px] rounded px-2 py-1.5 text-[0.78rem] text-smoke transition-colors hover:text-[#ff7a6b]"
                     >
                       Remove
                     </button>

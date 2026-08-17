@@ -39,6 +39,17 @@ export type Tool = {
 };
 
 export const TOOLS: Tool[] = [
+  // First on purpose — this is the one the homepage promotes, and the one that
+  // reads everything else the student has entered.
+  {
+    slug: "profile-analysis",
+    name: "Profile analysis",
+    tagline: "Everything you've entered, read back to you properly.",
+    what: "Matches your classes against the usual sequence for your field, writes your activities up in application language, and shows you exactly which published documents to look up for the colleges on your list.",
+    promise:
+      "It will never give you a percentage, a score, or your chances of getting in. Nobody can honestly calculate that, and a confident number from a site that sounds like it's on your side is worse than no number at all. It also never invents a college statistic — it tells you where the school publishes its own.",
+    effort: "Instant, then about 10 minutes of reading",
+  },
   {
     slug: "fee-waivers",
     name: "Fee waiver checker",

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-export type Accent = "teal" | "lime" | "coral" | "violet" | "azure";
+export type Accent = "teal" | "lime" | "coral" | "violet" | "azure" | "rose";
 
 /**
  * Per-page identity wrapper: sets the route's accent colour and draws the

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, SchoolApOffered } from "@/lib/db/types";
 
@@ -58,7 +58,10 @@ export function SchoolContext({ profile: initial }: { profile: Profile }) {
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  useEffect(() => setProfile(normalize(initial)), [initial]);
+  // No prop-mirroring effect here on purpose. StatsPanel doesn't render this
+  // until the profile has loaded, so the initial state is already the real
+  // data, and this component owns these fields from that point on — syncing
+  // from the prop would only ever fight the user's own typing.
 
   const save = useCallback(
     async (patch: Partial<Record<keyof Profile, unknown>>) => {

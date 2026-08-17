@@ -56,11 +56,21 @@ export function KineticText({
       document.fonts.ready.then(() => {
         if (cancelled || !ref.current) return;
 
-        split = new SplitText(el, { type: "words,lines", mask: "lines" });
+        // `linesClass` is not decoration: GSAP names the mask wrapper
+        // `<linesClass>-mask`, and without a class there is no way for CSS to
+        // give that wrapper the bottom padding that keeps `overflow: clip`
+        // from slicing descenders off every heading on the site. See the
+        // `.split-line-mask` note in globals.css — this was a real, shipped,
+        // user-reported bug ("text cut off at the bottom of the words").
+        split = new SplitText(el, {
+          type: "words,lines",
+          mask: "lines",
+          linesClass: "split-line",
+        });
         gsap.set(el, { autoAlpha: 1 });
 
         gsap.from(split.words, {
-          yPercent: 120,
+          yPercent: 140,
           rotate: 5,
           opacity: 0,
           duration: 1,

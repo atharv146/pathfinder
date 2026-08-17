@@ -14,6 +14,7 @@ import { CountUp } from "@/components/CountUp";
 import { RoadmapPath } from "@/components/RoadmapPath";
 import { TruthSpotlight } from "@/components/TruthSpotlight";
 import { ResumePaper } from "@/components/ResumePaper";
+import { AnalysisPromo } from "@/components/home/AnalysisPromo";
 import { Marquee } from "@/components/Marquee";
 import { KineticText } from "@/components/KineticText";
 import { ClosingWire } from "@/components/ClosingWire";
@@ -46,6 +47,7 @@ export default function Home() {
       <RoadmapPath />
       <TruthSpotlight />
       <ResumePaper />
+      <AnalysisPromo />
       <DeadlineSection />
       <RoadmapPreview />
       <ClosingWire />

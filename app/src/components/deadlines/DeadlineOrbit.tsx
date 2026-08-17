@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useCanvasActive } from "@/lib/useCanvasActive";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
@@ -144,15 +145,19 @@ export default function DeadlineOrbit({
 }: {
   rings: { progress: number; days: number }[];
 }) {
+  const { ref, active } = useCanvasActive<HTMLCanvasElement>();
+
   return (
     <Canvas
-      dpr={[1, 1.6]}
+      ref={ref}
+      frameloop={active ? "always" : "never"}
+      dpr={[1, 1.35]}
       camera={{ position: [0, 0, 5.6], fov: 50 }}
       gl={{ antialias: true, alpha: true }}
       style={{ background: "transparent" }}
     >
       <Gyro rings={rings} />
-      <EffectComposer>
+      <EffectComposer multisampling={0}>
         <Bloom intensity={0.85} luminanceThreshold={0.2} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>
     </Canvas>

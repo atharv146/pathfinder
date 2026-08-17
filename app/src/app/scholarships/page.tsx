@@ -3,12 +3,8 @@ import { FadeIn } from "@/components/FadeIn";
 import { PageFrame } from "@/components/PageFrame";
 import { Backdrop } from "@/components/backdrop/Backdrop";
 import { KineticText } from "@/components/KineticText";
-import {
-  SCHOLARSHIPS,
-  SCHOLARSHIPS_VERIFIED_ON,
-  cycleStatus,
-  type Scholarship,
-} from "@/data/scholarships";
+import { ScholarshipDirectory } from "@/components/scholarships/ScholarshipDirectory";
+import { SCHOLARSHIPS, SCHOLARSHIPS_VERIFIED_ON } from "@/data/scholarships";
 
 export const metadata = { title: "Scholarships — PathFinder" };
 
@@ -31,13 +27,6 @@ export const metadata = { title: "Scholarships — PathFinder" };
  *    detail this project exists not to ship.
  */
 export default function ScholarshipsPage() {
-  const now = new Date();
-  const ranked = [...SCHOLARSHIPS].sort((a, b) => {
-    const order = { open: 0, "opens-soon": 1, unknown: 2, closed: 3 } as const;
-    return order[cycleStatus(a, now).kind] - order[cycleStatus(b, now).kind];
-  });
-  const openCount = ranked.filter((s) => cycleStatus(s, now).kind === "open").length;
-
   return (
     <PageFrame accent="lime" label="Scholarships" index="A07">
       <section className="texture-dots relative min-h-[70vh] overflow-hidden px-6 py-16 sm:px-10">
@@ -59,25 +48,15 @@ export default function ScholarshipsPage() {
           </KineticText>
           <FadeIn delay={0.2}>
             <p className="mt-4 max-w-xl text-ash">
-              A small, checked list rather than a directory of thousands. Every
-              one of these was opened on its own official site and verified.
-              Applying to all of them costs nothing but time.
+              {SCHOLARSHIPS.length} awards, each one opened on its own official
+              site and checked — not a scraped directory of thousands where half
+              the deadlines are two years old. Search it, filter it, and apply
+              to everything you can: it costs nothing but time.
             </p>
-            {openCount > 0 && (
-              <p className="mt-4 inline-block rounded-full border border-accent/50 bg-accent/[0.08] px-4 py-1.5 text-[0.85rem] text-chalk">
-                {openCount === 1
-                  ? "1 of these is open right now"
-                  : `${openCount} of these are open right now`}
-              </p>
-            )}
           </FadeIn>
 
-          <div className="mt-14 flex flex-col gap-4">
-            {ranked.map((s, i) => (
-              <FadeIn key={s.id} delay={Math.min(0.28 + i * 0.05, 0.5)}>
-                <ScholarshipCard s={s} now={now} />
-              </FadeIn>
-            ))}
+          <div className="mt-12">
+            <ScholarshipDirectory />
           </div>
 
           <FadeIn delay={0.5}>
@@ -112,119 +91,5 @@ export default function ScholarshipsPage() {
         </div>
       </section>
     </PageFrame>
-  );
-}
-
-function ScholarshipCard({ s, now }: { s: Scholarship; now: Date }) {
-  const status = cycleStatus(s, now);
-
-  return (
-    <div
-      className={`relative overflow-hidden rounded-2xl border bg-panel p-6 sm:p-8 ${
-        status.kind === "open" ? "border-accent/50" : "border-line"
-      }`}
-    >
-      {status.kind === "open" && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-accent/15 blur-3xl"
-        />
-      )}
-
-      <div className="relative flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h2 className="display-md text-2xl text-chalk">{s.name}</h2>
-        <span className="micro text-smoke">{s.org}</span>
-      </div>
-
-      <div className="relative mt-3">
-        <StatusBadge status={status} />
-      </div>
-
-      <p className="relative mt-4 text-[0.95rem] leading-relaxed text-chalk">
-        {s.award}
-      </p>
-      <p className="relative mt-3 max-w-2xl text-[0.88rem] leading-relaxed text-ash">
-        {s.whoItsFor}
-      </p>
-
-      <div className="relative mt-5 grid gap-5 sm:grid-cols-2">
-        <div>
-          <p className="micro mb-2 text-smoke">Who can apply</p>
-          <ul className="flex flex-col gap-1.5">
-            {s.eligibility.map((e) => (
-              <li key={e} className="flex items-start gap-2.5">
-                <span
-                  aria-hidden
-                  className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-accent"
-                />
-                <span className="text-[0.83rem] leading-relaxed text-ash">{e}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className="micro mb-2 text-smoke">Timing</p>
-          <p className="text-[0.83rem] leading-relaxed text-ash">{s.cycle}</p>
-        </div>
-      </div>
-
-      {/* Immigration-status framing. States no assurance in either direction —
-          see the header note in data/scholarships.ts. */}
-      {s.sensitive && (
-        <div className="relative mt-5 rounded-lg border border-line-bright bg-ink px-4 py-3">
-          <p className="text-[0.82rem] leading-relaxed text-ash">
-            Any application asks for personal information. What you&rsquo;re
-            comfortable sharing is a decision for you and your family, and it is
-            not one we can make for you or reassure you about — read the
-            organisation&rsquo;s own policies, and if the stakes are unclear,
-            an immigration attorney is the right person to ask, not us.
-          </p>
-        </div>
-      )}
-
-      <a
-        href={s.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="micro relative mt-6 inline-block text-chalk underline underline-offset-4 transition-colors hover:text-accent"
-      >
-        Official site &rarr;
-      </a>
-    </div>
-  );
-}
-
-function StatusBadge({ status }: { status: ReturnType<typeof cycleStatus> }) {
-  if (status.kind === "open") {
-    return (
-      <span className="inline-block rounded-full border border-accent bg-accent/[0.14] px-3 py-1 text-[0.8rem] font-semibold text-chalk">
-        {status.daysLeft < 0
-          ? "Open now"
-          : status.daysLeft === 0
-            ? "Closes today"
-            : `Open now — about ${status.daysLeft} day${status.daysLeft === 1 ? "" : "s"} left`}
-      </span>
-    );
-  }
-  if (status.kind === "opens-soon") {
-    return (
-      <span className="inline-block rounded-full border border-line-bright px-3 py-1 text-[0.8rem] text-chalk">
-        {status.daysUntil <= 1
-          ? "Opens tomorrow"
-          : `Opens in about ${status.daysUntil} days`}
-      </span>
-    );
-  }
-  if (status.kind === "closed") {
-    return (
-      <span className="inline-block rounded-full border border-line px-3 py-1 text-[0.8rem] text-smoke">
-        That cycle has closed — next one not yet confirmed
-      </span>
-    );
-  }
-  return (
-    <span className="inline-block rounded-full border border-line px-3 py-1 text-[0.8rem] text-smoke">
-      Check the site for dates
-    </span>
   );
 }

@@ -259,6 +259,13 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
   - **Migration 0008 is written but NOT applied** — the user applies migrations by hand in the Supabase dashboard. Until then the course list renders an explicit "run migration 0008" panel and the chat's profile select falls back to the pre-0008 column list via `tolerateMissingColumn` (naming a missing column fails the *entire* select, which would have dropped all chat context, not just the new fields).
   - **Dead link fixed:** `/major`'s "Change your major" pointed at `/account`, which has never had a major control. It now points at `/stats`, which does.
 
+- **Aug 17, 2026 (second session) — perf pass, a real text-clipping bug, the scholarships directory, and Profile Analysis. Full detail in Section 16Q.** The decisions that belong in this log:
+  - **"Text cut off at the bottom of the words" was a genuine defect, not a taste note.** GSAP `SplitText`'s `mask: "lines"` clips at the padding box, and `.display`'s `line-height: 0.95` puts descenders outside the line box — measured at 12.5px of ink lost on a 100px heading. The pre-existing `.split-line` padding was a no-op because it sat on the inner element; the padding has to be on the mask. `KineticText` also had no `linesClass`, so no CSS could reach its masks at all. **Standing rule: any component using `mask: "lines"` must pass `linesClass: "split-line"`.**
+  - **The site's biggest performance cost was a CSS blur, not WebGL.** A ~2.5×-viewport layer under `blur(90px)` animated with `scale()` re-rasterises every frame on every page. Removing the `scale()` from the keyframes is the single highest-value change; blur radius and inset came second. Canvases now also stop rendering when off-screen or in a hidden tab (`lib/useCanvasActive.ts`), which matters most on the homepage's five.
+  - **Scholarships doubled to 12, and two verified-but-unlistable awards were deliberately left out** with the reason recorded in the data file. Golden Door in particular is status-dependent, and a third-party summary is not an acceptable source for eligibility on an award whose entire audience is undocumented students. This is rule 1 of that file working as intended rather than a gap.
+  - **Profile Analysis ships with no score of any kind**, per the §16N resolution. Course-path matching is deterministic and checkable; the only model call rewrites the student's own activity text under the never-inflate rule; the college section teaches the Common Data Set and the net price calculator instead of printing a statistic we haven't verified.
+  - **A false-positive course match was caught in verification** ("Algebra I" satisfying the "Algebra 2" step) and is now guarded with a comment explaining why digits are disqualifying. Marking a class complete that a student hasn't taken is precisely the confidently-wrong behaviour this app exists to avoid, and it would have shipped silently.
+
 ## 15. Current Build Status
 
 *(Update after every session — this is what you paste into a new AI tool to catch it up instantly. This section was found significantly stale on Aug 15, 2026 and again needed a full rewrite on Aug 16 — see the Decisions Log — so treat any gap between this section and `git log` as a signal to re-audit, not as "nothing happened.")*
@@ -307,7 +314,7 @@ The user decided explicitly: **the trained model stays the brother's side projec
 3. Design not explicitly signed off as final.
 4. Guide articles haven't had the deeper content pass that the roadmap already got (middle-school depth pass, Ivy-testing update, FAFSA dating fixes) — still the original Aug 11 port apart from those specific corrections.
 
-**Immediate next action for whoever picks this up (rewritten Aug 17, 2026):** the queue above is now at item 4/5. **First, ask the user to run migration 0008 in the Supabase dashboard** — `/stats` ships with a visible "run migration 0008" panel until they do, and Profile Analysis has nothing real to read without it. Then either the structural comparison logic (item 4) or the provider plumbing (item 5) can proceed; both are unblocked, and neither needs a new decision. Nothing in this list is blocked on the ML question anymore.
+**Immediate next action (rewritten Aug 17, 2026, later session — §16K items 1–7 are now ALL BUILT; see §16L, §16M, §16N, §16P, §16Q):** there is no queued §16K work left. The open items are the ones under "Known smaller open items" below, plus: re-check **Golden Door Scholars** and **Ron Brown** for the scholarships directory (both were verified-but-unlistable on Aug 17 — see the note at the foot of `data/scholarships.ts`), the guide-articles depth pass, and adding `ANTHROPIC_API_KEY` / `OPENROUTER_API_KEY` if the AI paths should stop running on the Gemini free tier. *(Historic note, kept because it was the previous instruction:* run migration 0008 in the Supabase dashboard — `/stats` ships with a visible "run migration 0008" panel until they do, — **the user confirmed on Aug 17, 2026 that this has been run**, so `/stats` is live.)*
 
 ---
 
@@ -787,6 +794,56 @@ The chat route's profile `select` names explicit columns, so it wraps the 0008 c
 ### Verified
 
 `tsc --noEmit` and `npm run build` clean, `/stats` in the route manifest. Page renders with correct copy and no console errors. Every control renders with a real label; the missing-migration panel renders and names 0008 explicitly; `SchoolContext`'s `undefined`-vs-`null` normalisation confirmed against a seeded profile (an unanswered yes/no stays "Not sure" rather than rendering as "No" — the migration-0004 bug that shipped once already). `strata` geometry checked numerically (143 instances, positions finite, wrap correct). **Not verified by eye:** the signed-in view — localhost can't hold a session (the documented dev bypass shows the signed-out state) — and the 3D backdrop, since the preview pane reports a zero-width viewport and the ambient-3D gate requires ≥640px. The user should look at `/stats` in a real browser after applying migration 0008.
+
+---
+
+## 16Q. Perf, the Text-Clipping Bug, the Scholarships Directory, and Profile Analysis (BUILT Aug 17, 2026)
+
+*Second build session that day. Closes §16K items 4–7 — the queue from §16K is now complete.*
+
+### 1. The text-cutting bug — real, found, measured
+
+The user reported text "being hidden or ingrained into the background and being cut off especially at the bottom of the words." Two separate defects, both confirmed with numbers rather than by eye:
+
+**Descenders were being sliced off every animated heading.** `.display` runs `line-height: 0.95`, tighter than the font's glyph box, so descenders (g, y, p, j) legitimately overflow the line box. Fine on its own — until GSAP `SplitText`'s `mask: "lines"` wraps each line in an element with `overflow: clip`. Measured at a 100px font: **12.5px of ink below the clip edge**, gone.
+
+The existing `.split-line` padding rule was a **no-op** against this. It put the padding on the inner line element with a matching negative margin, so the mask sized itself to the same box and the extra padding landed outside the clip edge. `overflow: clip` clips at the **padding box**, so the padding has to be on the *mask*. Fixed by adding `.split-line-mask` (GSAP names the wrapper `<linesClass>-mask`), and by giving `KineticText` a `linesClass` at all — it had none, so no CSS could reach its masks, which is why every page heading clipped. After: the clip edge sits **7.5px below** the ink. Reveal offsets moved 108%→140% so the extra room doesn't reveal the incoming line early.
+
+**`--color-smoke` was under AA on panels.** #78777f measures 4.74:1 on pure black but **4.43:1 on `--color-panel`** (#0b0b0d) — below the 4.5:1 minimum — and it's used for `.micro`, the ~11px labels. Raised to #8b8a92 (5.7:1 on panel, 6.0:1 on black). Third time this class of bug has surfaced; the rule stands: compute the ratio, don't look at it.
+
+### 2. Performance — the site really was slow, and mostly not because of WebGL
+
+The user reported lag "even on my type of laptop". In order of what each change bought:
+
+- **`.aurora` / `.aurora-accent` were the biggest cost, on every page, with no 3D involved.** `inset: -30%` (a surface ~2.5× the viewport) under `filter: blur(90px)`, animated with a `scale()` in the keyframes. A *scaled* blurred layer can't be reused by the compositor, so the browser re-rasterises the whole blurred surface every frame forever. Fixed: `scale()` removed from the keyframes (translate-only is a pure GPU composite), blur 90px→48px, inset −30%→−14%.
+- **Every WebGL canvas now stops when it can't be seen.** `lib/useCanvasActive.ts` drives R3F's `frameloop` from an IntersectionObserver plus `visibilitychange`. The homepage carries five canvases; previously all five rendered every frame regardless of scroll position, and a backgrounded tab kept drawing.
+- **`EffectComposer multisampling={0}`** on all three post-processed scenes. The composer defaults to 8× MSAA on its render target — a large per-frame cost for backgrounds that are bloomed and blurred anyway.
+- **DPR caps lowered** (backdrops 1.5→1.25, hero 1.75→1.5, others 1.6→1.3). Cost scales with the square of the ratio, and these are hairline geometry behind text.
+- **Film grain layer** `inset: -50%` → `-8%`. It only ever shifts ±1.5%, so three viewports of noise were being composited per frame to be seen by nobody.
+- **Lenis tuned snappier** (duration 1.05→0.85, lerp 0.1→0.14). Inertia that takes too long to settle reads as *lag*, which is the exact word used.
+
+### 3. Scholarships became a real directory (5 → 12 awards)
+
+Seven new entries, each verified by opening the organisation's own page on Aug 17, 2026: **Coca-Cola Scholars** ($20k, open now, closes Sept 30 2026), **QuestBridge National College Match** (full four-year, closes Oct 1 2026), **Elks Most Valuable Student** (closes Nov 12 2026 — and it states plainly that permanent residents do *not* qualify, which matters here), **HSF Scholar Program** (explicitly lists DACA), **APIA Scholars**, **Cooke Young Scholars** (7th graders — the earliest thing on the site, and the only entry that serves the middle-school half of the roadmap), and the **Hispanic Heritage Youth Awards** (listed with its cycle explicitly marked as not-yet-posted).
+
+**Two were deliberately left out and the reason is written into the data file**: Golden Door Scholars (site had moved, showed no eligibility criteria and no next cycle — and it is a status-dependent award, where a third-party summary is not an acceptable source) and Ron Brown (official page showed contradictory cycle status on the same screen). Both are the highest-value re-checks for a future session.
+
+The page is now a filterable directory: full-text search across eligibility (students search their own situation — "DACA", "Pell", "junior"), an "open now" filter, grade filter, and five facet tags. Open-right-now still sorts to the top inside any filter. The empty state says the list has nothing *listed* — never "you don't qualify" — and points at counselors, state agencies and community foundations, which run less competitive awards than any of these.
+
+### 4. Profile Analysis — the flagship (§16K items 4, 5, 6, 7)
+
+`/tools/profile-analysis`, own accent (`rose`) and own geometry (`lattice`), promoted from the homepage.
+
+- **`lib/analysis/structure.ts` — deterministic, no model.** Matches the student's course list against their field's ladders from `major-pathways.ts`. Normalised matching (Roman numerals folded, "AP"/"Honors"/"CP" stripped) because district course names disagree. **A real bug was caught in verification and is now a guard with a comment**: "Algebra I" matched the "Algebra 2" step, because the word-overlap fallback drops short tokens and both reduce to `["algebra"]`. Telling a student they've completed a class they haven't is the worst thing this file could do, so a digit mismatch is now disqualifying before anything else runs.
+- **School context caveats every reading.** "None" AP offered, or a written course limit, is attached to the output rather than left for the reader to remember.
+- **No score, ever.** Not a percentage, not reach/target/safety, not a verdict. A ladder step is "you listed this" or "not listed yet", and the latter is stated as a fact about the *list*.
+- **The dream-college section prints no statistic we haven't verified** — per §16N. It teaches the two documents every U.S. college publishes: the **Common Data Set** (section C describes the admitted class) and the federally-required **net price calculator**, with the test-optional caveat most sites get wrong stated explicitly (a score range covers only admitted students who *submitted* scores — a self-selected group, not the class).
+- **The AI does exactly one job**: rewriting the student's own activity entries into ~150-character application descriptions. `lib/ai/resume-prompt.ts` carries the never-inflate rule as bluntly as `EXTRACT_PROMPT` does, plus explicit instruction not to corporate-ise family caregiving or translating work. Nothing is saved automatically; ids are validated against the student's real activities so a hallucinated id can't attach text to anything.
+- **§16K step 5 shipped as the provider layer**: `lib/ai/openrouter.ts` rotates free models, used by the resume route first when `OPENROUTER_API_KEY` is set, falling back to the Gemini chain otherwise *and* on any OpenRouter failure. The key is unset today, so every request currently takes the Gemini path — a working state, not a broken one. Scope stays resume text only, per the Aug 15 reasoning about crisis/immigration paths.
+
+### Verified
+
+`tsc --noEmit`, `npm run build` and `eslint` all clean. Descender clipping measured before/after. Course matching verified against a fixture (the Algebra bug was found this way). Directory filtering verified live (12 of 12 → 2 of 12 on "Before senior year"). No horizontal overflow at 375px on either new page; filter chips measured 38px and were raised to 44px. **Not verified: the signed-in view** (localhost holds no session) and the 3D backdrops (the preview pane reports a zero-width viewport, so the ≥640px ambient gate never opens).
 
 ---
 

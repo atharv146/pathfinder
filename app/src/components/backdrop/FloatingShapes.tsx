@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useCanvasActive } from "@/lib/useCanvasActive";
 import * as THREE from "three";
 
 /**
@@ -108,9 +109,13 @@ function Field({ color }: { color: string }) {
 }
 
 export default function FloatingShapes({ color = "#f4f3f0" }: { color?: string }) {
-  const dpr = useMemo<[number, number]>(() => [1, 1.4], []);
+  const dpr = useMemo<[number, number]>(() => [1, 1.25], []);
+  const { ref, active } = useCanvasActive<HTMLCanvasElement>();
+
   return (
     <Canvas
+      ref={ref}
+      frameloop={active ? "always" : "never"}
       dpr={dpr}
       camera={{ position: [0, 0, 9], fov: 50 }}
       gl={{ antialias: true, alpha: true }}

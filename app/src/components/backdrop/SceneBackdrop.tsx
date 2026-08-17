@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useCanvasActive } from "@/lib/useCanvasActive";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
@@ -10,7 +11,8 @@ export type BackdropVariant =
   | "sheets"
   | "swarm"
   | "orbits"
-  | "strata";
+  | "strata"
+  | "lattice";
 
 /**
  * Per-route 3D background.
@@ -23,6 +25,7 @@ export type BackdropVariant =
  *   swarm  — a particle field that leans toward the cursor
  *   orbits — nested tilted rings turning at different rates (/major)
  *   strata — stacked drifting rows, like years of a transcript (/stats)
+ *   lattice — a slowly turning 3D point lattice (/tools/profile-analysis)
  *
  * All of them use InstancedMesh: one draw call for hundreds of objects, which
  * is what makes this affordable as a *background* rather than the main event.
@@ -307,6 +310,63 @@ function Strata({ color }: { color: string }) {
   );
 }
 
+
+/**
+ * A 3D lattice of points, turning slowly, with a travelling wave running
+ * through it.
+ *
+ * Chosen for Profile Analysis: the page reads one student's information
+ * against a structure, and a regular lattice seen from an angle is the
+ * clearest geometric statement of "structure" available — it also happens to
+ * be the only shape in this set that reads as ordered rather than organic,
+ * which is what distinguishes the page from the other five at a glance.
+ *
+ * The wave is amplitude-only (points brighten and swell in place); nothing
+ * travels toward a destination, because on this page in particular an
+ * animation that reads as "progress toward a goal" would be saying something
+ * about the student that this app does not say.
+ */
+function Lattice({ color }: { color: string }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const N = 7;
+  const count = N * N * N;
+  const GAP = 1.5;
+
+  useFrame(({ clock }) => {
+    const mesh = ref.current;
+    if (!mesh) return;
+    const t = clock.elapsedTime;
+
+    let i = 0;
+    for (let x = 0; x < N; x++) {
+      for (let y = 0; y < N; y++) {
+        for (let z = 0; z < N; z++) {
+          const px = (x - (N - 1) / 2) * GAP;
+          const py = (y - (N - 1) / 2) * GAP;
+          const pz = (z - (N - 1) / 2) * GAP;
+          // Distance-phased pulse: a spherical wave through the lattice.
+          const d = Math.sqrt(px * px + py * py + pz * pz);
+          const pulse = 0.5 + 0.5 * Math.sin(t * 0.9 - d * 0.5);
+          dummy.position.set(px, py, pz);
+          dummy.scale.setScalar(0.035 + pulse * 0.055);
+          dummy.updateMatrix();
+          mesh.setMatrixAt(i++, dummy.matrix);
+        }
+      }
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.rotation.y = t * 0.07;
+    mesh.rotation.x = 0.35 + Math.sin(t * 0.11) * 0.08;
+  });
+
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, count]}>
+      <boxGeometry />
+      <meshBasicMaterial color={color} transparent opacity={0.6} />
+    </instancedMesh>
+  );
+}
+
 export default function SceneBackdrop({
   variant,
   color,
@@ -314,9 +374,18 @@ export default function SceneBackdrop({
   variant: BackdropVariant;
   color: string;
 }) {
+  const { ref, active } = useCanvasActive<HTMLCanvasElement>();
+
   return (
     <Canvas
-      dpr={[1, 1.5]}
+      ref={ref}
+      // Off-screen backdrops render nothing. See lib/useCanvasActive.ts —
+      // this is decoration, and decoration nobody can see should cost zero.
+      frameloop={active ? "always" : "never"}
+      // 1.25 rather than 1.5: this is a blurred, bloomed field of hairlines
+      // behind text. The extra pixels are invisible here and the cost is
+      // quadratic in the ratio.
+      dpr={[1, 1.25]}
       camera={{ position: [0, 0, 11], fov: 45 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       style={{ background: "transparent" }}
@@ -326,7 +395,12 @@ export default function SceneBackdrop({
       {variant === "swarm" && <Swarm color={color} />}
       {variant === "orbits" && <Orbits color={color} />}
       {variant === "strata" && <Strata color={color} />}
-      <EffectComposer>
+      {variant === "lattice" && <Lattice color={color} />}
+      {/* multisampling={0}: the composer defaults to 8× MSAA on its render
+          target, which is a large per-frame cost for a background that is
+          then bloomed and blurred anyway. The scene keeps the canvas's own
+          antialiasing. */}
+      <EffectComposer multisampling={0}>
         <Bloom intensity={0.55} luminanceThreshold={0.15} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>
     </Canvas>

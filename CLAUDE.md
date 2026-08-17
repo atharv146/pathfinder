@@ -13,7 +13,15 @@ A free, student-owned app guiding immigrant and first-generation students (and t
 
 ## 🔑 Session handoff (Aug 17, 2026, later session — read this first)
 
-**⚠️ ACTION REQUIRED FROM THE USER BEFORE `/stats` WORKS: run `supabase/migrations/0008_courses.sql` in the Supabase dashboard (SQL Editor → New query → paste → Run).** It's written and committed but not applied — migrations here are applied by hand. Until it runs, the course list on `/stats` shows an explicit "run migration 0008" panel and saves nothing; everything else degrades gracefully rather than breaking.
+**Migration 0008 has been run by the user (confirmed Aug 17, 2026) — `/stats` is live.**
+
+**§16K IS NOW COMPLETE — items 1–7 all built.** The later Aug 17 session shipped items 4–7 plus a perf pass and a real text-rendering bug fix. Full detail in `master-spec-doc.md` **Section 16Q**. Highlights a future session must not undo:
+- **`.split-line-mask` in globals.css is load-bearing.** GSAP `mask: "lines"` clips at the padding box and `.display` uses `line-height: 0.95`, so descenders were being sliced off every animated heading (measured: 12.5px of ink at a 100px font). **Any component using `mask: "lines"` MUST pass `linesClass: "split-line"`** or no CSS can reach its mask.
+- **Never put a `scale()` in the `.aurora` keyframes, and don't raise the blur back to 90px.** That combination re-rasterises a 2.5×-viewport blurred layer every frame on every page and was the main cause of the site feeling laggy — bigger than all the WebGL combined.
+- **Canvases pause when off-screen** via `lib/useCanvasActive.ts` → R3F `frameloop`. Any new `<Canvas>` should use it.
+- **`/tools/profile-analysis` is the flagship** (`rose` accent, `lattice` backdrop, promoted on the homepage). It never scores a student, never prints a college statistic we haven't verified, and its only AI call rewrites the student's own activity entries under the never-inflate rule in `lib/ai/resume-prompt.ts`.
+- **`lib/analysis/structure.ts` matches course names by digit-first rules on purpose** — "Algebra I" once matched the "Algebra 2" step, which would have told a student they'd completed a class they hadn't.
+- **Scholarships is a 12-entry filterable directory now.** Two researched awards (Golden Door, Ron Brown) are deliberately absent with reasons recorded at the foot of `data/scholarships.ts` — re-check those before adding anything else.
 
 **§16K step 3 is BUILT (Aug 17, 2026) — `/stats` + the per-course schema. Full detail in `master-spec-doc.md` Section 16P.** New gated route `/stats` (violet, new `strata` backdrop), `courses` table + four student-reported school-context columns on `profiles`, `src/lib/db/courses.ts`, `src/components/stats/`. `/account` shrank to email + language/role + share link + deletion — **don't re-add profile fields there**, the relocation was the point. Grade and major moved to `/stats`, which also fixed `/major`'s "Change your major" link pointing at a page with no major control.
 

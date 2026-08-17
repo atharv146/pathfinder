@@ -30,10 +30,29 @@
  * the UI render the "decide with your family" note instead of any assurance.
  */
 
+/**
+ * Filter facets for the directory. Deliberately few and concrete — a filter
+ * bar with fifteen tags is a worse experience than a list of twelve awards.
+ *
+ *  need      — financial need is central to who wins it
+ *  status    — eligibility turns on citizenship or immigration status, in
+ *              either direction (some *require* citizenship, some exist
+ *              specifically for undocumented students). Surfaced as a filter
+ *              because it is the first question this audience actually has.
+ *  early     — you apply before senior year. The most valuable and least
+ *              known category on the page.
+ *  full-ride — covers most or all of a degree, not a one-off cheque
+ *  support   — comes with advising, coaching or a community, not just money
+ */
+export type ScholarshipTag = "need" | "status" | "early" | "full-ride" | "support";
+
 export type Scholarship = {
   id: string;
   name: string;
   org: string;
+  /** Grades that can actually apply this year. Drives the grade filter. */
+  grades: number[];
+  tags: ScholarshipTag[];
   /** What it actually gives you. Quote the organisation's own figures. */
   award: string;
   /** The honest "is this me?" answer. */
@@ -58,11 +77,14 @@ export type Scholarship = {
   sensitive?: boolean;
 };
 
-export const SCHOLARSHIPS_VERIFIED_ON = "2026-08-16";
+/** The most recent date on which this whole list was re-checked. */
+export const SCHOLARSHIPS_VERIFIED_ON = "2026-08-17";
 
 export const SCHOLARSHIPS: Scholarship[] = [
   {
     id: "gates",
+    grades: [12],
+    tags: ["need", "full-ride", "status"],
     name: "The Gates Scholarship",
     org: "Bill & Melinda Gates Foundation",
     award:
@@ -84,6 +106,8 @@ export const SCHOLARSHIPS: Scholarship[] = [
   },
   {
     id: "jkc-college",
+    grades: [12],
+    tags: ["need", "full-ride", "support"],
     name: "Cooke College Scholarship Program",
     org: "Jack Kent Cooke Foundation",
     award:
@@ -102,6 +126,8 @@ export const SCHOLARSHIPS: Scholarship[] = [
   },
   {
     id: "questbridge-cps",
+    grades: [11],
+    tags: ["need", "early", "support"],
     name: "College Prep Scholars",
     org: "QuestBridge",
     award:
@@ -119,6 +145,8 @@ export const SCHOLARSHIPS: Scholarship[] = [
   },
   {
     id: "dell",
+    grades: [12],
+    tags: ["need", "support"],
     name: "Dell Scholars",
     org: "Michael & Susan Dell Foundation",
     award:
@@ -138,6 +166,8 @@ export const SCHOLARSHIPS: Scholarship[] = [
   },
   {
     id: "thedream-us",
+    grades: [12],
+    tags: ["need", "status", "full-ride"],
     name: "National Scholarship",
     org: "TheDream.US",
     award:
@@ -157,7 +187,176 @@ export const SCHOLARSHIPS: Scholarship[] = [
     url: "https://www.thedream.us/scholarships/national-scholarship/",
     sensitive: true,
   },
+
+  // ── Added Aug 17, 2026. Each of the seven below was verified by opening the
+  // organisation's own page on that date; figures and dates are quoted from
+  // what those pages actually said, including where a page had not yet posted
+  // its next cycle. Where a site was ambiguous or unreachable, the award was
+  // LEFT OUT rather than filled in from a third-party summary — see the note
+  // at the bottom of this file for the two that were dropped for that reason.
+
+  {
+    id: "coca-cola",
+    grades: [12],
+    tags: ["status"],
+    name: "Coca-Cola Scholars Program",
+    org: "Coca-Cola Scholars Foundation",
+    award: "$20,000. 150 scholars are selected each year.",
+    whoItsFor:
+      "Seniors, and the bar is a B average rather than a perfect transcript. It is achievement-based rather than need-based, so it does not ask your family to qualify for anything first.",
+    eligibility: [
+      "Currently enrolled high school student graduating during the 2026–2027 academic year",
+      "Minimum overall B / 3.0 GPA in high school coursework",
+      "U.S. citizens, U.S. nationals, U.S. permanent residents, refugees, asylees, Cuban-Haitian entrants, or humanitarian parolees",
+      "Attending school in one of the 50 U.S. states, D.C., Puerto Rico, or select DoD schools",
+    ],
+    cycle:
+      "The application for students graduating in 2026–2027 opened Monday, August 3, 2026 and closes Wednesday, September 30, 2026 at 5pm Eastern.",
+    opensOn: "2026-08-03",
+    closesOn: "2026-09-30",
+    url: "https://www.coca-colascholarsfoundation.org/apply/",
+  },
+  {
+    id: "questbridge-match",
+    grades: [12],
+    tags: ["need", "full-ride"],
+    name: "National College Match",
+    org: "QuestBridge",
+    award:
+      "A full four-year scholarship at one of 55 college partners, awarded through a matching process rather than as cash.",
+    whoItsFor:
+      "Seniors — this is the senior-year half of QuestBridge, and the one College Prep Scholars leads into. You do not have to have done College Prep Scholars to apply.",
+    eligibility: [
+      "High school senior",
+      "Household earning less than $65,000 a year for a household of four, with minimal assets",
+      "Earning primarily A's in the most challenging courses offered, with strong writing",
+      "QuestBridge states its citizenship and status requirements on its own eligibility page — check them there, we are not summarising them second-hand",
+    ],
+    cycle:
+      "The 2026 application deadline is October 1, 2026. Match results come back in December, before regular decision deadlines.",
+    closesOn: "2026-10-01",
+    url: "https://www.questbridge.org/high-school-students/national-college-match",
+  },
+  {
+    id: "elks-mvs",
+    grades: [12],
+    tags: ["need"],
+    name: "Most Valuable Student",
+    org: "Elks National Foundation",
+    award:
+      "500 four-year scholarships ranging from $1,000 per year to $7,500 per year. The top 20 scholars receive $30,000.",
+    whoItsFor:
+      "Seniors. You do not need any connection to the Elks to apply, which surprises most people who see the name and assume it's members-only.",
+    eligibility: [
+      "Current high school senior, or the equivalent",
+      "Must be a U.S. citizen on the date the application is submitted — the foundation states plainly that permanent legal resident status does not qualify",
+    ],
+    cycle:
+      "The 2027 application deadline is November 12, 2026 at 11:59pm Pacific.",
+    closesOn: "2026-11-12",
+    url: "https://www.elks.org/scholars/scholarships/mvs.cfm",
+    sensitive: true,
+  },
+  {
+    id: "hsf",
+    grades: [12],
+    tags: ["need", "status", "support"],
+    name: "HSF Scholar Program",
+    org: "Hispanic Scholarship Fund",
+    award:
+      "Award amounts range from $500 to $5,000, based on relative need. Scholars also get career services, mentorship and leadership programming.",
+    whoItsFor:
+      "Students of Hispanic heritage, and it is one of the few large national programmes that explicitly lists DACA recipients as eligible alongside citizens and permanent residents.",
+    eligibility: [
+      "U.S. citizen, permanent legal resident, or DACA",
+      "High school seniors: minimum 3.0 GPA on a 4.0 scale (or equivalent)",
+      "College and graduate students: minimum 2.5 GPA on a 4.0 scale (or equivalent)",
+      "Must plan to enrol full-time in a degree programme",
+    ],
+    cycle:
+      "The 2026 application ran January 5 to February 15, 2026 and has closed. HSF opens a new cycle each January — check the site in December for the 2027 dates rather than assuming the same days.",
+    closesOn: "2026-02-15",
+    url: "https://www.hsf.net/scholarship",
+    sensitive: true,
+  },
+  {
+    id: "apia",
+    grades: [12],
+    tags: ["need"],
+    name: "APIA Scholarship",
+    org: "APIA Scholars",
+    award:
+      "Scholarship amounts range from $2,500 one-year awards to $20,000 multi-year awards.",
+    whoItsFor:
+      "Students of Asian and Pacific Islander heritage heading into an undergraduate degree. Note the multi-year awards — most national scholarships are one-and-done.",
+    eligibility: [
+      "Citizen, national, or legal permanent resident of the United States",
+      "Citizens of the Republic of the Marshall Islands, the Federated States of Micronesia, and the Republic of Palau are also eligible",
+      "Degree-seeking undergraduate student",
+    ],
+    cycle:
+      "The 2027–2028 cycle opens November 15, 2026 and closes January 15, 2027 at 5pm Eastern.",
+    opensOn: "2026-11-15",
+    closesOn: "2027-01-15",
+    url: "https://apiascholars.org/scholarship/apia-scholarship/",
+  },
+  {
+    id: "jkc-young",
+    grades: [7, 8],
+    tags: ["need", "early", "support"],
+    name: "Cooke Young Scholars Program",
+    org: "Jack Kent Cooke Foundation",
+    award:
+      "Not a cheque — five years of comprehensive academic and college advising, plus financial support for school, Cooke-sponsored summer programmes, internships and other learning enrichment, from 8th grade through high school.",
+    whoItsFor:
+      "Current 7th graders with financial need. This is the single earliest thing on this page and almost nobody in this audience knows it exists — by the time most families start looking at scholarships, this one closed five years ago.",
+    eligibility: [
+      "Applies during 7th grade, for support beginning in 8th grade",
+      "Strong academic record with demonstrated financial need",
+      "The foundation publishes its exact income and grade thresholds on its own page — check them there",
+    ],
+    cycle:
+      "The application was closed when we checked on August 17, 2026. It runs on an annual cycle for current 7th graders — if you are in 6th or 7th grade, put a reminder in your phone to check the site in the autumn.",
+    url: "https://www.jkcf.org/our-scholarships/young-scholars-program/",
+  },
+  {
+    id: "hhf-youth",
+    grades: [12],
+    tags: [],
+    name: "Youth Awards",
+    org: "Hispanic Heritage Foundation",
+    award:
+      "A one-time innovation grant to fund college or support a community service effort, awarded by category — STEM, entrepreneurship, media, public service and others.",
+    whoItsFor:
+      "Seniors who have done something specific and can point at it. Because it is judged by category rather than as one general pool, a student with one strong area does not have to look well-rounded to win.",
+    eligibility: [
+      "Currently enrolled in high school and graduating in the spring",
+      "Minimum unweighted 3.0 GPA on a 4.0 scale, or 7.5 on a 10.0 scale",
+      "Must enrol at an accredited higher education institution the following year",
+    ],
+    cycle:
+      "⚠️ When we checked on August 17, 2026 the site still showed the previous cycle (deadline November 2, 2025) and had not posted the next one. Their deadlines have historically fallen in early November — check the site in the autumn, and do not treat that pattern as a date.",
+    url: "https://hispanicheritage.org/programs/leadership/youth-awards/",
+  },
 ];
+
+/**
+ * ── DELIBERATELY NOT LISTED, and why (Aug 17, 2026) ────────────────────────
+ * Both of these are real and would be valuable here. Neither is listed because
+ * rule 1 wasn't satisfiable on the day, and a half-verified scholarship entry
+ * is exactly the kind of confident wrongness this file exists to prevent.
+ *
+ *  • Golden Door Scholars — for students with DACA, TPS or no lawful status.
+ *    Their site had moved to roadtohire.org and the live page showed only
+ *    "Applications are Closed" with no eligibility criteria and no next cycle.
+ *    Third-party summaries carry details; those are not a source we use for an
+ *    award whose whole audience is status-dependent. Re-check for the next
+ *    cycle and add it then — this is the highest-value missing entry.
+ *  • Ron Brown Scholar Program — $40,000 over four years for Black students.
+ *    The official page showed contradictory cycle status on the same screen
+ *    (both "now open" and "the 2026 competition is now closed"), so the
+ *    deadline could not be stated honestly. Re-check.
+ */
 
 /**
  * Where a scholarship's currently-known cycle sits relative to today.

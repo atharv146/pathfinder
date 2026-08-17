@@ -81,8 +81,12 @@ export function SplitReveal({
 
         gsap.set(el, { autoAlpha: 1 });
 
+        // 140, not 108. The mask now has bottom padding so descenders survive
+        // (see `.split-line-mask` in globals.css), which also means the clip
+        // edge sits below the line box — a line parked only 108% down would
+        // show its ascender tips in that strip before it moves.
         gsap.from(split.lines, {
-          yPercent: 108,
+          yPercent: 140,
           duration: 1.05,
           ease: EASE_EXPO,
           delay,

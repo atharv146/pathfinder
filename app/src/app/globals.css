@@ -23,7 +23,12 @@
      the "text sinking into the screen" complaint: it was too dim to read. */
   --color-chalk: #f4f3f0;
   --color-ash: #a8a7b0;
-  --color-smoke: #78777f;
+  /* Raised from #78777f (Aug 17, 2026) after the "text is ingrained into the
+     background" report. Measured, not eyeballed, which is the standing rule
+     here: #78777f is 4.74:1 on pure black but only **4.43:1** on `--color-panel`
+     (#0b0b0d) — under WCAG AA — and `.micro` labels are ~11px, the smallest
+     type on the site. #8b8a92 measures 5.7:1 on panel and 6.0:1 on black. */
+  --color-smoke: #8b8a92;
 
   /* Accent — used sparingly: hover states, a single active node, one rule. */
   --color-ember: #d46438;
@@ -198,6 +203,12 @@ body {
    lime ~75°, coral ~15°, violet ~260°, so a true blue at ~205° is the one
    addition that can't be confused with an existing page at a glance. */
 [data-accent="azure"] { --accent: #5ab8ff; --accent-rgb: 90, 184, 255; }
+/* /tools/profile-analysis. The other open slot on the wheel: teal ~170°,
+   lime ~75°, coral ~15°, violet ~260°, azure ~205° — magenta at ~335° is the
+   one remaining hue that can't be mistaken for an existing page at a glance.
+   The flagship tool gets its own identity rather than borrowing the tools
+   section's coral. */
+[data-accent="rose"] { --accent: #ff5fa2; --accent-rgb: 255, 95, 162; }
 
 .text-accent { color: var(--accent); }
 .bg-accent { background-color: var(--accent); }
@@ -212,11 +223,13 @@ body {
 
 .aurora-accent {
   position: absolute;
-  inset: -30%;
+  inset: -14%;
   z-index: 0;
   pointer-events: none;
-  filter: blur(90px);
+  /* 48px, not 90px — see the perf note on `.aurora` below. */
+  filter: blur(48px);
   opacity: 0.42;
+  will-change: transform;
   background:
     radial-gradient(38% 44% at 24% 28%, rgba(var(--accent-rgb), 0.5), transparent 70%),
     radial-gradient(34% 40% at 76% 24%, rgba(var(--accent-rgb), 0.26), transparent 70%),
@@ -236,13 +249,30 @@ body {
 }
 
 /* Slow-drifting aurora field. Multiple offset radial gradients rather than one
-   blurred blob, which is the look this project already rejected once. */
+   blurred blob, which is the look this project already rejected once.
+   ---------------------------------------------------------------------------
+   ⚠️ PERFORMANCE — this rule was the single biggest source of the "the whole
+   site feels laggy" report (Aug 17, 2026), on every page, with no WebGL
+   involved. It was `inset: -30%` (a surface ~2.5× the viewport) under
+   `filter: blur(90px)`, animated with a `scale()` in the keyframes. A scaled
+   blurred layer cannot be reused by the compositor — the browser re-rasterises
+   the entire blurred surface every frame, forever, on every page.
+
+   Three changes, in order of how much each bought:
+     1. `scale()` removed from the keyframes — translate-only animation is a
+        pure GPU composite of an already-rasterised layer.
+     2. blur 90px → 48px (cost scales with the radius; the gradients are
+        already soft, so most of that radius was doing nothing visible).
+     3. inset -30% → -14%, which is still well past the viewport edge so no
+        hard edge of the field can enter frame.
+   Keep those three properties in mind before "just nudging" this. */
 .aurora {
   position: absolute;
-  inset: -30%;
+  inset: -14%;
   pointer-events: none;
-  filter: blur(90px);
+  filter: blur(48px);
   opacity: 0.5;
+  will-change: transform;
   background:
     radial-gradient(38% 44% at 22% 30%, rgba(127, 212, 198, 0.36), transparent 70%),
     radial-gradient(34% 40% at 78% 22%, rgba(212, 100, 56, 0.28), transparent 70%),
@@ -251,10 +281,12 @@ body {
   animation: aurora-drift 26s ease-in-out infinite alternate;
 }
 
+/* Translate only. A `scale()` here forces the blurred layer to be
+   re-rasterised every frame — see the performance note on `.aurora`. */
 @keyframes aurora-drift {
-  0% { transform: translate3d(-3%, -2%, 0) scale(1); }
-  50% { transform: translate3d(3%, 2%, 0) scale(1.08); }
-  100% { transform: translate3d(-2%, 3%, 0) scale(1.03); }
+  0% { transform: translate3d(-4%, -3%, 0); }
+  50% { transform: translate3d(4%, 3%, 0); }
+  100% { transform: translate3d(-3%, 4%, 0); }
 }
 
 /* Emissive type — used on single words, never whole paragraphs. */
@@ -452,13 +484,36 @@ section > .absolute:not(.aurora):not(.aurora-accent):not([data-decor]) {
   color: #1a1712;
 }
 
-/* GSAP SplitText line wrappers. The mask clips at the line box, which slices
-   descenders (p, g, y, j) — padding restores the room, the negative margin
-   keeps the visual line spacing unchanged. */
+/* GSAP SplitText line wrappers.
+   ---------------------------------------------------------------------------
+   ⚠️ THE DESCENDER BUG (reported Aug 17, 2026 as "text cut off, especially at
+   the bottom of the words" — real, and this was the cause).
+
+   `.display` runs `line-height: 0.95`, which is TIGHTER than the font's own
+   glyph box, so descenders (g, y, p, j) legitimately overflow the line box.
+   That's fine on its own — until SplitText's `mask: "lines"` wraps each line
+   in an element with `overflow: clip`, which then slices them off.
+
+   The rule below used to carry the padding on the INNER line element only.
+   That is a no-op against a mask: the negative margin pulls the inner
+   element's margin box back to the original height, the mask sizes itself to
+   that margin box, and the extra padding lands outside the clip edge. The
+   padding has to be on the MASK, because `overflow: clip` clips at the
+   padding box — enlarging the mask's padding is the only thing that actually
+   moves the clip edge down.
+
+   GSAP names the wrapper `<linesClass>-mask`, so any component using
+   `mask: "lines"` must also pass `linesClass: "split-line"` or nothing here
+   matches it. KineticText didn't, which is why every page heading clipped. */
 .split-line {
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
   will-change: transform;
+}
+
+.split-line-mask {
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
 }
 
 /* Film grain. A true-black page is optically flat; a barely-there noise field
@@ -467,7 +522,10 @@ section > .absolute:not(.aurora):not(.aurora-accent):not([data-decor]) {
 body::after {
   content: "";
   position: fixed;
-  inset: -50%;
+  /* -8%, not -50%. The grain only ever shifts by ±1.5%, so a layer four times
+     the viewport was compositing three viewports of noise per frame that
+     could never be seen. Same perf pass as the `.aurora` note above. */
+  inset: -8%;
   z-index: 9996;
   pointer-events: none;
   opacity: 0.028;
