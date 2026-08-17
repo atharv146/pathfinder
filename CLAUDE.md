@@ -11,7 +11,17 @@ A free, student-owned app guiding immigrant and first-generation students (and t
 - Hosting: **Vercel — live at https://pathfinder-atharv.vercel.app, auto-deploying on every push to `master`.** Project name `pathfinder`, connected to the GitHub repo via the Vercel GitHub App. Root Directory is explicitly set to `app` (don't let it revert to auto-detect — breaks path aliases on git-triggered builds). SSO/Deployment Protection is off (public app). See `master-spec-doc.md` Decisions Log, Aug 11 entry, for the full setup story if this ever needs revisiting.
 - Repo: `atharv146/pathfinder` (public) — https://github.com/atharv146/pathfinder
 
-## 🔑 Session handoff (Aug 17, 2026, end of session — read this first)
+## 🔑 Session handoff (Aug 17, 2026, later session — read this first)
+
+**⚠️ ACTION REQUIRED FROM THE USER BEFORE `/stats` WORKS: run `supabase/migrations/0008_courses.sql` in the Supabase dashboard (SQL Editor → New query → paste → Run).** It's written and committed but not applied — migrations here are applied by hand. Until it runs, the course list on `/stats` shows an explicit "run migration 0008" panel and saves nothing; everything else degrades gracefully rather than breaking.
+
+**§16K step 3 is BUILT (Aug 17, 2026) — `/stats` + the per-course schema. Full detail in `master-spec-doc.md` Section 16P.** New gated route `/stats` (violet, new `strata` backdrop), `courses` table + four student-reported school-context columns on `profiles`, `src/lib/db/courses.ts`, `src/components/stats/`. `/account` shrank to email + language/role + share link + deletion — **don't re-add profile fields there**, the relocation was the point. Grade and major moved to `/stats`, which also fixed `/major`'s "Change your major" link pointing at a page with no major control.
+
+**The rules those components hold:** the course list never scores a schedule (counts only — no target, no denominator, no meter, same rule as `WhereYouAre`); `course_rigor` stays as the one-click alternative so the detailed list is never mandatory; the school-context block exists because two APs at a school offering three is not two at a school offering twenty-five, and every generic tool gets that wrong. `buildContextBlock()` already feeds all of it to the AI **with an instruction to describe rather than rank** — keep that instruction attached to the data if you touch it.
+
+**Next up:** §16K item 4 (structural course-vs-major comparison logic, using `major-pathways.ts` + the new course data) or item 5 (OpenRouter + Claude Sonnet provider paths). Both unblocked, no decisions pending.
+
+## Session handoff (Aug 17, 2026, earlier session)
 
 **Everything through V2 steps 1–10 plus §16K steps 1–3 is built and pushed.** `origin/master` and local are in sync. The app has real auth, an AI activities interview that's the actual differentiator, a major-specific hub, a scholarships hub, restructured tools, freshness stamps, parent mode, Spanish UI, and a counselor share link.
 
@@ -19,7 +29,7 @@ A free, student-owned app guiding immigrant and first-generation students (and t
 1. ~~`/major` — dedicated page for major-specific content~~ — **BUILT Aug 16, 2026. See Section 16L.** New route + `src/data/major-pathways.ts` (course ladders, 4 grade stages, structure facts per family), an interactive grade timeline, a course-chain diagram, an 8-family comparison grid, `azure` accent + `orbits` backdrop. `MajorLens` on the roadmap is now a one-line pointer, and Opportunities moved to `/major`.
 2. ~~Tools become individual pages instead of sections on `/tools`~~ — **BUILT Aug 16, 2026. See Section 16M.** `/tools` is an index over `src/data/tools.ts`; `/tools/fee-waivers` and `/tools/essay-brainstorm` are their own routes; `item-tools.ts` deep links now build from `toolHref()` (no hash links remain). Add `/tools/profile-analysis` to the `TOOLS` array when that ships.
 3. ~~Scholarships / internships / programs hub~~ — **BUILT Aug 16, 2026. See Section 16N.** Gated `/scholarships`, `src/data/scholarships.ts`, five awards verified on official sites (Gates, Jack Kent Cooke, QuestBridge College Prep Scholars, Dell, TheDream.US). Open-right-now sorts to the top via `cycleStatus()`. **Adding entries requires real web research — the file header states the rules; do not improvise.**
-4. **Settings/stats page + the per-course-list schema** ← **start here.** Needs a real Supabase migration (a `courses` table, not a reuse of the coarse `course_rigor` bucket). Prerequisite for Profile Analysis doing anything beyond guessing.
+4. ~~Settings/stats page + the per-course-list schema~~ — **BUILT Aug 17, 2026. See Section 16P.** `/stats`, migration 0008 (`courses` table + school-context columns), course data wired into the AI context block. **Migration not yet applied — see the action-required note at the top of this handoff.**
 5. The flagship "Profile Analysis" tool — **fully UNBLOCKED, see below**
 6. New OpenRouter (resume text) + Claude Sonnet (Profile Analysis) provider paths
 7. Guide-articles depth pass — still the original unmodified Aug 11 port, the last big untouched content area

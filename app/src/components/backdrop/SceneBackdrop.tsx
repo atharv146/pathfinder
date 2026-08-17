@@ -5,7 +5,12 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
-export type BackdropVariant = "grid" | "sheets" | "swarm" | "orbits";
+export type BackdropVariant =
+  | "grid"
+  | "sheets"
+  | "swarm"
+  | "orbits"
+  | "strata";
 
 /**
  * Per-route 3D background.
@@ -17,9 +22,10 @@ export type BackdropVariant = "grid" | "sheets" | "swarm" | "orbits";
  *   sheets — drifting planes, like pages caught mid-air
  *   swarm  — a particle field that leans toward the cursor
  *   orbits — nested tilted rings turning at different rates (/major)
+ *   strata — stacked drifting rows, like years of a transcript (/stats)
  *
- * All four use InstancedMesh: one draw call for hundreds of objects, which is
- * what makes this affordable as a *background* rather than the main event.
+ * All of them use InstancedMesh: one draw call for hundreds of objects, which
+ * is what makes this affordable as a *background* rather than the main event.
  * Everything sits far back with low bloom so type stays the focus.
  */
 
@@ -233,6 +239,74 @@ function Orbits({ color }: { color: string }) {
   );
 }
 
+/**
+ * Horizontal rows of dashes, stacked in depth, each row sliding at its own
+ * rate and wrapping when it runs off the edge.
+ *
+ * Chosen for /stats: the page is a transcript — years stacked on years, each
+ * one a row of separate pieces. Rows of segmented lines is that shape, and it
+ * reads as clearly distinct from the other four at a glance, which is the
+ * actual requirement for a per-page backdrop.
+ *
+ * Deliberately NOT a rising or filling motion. Nothing on this page may imply
+ * a level being reached — the rows drift sideways and go nowhere, because the
+ * one thing this component must never do is look like a progress meter for a
+ * student's schedule.
+ */
+function Strata({ color }: { color: string }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const ROWS = 11;
+  const PER_ROW = 13;
+  const count = ROWS * PER_ROW;
+  const SPAN = 26; // wrap width, comfortably wider than the visible frame
+
+  const segments = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => {
+        const row = Math.floor(i / PER_ROW);
+        return {
+          row,
+          // Uneven starting offsets and widths so rows never line up into a
+          // grid — a transcript year isn't a tidy set of equal blocks.
+          x0: ((i % PER_ROW) / PER_ROW) * SPAN + Math.sin(i * 3.7) * 0.8,
+          width: 0.5 + Math.abs(Math.sin(i * 1.9)) * 1.5,
+          // Alternating direction per row, slower toward the back.
+          speed: (0.35 + (row % 4) * 0.13) * (row % 2 === 0 ? 1 : -1),
+        };
+      }),
+    [count]
+  );
+
+  useFrame(({ clock }) => {
+    const mesh = ref.current;
+    if (!mesh) return;
+    const t = clock.elapsedTime;
+
+    segments.forEach((s, i) => {
+      // Positive modulo — JS `%` keeps the sign, which would teleport the
+      // reversed rows off-screen instead of wrapping them.
+      const x = (((s.x0 + t * s.speed) % SPAN) + SPAN) % SPAN - SPAN / 2;
+      const y = (s.row - ROWS / 2) * 0.78;
+      dummy.position.set(x, y, -s.row * 0.4);
+      dummy.scale.set(s.width, 0.045, 0.045);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh
+      ref={ref}
+      args={[undefined, undefined, count]}
+      rotation={[0.16, -0.3, 0.05]}
+    >
+      <boxGeometry />
+      <meshBasicMaterial color={color} transparent opacity={0.55} />
+    </instancedMesh>
+  );
+}
+
 export default function SceneBackdrop({
   variant,
   color,
@@ -251,6 +325,7 @@ export default function SceneBackdrop({
       {variant === "sheets" && <Sheets color={color} />}
       {variant === "swarm" && <Swarm color={color} />}
       {variant === "orbits" && <Orbits color={color} />}
+      {variant === "strata" && <Strata color={color} />}
       <EffectComposer>
         <Bloom intensity={0.55} luminanceThreshold={0.15} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>

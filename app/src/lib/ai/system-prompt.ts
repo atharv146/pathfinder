@@ -79,6 +79,27 @@ export type ChatProfile = {
   firstGen: boolean | null;
   homeLanguage: string | null;
   statusCategory: string | null;
+
+  /**
+   * The per-course list and its school context (migration 0008). Optional —
+   * every caller predates them and most students will leave them empty.
+   *
+   * These travel together on purpose: a course list without the school's
+   * ceiling is the exact input that makes generic tools misread a student at
+   * a small school as unambitious. If one is ever passed without the other,
+   * the block below says so out loud rather than letting the model fill the
+   * gap with an assumption.
+   */
+  courses?: {
+    grade: number | null;
+    title: string;
+    level: string | null;
+    status: string;
+  }[];
+  schoolApOffered?: string | null;
+  schoolOffersIb?: boolean | null;
+  schoolOffersDualEnrollment?: boolean | null;
+  schoolCourseLimits?: string | null;
 };
 
 const RIGOR_LABEL: Record<string, string> = {
@@ -86,6 +107,30 @@ const RIGOR_LABEL: Record<string, string> = {
   some_honors: "a few honors/AP classes",
   mostly_honors_ap: "mostly honors/AP classes",
   most_rigorous: "the most rigorous schedule their school offers",
+};
+
+/** Migration 0008 — the school's ceiling, in words the model can reason with. */
+const AP_OFFERED_LABEL: Record<string, string> = {
+  none: "Their school does not offer AP classes at all",
+  "1_5": "Their school offers only about 1–5 AP classes",
+  "6_10": "Their school offers about 6–10 AP classes",
+  "11_20": "Their school offers about 11–20 AP classes",
+  "20_plus": "Their school offers more than 20 AP classes",
+};
+
+const COURSE_LEVEL_LABEL: Record<string, string> = {
+  regular: "regular",
+  honors: "honors",
+  ap: "AP",
+  ib: "IB",
+  dual_enrollment: "dual enrollment",
+  other: "other",
+};
+
+const COURSE_STATUS_LABEL: Record<string, string> = {
+  taken: "finished",
+  taking: "taking now",
+  planned: "planned",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -147,6 +192,59 @@ export function buildContextBlock(profile: ChatProfile): string {
 
   if (profile.courseRigor && RIGOR_LABEL[profile.courseRigor]) {
     lines.push(`Course load: ${RIGOR_LABEL[profile.courseRigor]}.`);
+  }
+
+  // ---------------------------------------------------------------------
+  // The course list and the school's ceiling (migration 0008).
+  // ---------------------------------------------------------------------
+  // The instruction attached to these is as load-bearing as the data. A model
+  // handed a transcript will, unprompted, rank it — and ranking a schedule
+  // against an imagined national average is precisely how every generic
+  // admissions tool misreads a student at an under-resourced school. The rule
+  // is the same one the rest of the app runs on: describe, never score.
+  const courses = profile.courses ?? [];
+  if (courses.length) {
+    const byGrade = new Map<number | null, string[]>();
+    for (const c of courses) {
+      const level = c.level ? COURSE_LEVEL_LABEL[c.level] ?? c.level : "level unknown";
+      const status = COURSE_STATUS_LABEL[c.status] ?? c.status;
+      const key = c.grade ?? null;
+      byGrade.set(key, [...(byGrade.get(key) ?? []), `${c.title} (${level}, ${status})`]);
+    }
+
+    lines.push("Classes they have entered:");
+    for (const [grade, list] of [...byGrade.entries()].sort(
+      (a, b) => (a[0] ?? 99) - (b[0] ?? 99)
+    )) {
+      lines.push(`  ${grade === null ? "Year not given" : `Grade ${grade}`}: ${list.join("; ")}`);
+    }
+    lines.push(
+      "This list is self-reported and may be incomplete — never tell them a class is missing, only that you don't see it. Never rate, score, or grade this schedule, and never compare it to what 'most applicants' take. Rigor is only meaningful against what their own school offers, so if that ceiling isn't given below, ask rather than assume."
+    );
+  }
+
+  const schoolFacts: string[] = [];
+  if (profile.schoolApOffered && AP_OFFERED_LABEL[profile.schoolApOffered]) {
+    schoolFacts.push(AP_OFFERED_LABEL[profile.schoolApOffered]);
+  }
+  if (profile.schoolOffersIb === true) schoolFacts.push("Their school has IB");
+  if (profile.schoolOffersIb === false) schoolFacts.push("Their school has no IB programme");
+  if (profile.schoolOffersDualEnrollment === true) {
+    schoolFacts.push("They can take dual enrollment / community college classes");
+  }
+  if (profile.schoolOffersDualEnrollment === false) {
+    schoolFacts.push("Dual enrollment is not available to them");
+  }
+  if (schoolFacts.length) {
+    lines.push(
+      `What their school offers: ${schoolFacts.join(". ")}. Judge nothing against a bigger school's catalog — taking most of what a small school offers IS the most rigorous schedule available, and saying otherwise is both wrong and harmful here.`
+    );
+  }
+
+  if (profile.schoolCourseLimits) {
+    lines.push(
+      `Rules their school places on what they can take, in their own words: "${profile.schoolCourseLimits}". Treat these as real constraints, not excuses — do not suggest courses these rules block, and never imply they should have taken something they were not allowed to take.`
+    );
   }
 
   if (profile.targetColleges.length) {

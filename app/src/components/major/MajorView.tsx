@@ -493,7 +493,7 @@ export function MajorView() {
                 {grade ? `Back to your grade ${grade} roadmap` : "Back to the roadmap"} →
               </Link>
               <Link
-                href="/account"
+                href="/stats"
                 className="micro text-smoke transition-colors hover:text-chalk"
               >
                 Change your major

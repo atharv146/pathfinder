@@ -60,6 +60,7 @@ export function MobileNav({
     ? [
         ...links,
         { href: "/activities", label: "Activities" },
+        { href: "/stats", label: "Your details" },
         { href: "/account", label: "Account" },
       ]
     : links;

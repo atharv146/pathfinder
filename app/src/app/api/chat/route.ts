@@ -77,13 +77,41 @@ export async function POST(request: Request) {
   }
 
   // --- Context ------------------------------------------------------------
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select(
-      "grade, major, major_undecided, account_type, preferred_language, gpa, gpa_scale, sat_score, act_score, course_rigor, target_colleges, first_gen, home_language, status_category"
-    )
-    .eq("id", user.id)
-    .maybeSingle();
+  const PROFILE_COLUMNS =
+    "grade, major, major_undecided, account_type, preferred_language, gpa, gpa_scale, sat_score, act_score, course_rigor, target_colleges, first_gen, home_language, status_category";
+
+  // The school-context columns arrived in migration 0008. Naming a column that
+  // doesn't exist fails the whole select — not just that field — so this falls
+  // back to the pre-0008 column list rather than losing every piece of context
+  // the chat has. Same reasoning as lib/db/resilient.ts, which this uses.
+  const { data: profile } = await tolerateMissingColumn(
+    () =>
+      supabase
+        .from("profiles")
+        .select(
+          `${PROFILE_COLUMNS}, school_ap_offered, school_offers_ib, school_offers_dual_enrollment, school_course_limits`
+        )
+        .eq("id", user.id)
+        .maybeSingle(),
+    () =>
+      supabase
+        .from("profiles")
+        .select(PROFILE_COLUMNS)
+        .eq("id", user.id)
+        .maybeSingle()
+  );
+
+  // The course list (migration 0008). Capped: a full 7-year transcript is
+  // maybe 40 rows, and this rides along on every single message, so it is
+  // bounded rather than trusted to stay small. An error here (table missing)
+  // simply means no course context — the chat is not worth breaking over it.
+  const { data: courseRows } = await supabase
+    .from("courses")
+    .select("grade, title, level, status")
+    .eq("user_id", user.id)
+    .order("grade", { ascending: true })
+    .order("sort_order", { ascending: true })
+    .limit(60);
 
   // Degrades rather than dies if migration 0005 hasn't been applied — see
   // lib/db/resilient.ts. Without `kind` the history is unseparated, which is
@@ -144,6 +172,11 @@ export async function POST(request: Request) {
     firstGen: profile?.first_gen ?? null,
     homeLanguage: profile?.home_language ?? null,
     statusCategory: profile?.status_category ?? null,
+    courses: courseRows ?? [],
+    schoolApOffered: profile?.school_ap_offered ?? null,
+    schoolOffersIb: profile?.school_offers_ib ?? null,
+    schoolOffersDualEnrollment: profile?.school_offers_dual_enrollment ?? null,
+    schoolCourseLimits: profile?.school_course_limits ?? null,
   });
 
   // Gemini names the assistant role "model", not "assistant".

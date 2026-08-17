@@ -82,6 +82,12 @@ export function AuthNav() {
       >
         :Activities
       </Link>
+      <Link
+        href="/stats"
+        className="micro hidden text-ash transition-colors hover:text-chalk sm:inline"
+      >
+        :Details
+      </Link>
       {/* The email doubles as the account link — it's the affordance people
           already expect to be clickable in a header. */}
       <Link

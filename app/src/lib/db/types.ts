@@ -30,6 +30,19 @@ export type StatusCategory =
   | "international"
   | "prefer_not_to_say";
 
+/**
+ * Added in migration 0008. Student-reported, because no maintainable database
+ * of per-school course catalogs exists — see that migration for the reasoning.
+ * `not_sure` is a real answer, not a placeholder.
+ */
+export type SchoolApOffered =
+  | "none"
+  | "1_5"
+  | "6_10"
+  | "11_20"
+  | "20_plus"
+  | "not_sure";
+
 export type Profile = {
   id: string;
   grade: number | null;
@@ -52,6 +65,52 @@ export type Profile = {
   first_gen: boolean | null;
   home_language: string | null;
   status_category: StatusCategory | null;
+
+  // Added in migration 0008. The "what's offered" half of course rigor —
+  // meaningless on its own, and the course list is meaningless without it.
+  school_ap_offered: SchoolApOffered | null;
+  school_offers_ib: boolean | null;
+  school_offers_dual_enrollment: boolean | null;
+  school_course_limits: string | null;
+};
+
+/**
+ * A single class on a student's transcript or planned schedule — migration
+ * 0008. `level` and `subject` are nullable because "I don't actually know if
+ * it's honors" is a common and honest answer.
+ */
+export type CourseLevel =
+  | "regular"
+  | "honors"
+  | "ap"
+  | "ib"
+  | "dual_enrollment"
+  | "other";
+
+export type CourseSubject =
+  | "math"
+  | "english"
+  | "science"
+  | "social_studies"
+  | "world_language"
+  | "arts"
+  | "cte"
+  | "other";
+
+/** Past, present and planned all live in one table — see migration 0008. */
+export type CourseStatus = "taken" | "taking" | "planned";
+
+export type Course = {
+  id: string;
+  user_id: string;
+  grade: number | null;
+  title: string;
+  level: CourseLevel | null;
+  subject: CourseSubject | null;
+  status: CourseStatus;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Activity = {

@@ -3,15 +3,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ProfileDetails } from "@/components/account/ProfileDetails";
+import Link from "next/link";
 import { LanguageAndRole } from "@/components/i18n/LanguageAndRole";
 import { ShareLink } from "@/components/account/ShareLink";
-import type { Profile } from "@/lib/db/types";
 
-const GRADES = [6, 7, 8, 9, 10, 11, 12];
 
 /**
- * Account settings: change your grade, see progress, delete everything.
+ * Account settings: your login, your language, sharing, and deleting
+ * everything.
+ *
+ * V2 §16K step 3 moved grade, major, the count tiles and every profile field
+ * out to `/stats`. The split is by what the thing is: this page is what you do
+ * to an *account*, `/stats` is the picture of you that the product reads from.
+ * Do not re-add profile fields here — a second copy of the same fields was the
+ * specific outcome that plan ruled out.
  *
  * Deletion is not optional polish. This app stores data belonging to minors,
  * and "let me remove my data" is a baseline expectation as well as a legal one
@@ -21,12 +26,8 @@ const GRADES = [6, 7, 8, 9, 10, 11, 12];
  */
 export function AccountPanel() {
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile | null>(null);
   const [email, setEmail] = useState("");
-  const [doneCount, setDoneCount] = useState(0);
-  const [activityCount, setActivityCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [saved, setSaved] = useState(false);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
@@ -42,32 +43,10 @@ export function AccountPanel() {
       if (!user) return setLoading(false);
 
       setEmail(user.email ?? "");
-
-      const [{ data: p }, { count: pc }, { count: ac }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
-        supabase
-          .from("roadmap_progress")
-          .select("*", { count: "exact", head: true }),
-        supabase.from("activities").select("*", { count: "exact", head: true }),
-      ]);
-
-      setProfile((p as Profile) ?? null);
-      setDoneCount(pc ?? 0);
-      setActivityCount(ac ?? 0);
       setLoading(false);
     };
     load();
   }, []);
-
-  const setGrade = async (grade: number) => {
-    if (!profile) return;
-    setProfile({ ...profile, grade });
-    setSaved(false);
-    const supabase = createClient();
-    await supabase.from("profiles").update({ grade }).eq("id", profile.id);
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 2000);
-  };
 
   const deleteAccount = async () => {
     setDeleting(true);
@@ -104,45 +83,26 @@ export function AccountPanel() {
         <p className="display-md break-all text-xl text-chalk sm:text-2xl">{email}</p>
       </section>
 
-      <section>
-        <p className="micro mb-4 text-smoke">Your grade</p>
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-7 sm:gap-3">
-          {GRADES.map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setGrade(g)}
-              aria-pressed={profile?.grade === g}
-              className={`display rounded-lg border py-4 text-xl transition-all sm:py-5 sm:text-2xl ${
-                profile?.grade === g
-                  ? "border-accent bg-accent/10 text-chalk"
-                  : "border-line text-ash hover:border-line-bright hover:text-chalk"
-              }`}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-        {saved && <p className="micro mt-3 text-signal">✓ Saved</p>}
+      {/* Grade, major, classes and every optional profile field moved to
+          /stats. This link is the only pointer to them from here — a second
+          copy of the fields is exactly what §16K ruled out. */}
+      <section className="rounded-lg border border-line bg-panel p-6 sm:p-8">
+        <h2 className="display-md mb-2 text-xl text-chalk">Your details</h2>
+        <p className="mb-5 max-w-xl text-[0.9rem] leading-relaxed text-ash">
+          Your grade, what you might study, the classes you&rsquo;re taking and
+          what your school offers all live on their own page now — so the
+          things that shape your roadmap aren&rsquo;t buried next to the delete
+          button.
+        </p>
+        <Link
+          href="/stats"
+          className="micro inline-block text-chalk underline underline-offset-4 transition-colors hover:text-accent"
+        >
+          Edit your details &rarr;
+        </Link>
       </section>
 
-      <section className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line">
-        <div className="bg-ink-2 p-5 sm:p-6">
-          <p className="display text-3xl text-chalk sm:text-4xl">{doneCount}</p>
-          <p className="micro mt-2 text-smoke">Roadmap items done</p>
-        </div>
-        <div className="bg-ink-2 p-5 sm:p-6">
-          <p className="display text-3xl text-chalk sm:text-4xl">{activityCount}</p>
-          <p className="micro mt-2 text-smoke">Activities saved</p>
-        </div>
-      </section>
-
-      {/* Optional profile fields. Rendered only once the profile has loaded —
-          every field inside is nullable, so there is nothing to show until we
-          know what's already filled in. */}
       <LanguageAndRole />
-
-      {profile && <ProfileDetails profile={profile} />}
 
       <ShareLink />
 

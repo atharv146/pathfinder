@@ -251,6 +251,14 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 
 ---
 
+- **Aug 17, 2026 — built §16K step 3: `/stats` and the per-course schema.** Full detail in **Section 16P**; the decisions worth having in this log rather than only there:
+  - **The "what's offered" side is student-reported, and that was the open design question §16K left.** Resolved by asking the student four questions (AP count banded, IB yes/no, dual enrollment yes/no, and a free-text box for the rules their school places on what they may take) rather than building or scraping a per-school course catalog. Catalogs go stale, cover a fraction of U.S. high schools, and would produce confident wrong answers about a student's own school — the exact failure this app exists to avoid. A student knows whether their school has IB; asking is both more accurate and more honest than a database we don't have.
+  - **The whole feature's justification, stated because it's easy to lose:** a course list means nothing without the ceiling it sits under. Two AP classes is a thin schedule at a school offering twenty-five and the most rigorous schedule available at a school offering three. PathFinder's students are disproportionately at the second kind of school and every generic tool reads them as the first. `school_course_limits` (schools that cap APs, gate honors behind teacher recommendation, or lock the math track in 8th grade) is the highest-value field in the migration for that reason.
+  - **`profiles.course_rigor` was kept, not replaced.** The coarse bucket is the one-click answer for students who won't enumerate twenty-four classes; the detailed list must stay optional or "N/A is okay" isn't real.
+  - **The data is already wired into the AI, with the instruction that has to travel with it.** `buildContextBlock()` emits courses grouped by grade plus the school context, and explicitly tells the model to describe rather than rank, to ask about the ceiling rather than assume one, and to treat school rules as real constraints. A model handed a transcript will rank it against an imagined national average unless told not to — the instruction is as load-bearing as the data.
+  - **Migration 0008 is written but NOT applied** — the user applies migrations by hand in the Supabase dashboard. Until then the course list renders an explicit "run migration 0008" panel and the chat's profile select falls back to the pre-0008 column list via `tolerateMissingColumn` (naming a missing column fails the *entire* select, which would have dropped all chat context, not just the new fields).
+  - **Dead link fixed:** `/major`'s "Change your major" pointed at `/account`, which has never had a major control. It now points at `/stats`, which does.
+
 ## 15. Current Build Status
 
 *(Update after every session — this is what you paste into a new AI tool to catch it up instantly. This section was found significantly stale on Aug 15, 2026 and again needed a full rewrite on Aug 16 — see the Decisions Log — so treat any gap between this section and `git log` as a signal to re-audit, not as "nothing happened.")*
@@ -276,21 +284,21 @@ Dedicated project email/accounts previously set up for: GitHub, Figma, Supabase,
 
 ### What's planned but NOT built — this is the actual next work
 
-**Section 16K in full** (a long section — read it, this is just the index):
+**Section 16K in full** (a long section — read it, this is just the index). *Updated Aug 17, 2026: steps 1–3 are now BUILT — this list was stale as written on Aug 16.*
 
-1. **`/major` — a dedicated page.** Moves 5B's opportunities off the shared roadmap card into its own home, with a real grade-by-grade specialized breakdown (common courses/ECs/narrative patterns per major, per grade — structural patterns, never past-admit claims). Not started. Lowest-risk next step: no new schema, no open decisions blocking it.
-2. **Tools become individual pages** (`/tools/fee-waivers`, `/tools/essay-brainstorm` instead of sections on one `/tools`). Mechanical, low risk. Not started.
-3. **Settings/stats page** — relocates `ProfileDetails`, **plus real new schema: a per-course list** the student fills in directly (not the coarse `course_rigor` bucket) compared against what's offered/expected. This was explicitly resolved Aug 16 as new scope, not a page move. Not started, and nothing else in this list can meaningfully use course data until this exists.
-4. **The flagship "Profile Analysis" tool** — resume reframing from real activities (same never-inflate rule as the interview), major-based recommendations, gap-based content suggestions, dream-college comparison. **Partially blocked — see the open decision below.** The resume/recommendation parts can proceed once 1–3 exist; the dream-college comparison part specifically must not ship until the ML-model decision is made.
+1. ~~**`/major` — a dedicated page.**~~ **BUILT Aug 16 — Section 16L.**
+2. ~~**Tools become individual pages.**~~ **BUILT Aug 16 — Section 16M.** (The scholarships hub also shipped that day — Section 16N.)
+3. ~~**Settings/stats page + the per-course-list schema.**~~ **BUILT Aug 17 — Section 16P.** `/stats` exists, migration 0008 is written **but not yet applied to the live database**. Course data is already wired into the AI's context block.
+4. **Structural "what's offered/expected" comparison logic** — the *data* half of this landed with step 3 (student-reported school context in migration 0008); what's still unbuilt is the reasoning that compares a student's courses against a major's structural expectations from `major-pathways.ts`. Nothing blocks it.
 5. **Two new AI provider paths, confirmed but not built:** OpenRouter (free-model rotation, resume-text generation only) and Claude Sonnet (Profile Analysis specifically — needs `ANTHROPIC_API_KEY` added to `.env.local` and Vercel; `@anthropic-ai/sdk` is already installed).
+6. **The flagship "Profile Analysis" tool** — resume reframing from real activities (same never-inflate rule as the interview), major-based recommendations, gap-based content suggestions, dream-college comparison. **Fully unblocked** (see below). Its prerequisites — the course list and the school ceiling — now exist. Remember to add `/tools/profile-analysis` to the `TOOLS` array in `src/data/tools.ts` when it ships.
+7. **Homepage promotion of Profile Analysis**, per the user's explicit ask.
 
-### The one open decision that actually blocks something (read this before building #4 above)
+### The ML-model question — RESOLVED Aug 16, 2026, do not re-open
 
-The user proposed training a real ML admissions-chancing model (Kaggle datasets, later crowdsourced outcomes from real PathFinder users) and wiring predictions into the dream-college comparison — partly framed as a CS learning project for their brother. Full discussion, including specific technical objections raised and the user's follow-up questions, is in the **Aug 16, 2026 addendum inside Section 16K** — don't skip it, it has real content, not just a flag.
+*(This block previously read "not resolved" and was left stale after the decision was made — corrected Aug 17.)*
 
-**Resolved within that discussion:** the ML project is worth building as a portfolio/resume piece regardless of whether it's ever deployed — an honestly-scoped, limitations-aware version ("why this doesn't generalize to U.S. undergrad admissions") is actually the *stronger* resume project, not a weaker one. That part needs no further decision.
-
-**Not resolved:** whether the dream-college comparison in the live product uses (a) the trained model's predictions, (b) stays structural/NCES-aggregate-only (the safer path I recommended), or (c) the model stays a side project entirely separate from PathFinder. **Do not build the comparison feature past the structural-facts-only version without the user explicitly picking one of these three.**
+The user decided explicitly: **the trained model stays the brother's side project and never ships into PathFinder.** The dream-college comparison is therefore **unblocked**, and is built on **published NCES / Common Data Set aggregate ranges** — descriptive facts about a school's last admitted class, never a probability or a verdict about this student. See §16N for the framing rules (especially the test-optional caveat most sites get wrong) and §16O for the full build plan for the project itself. Don't re-litigate either.
 
 ### Known smaller open items
 
@@ -299,7 +307,7 @@ The user proposed training a real ML admissions-chancing model (Kaggle datasets,
 3. Design not explicitly signed off as final.
 4. Guide articles haven't had the deeper content pass that the roadmap already got (middle-school depth pass, Ivy-testing update, FAFSA dating fixes) — still the original Aug 11 port apart from those specific corrections.
 
-**Immediate next action for whoever picks this up:** start with `/major` (item 1 above) — it's fully unblocked, reuses existing 5B data, and needs no new decisions. Do **not** start on the Profile Analysis comparison feature (item 4) without first getting the user's explicit choice on the ML-model question above; everything else in the list can proceed in any order.
+**Immediate next action for whoever picks this up (rewritten Aug 17, 2026):** the queue above is now at item 4/5. **First, ask the user to run migration 0008 in the Supabase dashboard** — `/stats` ships with a visible "run migration 0008" panel until they do, and Profile Analysis has nothing real to read without it. Then either the structural comparison logic (item 4) or the provider plumbing (item 5) can proceed; both are unblocked, and neither needs a new decision. Nothing in this list is blocked on the ML question anymore.
 
 ---
 
@@ -741,6 +749,44 @@ Content is most of the value, but a scrappy repo undersells real work. Cheap to 
 ### How this reads on an actual resume
 
 A single strong bullet, built from everything above, reads roughly like: *"Built and evaluated four ML models (logistic regression, random forest, XGBoost, neural network) predicting graduate admission likelihood on a public Kaggle dataset; performed SHAP-based feature-importance and calibration analysis; authored a sourced case study — citing Opportunity Insights' Mobility Report Cards and the U.S. Department of Education's College Scorecard — explaining why individual-applicant prediction doesn't generalize to U.S. undergraduate admissions, and why no public dataset currently allows it to."* That sentence signals real technical range (four model types, SHAP, calibration — not a single `.fit()` call) and real research judgment (a sourced, checkable argument, not an assumption) in one line, which is what separates this from the large number of "predict admission with ML" tutorial-clone projects that already exist.
+
+---
+
+## 16P. V2 §16K Step 3 — `/stats` and the Per-Course Schema (BUILT Aug 17, 2026)
+
+*Step 3 of the §16K build order (numbered 4 in CLAUDE.md's handoff queue — same item). Everything below exists in code. **Migration 0008 has NOT been applied to the live database** — the user runs migrations by hand in the Supabase dashboard, and until they do, the course list shows an explicit "run migration 0008" panel instead of silently failing.*
+
+### What shipped
+
+**`supabase/migrations/0008_courses.sql`** — a real `courses` table (`user_id`, `grade`, `title`, `level`, `subject`, `status`, `sort_order`), owner-only RLS, reusing the existing `touch_updated_at` trigger. Plus four student-reported school-context columns on `profiles`: `school_ap_offered` (banded), `school_offers_ib`, `school_offers_dual_enrollment`, `school_course_limits` (free text).
+
+**`/stats`** — a new gated route (inherits the `proxy.ts` gate, no change needed there). Carries grade, major, three count tiles, the course list, the school-context block, and the existing `ProfileDetails`. Keeps `/account`'s violet — these are one place in a student's head, the same reasoning that keeps `/tools/fee-waivers` coral — but takes a new `strata` backdrop variant per the standing one-geometry-per-page rule.
+
+**`/account` shrank to what it actually is:** email, language/role, share link, deletion. Grade, major and every profile field moved out. §16K was explicit that this is a relocation, not a second copy — do not re-add profile fields there.
+
+### The decisions inside it
+
+- **`course_rigor` stays.** The four-bucket answer from migration 0004 is the one-click path for a student who won't type out twenty-four classes, and "N/A is okay" means the detailed list can never be the price of admission to anything. Both live on the same page; neither is required.
+- **The school's ceiling is asked, and it is the entire point.** A course list alone can't answer "is this rigorous?" — two APs is a thin schedule at a school offering twenty-five and the most rigorous one available at a school offering three, and PathFinder's students are disproportionately at the second kind of school. Every generic admissions tool reads them as the first. `SchoolContext.tsx` exists to prevent PathFinder joining them.
+- **Student-reported, not scraped.** §16K left the "what's offered" side needing a design pass; this is the resolution. No maintainable public catalog of U.S. high school course offerings exists, and inventing one from partial scrapes would produce confident wrong answers about a student's own school. A student knows whether their school has IB.
+- **`school_course_limits` is the most under-asked field in the schema.** Real schools cap AP enrolment, gate honors behind a teacher recommendation, or lock the math track in 8th grade. Without that, a capped schedule reads as an unambitious one — which is false, and is precisely the misreading this app exists to correct.
+- **Free-text course titles**, because "Algebra II", "Algebra 2 CP" and "Integrated Math III" are often the same class and a fixed picker would make students mislabel their own transcript.
+- **Never a score.** The counts are counts — no target, no denominator, no progress bar, same rule as `WhereYouAre` and the `/major` timeline. The `strata` backdrop drifts sideways rather than rising or filling, deliberately, so the page's own decoration can't read as a meter.
+- **Courses are NOT in `get_shared_progress`** (migration 0007's counselor link). They stay owner-only. Adding them there later is a privacy decision, not a feature one.
+
+### It already does something — the AI reads it
+
+`buildContextBlock()` now emits the course list grouped by grade, the school's ceiling, and the school's rules, each with an instruction attached: describe, never rank; if the ceiling isn't known, ask rather than assume; treat the school's rules as real constraints and never suggest a course they block. The instruction matters as much as the data — a model handed a transcript will rank it against an imagined national average unless told not to, which is exactly the failure mode above. This makes step 3 useful before Profile Analysis exists, rather than schema sitting idle.
+
+The chat route's profile `select` names explicit columns, so it wraps the 0008 columns in `tolerateMissingColumn` — naming a column that doesn't exist fails the *whole* select, which would have dropped every piece of chat context rather than just the new fields.
+
+### Also fixed in passing
+
+`/major`'s "Change your major" link pointed at `/account`, where no major control has ever existed — a dead end. It now points at `/stats`, which has one.
+
+### Verified
+
+`tsc --noEmit` and `npm run build` clean, `/stats` in the route manifest. Page renders with correct copy and no console errors. Every control renders with a real label; the missing-migration panel renders and names 0008 explicitly; `SchoolContext`'s `undefined`-vs-`null` normalisation confirmed against a seeded profile (an unanswered yes/no stays "Not sure" rather than rendering as "No" — the migration-0004 bug that shipped once already). `strata` geometry checked numerically (143 instances, positions finite, wrap correct). **Not verified by eye:** the signed-in view — localhost can't hold a session (the documented dev bypass shows the signed-out state) — and the 3D backdrop, since the preview pane reports a zero-width viewport and the ambient-3D gate requires ≥640px. The user should look at `/stats` in a real browser after applying migration 0008.
 
 ---
 
