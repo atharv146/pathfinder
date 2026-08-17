@@ -29,41 +29,41 @@ export function OpportunitiesPromo() {
 
       <div className="relative mx-auto max-w-4xl">
         <p className="micro mb-5 text-accent">
-          {total} verified &nbsp;·&nbsp; Opportunities
+          {total}{" "}verified &nbsp;·&nbsp; Opportunities
         </p>
 
         <KineticText
           as="h2"
           className="display max-w-3xl text-4xl leading-[1.02] sm:text-6xl"
         >
-          Money, and <span className="glow-accent italic">everywhere else</span>{" "}
-          it comes from.
+          Real experience,{" "}
+          <span className="glow-accent italic">not just free money.</span>
         </KineticText>
 
         <FadeIn delay={0.1}>
           <p className="mt-6 max-w-xl text-[1rem] leading-relaxed text-ash">
-            Scholarships, paid internships, real summer jobs, and
-            competitions — {total} of them, every one opened on its own
-            official site and checked by hand. Not a scraped list where half
-            the deadlines are two years old.
+            Internships, competitive summer programs, competitions, and paid
+            work — with scholarships in there too. {total} of them, every one
+            opened on its own official site and checked by hand. Not a
+            scraped list where half the deadlines are two years old.
           </p>
         </FadeIn>
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
           <Cell
             index="01"
-            title="Free money"
-            body="Need-based and merit scholarships, from four-figure local awards to full rides — with the eligibility that actually decides it, not just the headline number."
+            title="Real experience"
+            body="Internships, competitive summer programs, competitions — the specific, sustained kind of experience that actually gives you something to write about, not a line you have to stretch."
           />
           <Cell
             index="02"
-            title="Paid work, not just resume lines"
-            body="Federal research stipends, a real paycheck doing conservation work outdoors, competitive placements — sorted honestly by how selective each one really is."
+            title="Some of it pays"
+            body="Federal research stipends, a real paycheck doing conservation work outdoors, funded seminars — sorted honestly by how selective each one really is."
           />
           <Cell
             index="03"
-            title="Filtered to your grade"
-            body="Search by keyword, filter by grade level and what's open right now — so a ninth grader isn't wading through fifty senior-only deadlines."
+            title="Free money too"
+            body="Need-based and merit scholarships, from four-figure local awards to full rides — with the eligibility that actually decides it, not just the headline number."
           />
         </div>
 

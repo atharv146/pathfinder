@@ -41,14 +41,13 @@ export default function OpportunitiesPage() {
             immediate
             className="display text-5xl leading-[1.05] sm:text-6xl"
           >
-            Money, and{" "}
-            <span className="glow-accent italic">everywhere else</span> it
-            comes from.
+            Real experience,{" "}
+            <span className="glow-accent italic">not just free money.</span>
           </KineticText>
           <FadeIn delay={0.2}>
             <p className="mt-4 max-w-xl text-ash">
-              {total} scholarships, internships, summer programs and
-              competitions — each opened on its own official site and checked,
+              {total} internships, summer programs, competitions and
+              scholarships — each opened on its own official site and checked,
               not a scraped list where half the deadlines are two years old.
             </p>
           </FadeIn>
