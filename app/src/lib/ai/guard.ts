@@ -17,8 +17,38 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
  *                      the feature down for every user at once.
  */
 
-/** Messages per user per rolling 24h, across chat AND interview combined. */
-export const DAILY_MESSAGE_CAP = 30;
+/**
+ * Messages per user per rolling 24h, across chat, interview AND profile
+ * analysis combined.
+ *
+ * Configurable via `AI_DAILY_CAP` (Aug 17, 2026) so it can be changed from the
+ * Vercel dashboard without a deploy. That matters because the moment this has
+ * real traffic, the cap is the only lever between normal use and an exhausted
+ * free tier — and needing a code push to pull it is needing it too late.
+ *
+ * 30 stays the default: it was picked as "more than any honest session needs,
+ * less than a runaway client costs", and nothing has changed that.
+ */
+export const DAILY_MESSAGE_CAP = (() => {
+  const raw = Number(process.env.AI_DAILY_CAP);
+  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 30;
+})();
+
+/**
+ * Hard off switch, via `AI_DISABLED=1`.
+ *
+ * The per-user cap bounds one student; it does nothing about a thousand
+ * students at once, and the free tier has no billing alarm to hide behind.
+ * This is the lever for that case — flip it in the Vercel dashboard and every
+ * AI route returns a clear, honest message while the rest of the app (roadmap,
+ * guides, opportunities, activities list) keeps working untouched.
+ *
+ * Deliberately not a silent failure: a student who can't use the AI should be
+ * told it's switched off, not left staring at a spinner.
+ */
+export function aiDisabled(): boolean {
+  return process.env.AI_DISABLED === "1";
+}
 
 /**
  * Model fallback chain, tried in order.
@@ -52,6 +82,21 @@ type GuardOk = {
 type GuardFail = { ok: false; response: NextResponse };
 
 export async function guardAiRequest(): Promise<GuardOk | GuardFail> {
+  // Checked first: if the AI is switched off there is no reason to touch the
+  // database or the auth service to say so.
+  if (aiDisabled()) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        {
+          error:
+            "PathFinder's AI is temporarily switched off while we sort out capacity. Everything else — your roadmap, the guides, opportunities and your activities list — still works.",
+        },
+        { status: 503 }
+      ),
+    };
+  }
+
   const supabase = await createClient();
 
   const {

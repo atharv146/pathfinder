@@ -41,6 +41,10 @@ Runs `typecheck → lint → test → build` and **refuses to push if any of it 
 
 **Migration 0008 has been run by the user (confirmed Aug 17, 2026) — `/stats` is live.**
 
+**⚠️ ACTION REQUIRED: run `supabase/migrations/0009_analysis_kind.sql`.** It closes a real spend hole — `/api/analysis/resume` checked the daily AI cap but never wrote a row, so Profile Analysis generations were effectively **uncapped** while being the most expensive call in the app. Until 0009 runs, the route degrades to writing an un-kinded row (still counted, which is the part that matters).
+
+**AI spend levers, both settable from the Vercel dashboard with no deploy:** `AI_DAILY_CAP` (per-user messages per rolling 24h across chat + interview + analysis; defaults to 30, junk values fall back to 30) and `AI_DISABLED=1` (hard off switch — every AI route returns an honest "switched off" message while the roadmap, guides and opportunities keep working). Both are covered by tests in `lib/ai/guard.test.ts`.
+
 **§16K IS NOW COMPLETE — items 1–7 all built.** The later Aug 17 session shipped items 4–7 plus a perf pass and a real text-rendering bug fix. Full detail in `master-spec-doc.md` **Section 16Q**. Highlights a future session must not undo:
 - **`.split-line-mask` in globals.css is load-bearing.** GSAP `mask: "lines"` clips at the padding box and `.display` uses `line-height: 0.95`, so descenders were being sliced off every animated heading (measured: 12.5px of ink at a 100px font). **Any component using `mask: "lines"` MUST pass `linesClass: "split-line"`** or no CSS can reach its mask.
 - **Never put a `scale()` in the `.aurora` keyframes, and don't raise the blur back to 90px.** That combination re-rasterises a 2.5×-viewport blurred layer every frame on every page and was the main cause of the site feeling laggy — bigger than all the WebGL combined.

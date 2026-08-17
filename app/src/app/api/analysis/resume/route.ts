@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { guardAiRequest, upstreamError, callWithFallback } from "@/lib/ai/guard";
 import { RESUME_PROMPT, buildResumeContext } from "@/lib/ai/resume-prompt";
 import { completeWithOpenRouter, isConfigured } from "@/lib/ai/openrouter";
+import { tolerateMissingColumn } from "@/lib/db/resilient";
 import type { Activity } from "@/lib/db/types";
 
 /**
@@ -90,6 +91,32 @@ export async function POST() {
       { status: 400 }
     );
   }
+
+  // ── COUNT THIS AGAINST THE DAILY CAP ───────────────────────────────────
+  // Recorded BEFORE the model call, deliberately, matching what the chat route
+  // does: a generation the student abandoned, or one that failed upstream,
+  // still cost us the request. Counting only successes would make the cap
+  // trivially avoidable by retrying failures.
+  //
+  // This route writes nothing else — the drafts themselves are never saved,
+  // so the model can't put words on an application unsupervised. This single
+  // row exists only so the spend is visible to `chat_messages_today`, which
+  // counts every kind against one shared per-user budget.
+  //
+  // `tolerateMissingColumn` because migration 0009 (which allows kind =
+  // 'analysis') is applied by hand and may not have run yet. If it hasn't, the
+  // insert degrades to an un-kinded row rather than failing the request —
+  // still counted, which is the part that matters.
+  const usageRow = {
+    user_id: user.id,
+    role: "user",
+    content: `[profile analysis: ${activities.length} activities]`,
+    flagged_topics: [],
+  };
+  await tolerateMissingColumn(
+    () => supabase.from("chat_messages").insert({ ...usageRow, kind: "analysis" }),
+    () => supabase.from("chat_messages").insert(usageRow)
+  );
 
   const context = buildResumeContext({
     grade: profile?.grade ?? null,
