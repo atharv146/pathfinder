@@ -267,10 +267,6 @@
         "definition": "A more detailed financial aid form required by roughly 200 colleges, in addition to the FAFSA."
       },
       {
-        "term": "CSS Profile",
-        "definition": "A second, more detailed aid form used by some (mostly private) colleges. Free for families making up to $100,000 a year, per the College Board."
-      },
-      {
         "term": "Verification",
         "definition": "A routine request to document what you reported on the FAFSA. Not an accusation — but aid isn't paid out until it's completed."
       },
@@ -702,10 +698,6 @@
       {
         "term": "In-state tuition",
         "definition": "The lower price a public university charges residents of its own state — often tens of thousands less per year. Decided by the university's residency office under state rules, not by admissions."
-      },
-      {
-        "term": "Credential evaluation",
-        "definition": "A formal assessment of schooling completed outside the U.S., translating it into U.S. equivalents. Takes weeks and costs money, which is why it's worth starting early."
       }
     ]
   }

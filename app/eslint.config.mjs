@@ -20,10 +20,18 @@ const eslintConfig = defineConfig([
    * ⚠️ THIS IS RECORDED DEBT, NOT AN ENDORSEMENT. Read before removing.
    *
    * `npm run verify` (and CI) now gate every push, so lint has to mean
-   * "something is wrong" rather than "26 known things are still known". These
-   * three rules currently fire ~26 times, almost entirely inside the imperative
-   * WebGL/animation layer, where the flagged patterns are how the libraries are
-   * meant to be used:
+   * "something is wrong" rather than "N known things are still known".
+   *
+   * Count: 30 → 26 on Aug 17, 2026. Four came off by extracting
+   * `lib/useWebglGate.ts` — Backdrop, ShapeField, ClosingWire and LightWire
+   * each carried a byte-identical motion-gate + WebGL-probe effect, now one
+   * `useSyncExternalStore` hook, which is the API this pattern actually wants.
+   * That was a real duplication fix that happened to clear the warnings, not a
+   * change made to satisfy the linter.
+   *
+   * What remains fires almost entirely inside the imperative WebGL/animation
+   * layer, where the flagged patterns are how the libraries are meant to be
+   * used:
    *
    *   • `set-state-in-effect` — reading localStorage on mount (motion level,
    *     language preference, progress migration). The value genuinely isn't

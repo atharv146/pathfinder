@@ -1,10 +1,8 @@
 "use client";
 
-import { shouldRenderAmbient3D } from "@/lib/motion";
-
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import type { BackdropVariant } from "./SceneBackdrop";
+import { useWebglAllowed } from "@/lib/useWebglGate";
 
 const SceneBackdrop = dynamic(() => import("./SceneBackdrop"), { ssr: false });
 
@@ -34,26 +32,14 @@ export function Backdrop({
   accent: keyof typeof ACCENT_HEX;
   className?: string;
 }) {
-  const [ok, setOk] = useState<boolean | null>(null);
+  // The motion gate and the WebGL capability probe both live in
+  // useWebglAllowed now — four components carried identical copies of this,
+  // which is four places for a capability gate to drift. The reasoning that
+  // used to sit here (why deviceMemory/hardwareConcurrency are NOT used —
+  // Brave reports capped fake values) moved there with it.
+  const ok = useWebglAllowed("ambient");
 
-  useEffect(() => {
-    // 3D survives "calm" — only "still" drops to the CSS aurora.
-    if (!shouldRenderAmbient3D()) return setOk(false);
-
-    // deviceMemory/hardwareConcurrency gate removed — Brave and other
-    // privacy-hardening browsers report capped, fake values for these
-    // (commonly 2 and 4) to resist fingerprinting, which was silently
-    // disabling WebGL for every such user regardless of real hardware.
-    // WebGL context creation below is the real, unspoofed capability test.
-    try {
-      const c = document.createElement("canvas");
-      setOk(!!(c.getContext("webgl2") || c.getContext("webgl")));
-    } catch {
-      setOk(false);
-    }
-  }, []);
-
-  if (ok !== true) return <div className={`aurora-accent ${className}`} aria-hidden data-decor />;
+  if (!ok) return <div className={`aurora-accent ${className}`} aria-hidden data-decor />;
 
   return (
     <div className={`pointer-events-none absolute inset-0 opacity-70 ${className}`} data-decor aria-hidden>

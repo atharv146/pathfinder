@@ -1,12 +1,10 @@
 "use client";
 
-import { shouldRender3D } from "@/lib/motion";
-
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { KineticText } from "@/components/KineticText";
 import { Magnetic } from "@/components/Magnetic";
+import { useWebglAllowed } from "@/lib/useWebglGate";
 
 const WireCage = dynamic(() => import("./backdrop/WireCage"), { ssr: false });
 
@@ -16,17 +14,7 @@ const WireCage = dynamic(() => import("./backdrop/WireCage"), { ssr: false });
  * its scale.
  */
 export function ClosingWire() {
-  const [can3D, setCan3D] = useState(false);
-
-  useEffect(() => {
-    if (!shouldRender3D()) return;
-    try {
-      const c = document.createElement("canvas");
-      setCan3D(!!(c.getContext("webgl2") || c.getContext("webgl")));
-    } catch {
-      setCan3D(false);
-    }
-  }, []);
+  const can3D = useWebglAllowed("content");
 
   return (
     <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden border-t border-line px-6 sm:px-10">
