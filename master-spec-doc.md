@@ -567,6 +567,8 @@ The centerpiece of this whole plan. Reads the student's full profile and:
 
 #### ⚠️ Aug 16, 2026 addendum — a proposed admissions-chancing ML model, flagged as an OPEN DECISION, not settled
 
+**RESOLVED Aug 16, 2026, later that day — kept here unedited as the historical record of the reasoning, but this is no longer open.** The user chose the side-project-only path explicitly: the model never ships into PathFinder, and the NCES/Common Data Set aggregate approach is the real product feature instead. See §16N for the resolution and §16O for the full, research-verified build plan for the project itself (real dataset findings, methodology, limitations-section content, and resume framing) — read those two before saying anything about this project.
+
 The user separately proposed something bigger than the structural comparison above: training an actual machine-learning admissions-prediction model — floated partly as a CS learning project for the user's brother — using public datasets (Kaggle's "Graduate Admission 2" / "College Admission Dataset", NCES College Navigator aggregates) plus, later, self-reported outcome data crowdsourced from PathFinder's own users once it has real traffic, explicitly citing this as how CollegeVine and Scoir built their chancing calculators. Also mentioned in the same message, as later/bigger ideas rather than scoped asks: AI-analyzed essay feedback, and a scholarship/internship finder trained on public data.
 
 **Recording the user's proposal accurately, and my pushback alongside it, so neither gets lost:**
@@ -581,11 +583,11 @@ The user separately proposed something bigger than the structural comparison abo
   1. **Domain mismatch.** The "Graduate Admission 2" dataset commonly found on Kaggle (Mohan Acharya's) is GRE/CGPA data for international students applying to graduate school — a different country, different applicants, and a different admissions process from a U.S. high schooler applying to undergrad. A model trained on it would be learning the wrong population's patterns, not just a small sample of the right one. "College Admission Dataset" is a generic, commonly-reused Kaggle name shared by datasets of varying and often unclear quality/scope — which specific one is meant needs to be pinned down and scrutinized before any of this is built, not assumed usable because the name sounds relevant.
   2. **Self-reported outcome data is famously biased even at real scale**, let alone PathFinder's current scale of zero users — students who got in report more than students who didn't (survivorship bias), a known-hard problem that CollegeVine's own data science team, with far more data and years head start, hasn't fully solved.
   - **The actual risk isn't "the model might be a little rough."** It's a confident-sounding percentage handed to a nervous first-gen student, from a tool whose entire premise (Section 1, and the explicit rejection of a chancing calculator in §16B) is *not being another confidently-wrong college site* — and a homegrown model can read as more authoritative than a generic one ("PathFinder's own AI says..."), which makes a bad number more dangerous, not less.
-- **Suggested middle path, not yet decided:** keep the NCES/Common Data Set aggregate approach (published, real, citable ranges — "this school's admitted-class SAT range is X–Y") as the actual product feature, since it's genuinely differentiated from CollegeVine and carries none of the fabrication risk. Keep the predictive model as the brother's separate project, worth building for what it teaches, and treat wiring it into user-facing predictions as a much later conversation requiring real validation — not something to fold into this build queue now.
+- **Suggested middle path — this is the one the user chose; see the resolution note above:** keep the NCES/Common Data Set aggregate approach (published, real, citable ranges — "this school's admitted-class SAT range is X–Y") as the actual product feature, since it's genuinely differentiated from CollegeVine and carries none of the fabrication risk. Keep the predictive model as the brother's separate project, worth building for what it teaches, and treat wiring it into user-facing predictions as a much later conversation requiring real validation — not something to fold into this build queue now.
 - **Essay feedback (AI reading a student's own draft and giving notes) is a materially different feature from `EssayBrainstorm`'s hard "writes nothing, ever" rule** — giving feedback on existing text isn't the same as generating it, and could be built consistent with that rule (questions/notes only, never a rewrite handed back) — but needs the same explicit care taken with `EXTRACT_PROMPT`'s never-inflate rule elsewhere in this doc. Not scoped or built.
 - **Scholarship/internship finder trained on public data** — named by the user as "a much bigger project," later, not scoped. If built, the same 5B verification discipline applies: real, checked, dated entries, not model-generated ones.
 
-**This entire addendum needs an explicit user decision — proceed with the ML model into production, keep it as a side project only, or land on the NCES-aggregate middle path — before any of it is built.** Do not treat the CS-project enthusiasm as approval to wire predictions into the live product.
+~~**This entire addendum needs an explicit user decision...**~~ **RESOLVED — see the note at the top of this addendum, §16N, and §16O.** Do not treat the CS-project enthusiasm as approval to wire predictions into the live product; the decision was specifically for the side-project-only path.
 
 **Advertise from the homepage once built** — per the user's explicit ask, this becomes a named, promoted feature once it exists, intended to be the thing that pulls people into checking out the rest of the tools.
 
@@ -608,7 +610,7 @@ Updated Aug 16, 2026 (later session) — **step 1 is now BUILT and shipped**; se
 3. Settings/stats page relocation **+ the new courses-list schema** (real scope now, per the resolution above — this is a prerequisite for step 6, not just a page move)
 4. Structural "what's offered/expected" comparison data per school/major (needed for step 6's course-gap flagging; likely extends `majors.ts`'s existing structural-pattern approach rather than per-school scraping)
 5. OpenRouter provider module + Claude Sonnet wiring (plumbing, no user-facing surface yet)
-6. Profile Analysis tool itself — **blocked on the Aug 16 addendum decision above.** The resume-reframing and recommendation parts of this tool can proceed once 1–5 are done; the dream-college comparison part specifically must not ship until the user has explicitly chosen between the ML-model path, the side-project-only path, or the NCES-aggregate middle path.
+6. Profile Analysis tool itself — **fully unblocked as of Aug 16, 2026 (see §16N).** The dream-college comparison should be built on NCES/Common Data Set aggregate ranges, per the framing rules in §16N. No part of this step is waiting on a decision anymore.
 7. Homepage promotion of Profile Analysis
 8. (Later, unscoped) AI essay feedback, scholarship/internship finder — see addendum
 
@@ -648,10 +650,6 @@ These are the things most likely to get "cleaned up" by a future session that do
 `npm run build` and `npx tsc --noEmit` both pass. Note that `/major` is gated, so verifying it in the preview pane requires either a real session or temporarily moving `app/.env.local` aside (which makes `proxy.ts` return early and skips gating — `MajorView` renders fine without Supabase). If you do that, **restore the file immediately.**
 
 ---
-
-## 17. Handoff Notes for Any New Claude Session
-
-If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is.
 
 ## 16M. V2 §16K Step 2 — Tools as Pages (BUILT Aug 16, 2026)
 
@@ -695,3 +693,57 @@ New gated route `/scholarships`, accent `lime`, backdrop `swarm`, nav entry `nav
 - Notable verification catch: Dell and TheDream.US cycles had already closed at the time of writing, and both say so explicitly rather than showing a stale deadline as if live.
 
 ---
+
+## 16O. The Brother's ML Project — How to Build It for Maximum Resume Impact (Aug 17, 2026)
+
+*This section is guidance for a project OUTSIDE PathFinder — nothing here ships into the app, per the RESOLVED decision at the top of §16N and in `CLAUDE.md`. It exists because the user asked directly for a complete, concrete plan to make this "the most impressive way for a resume," not just the go/no-go decision already recorded. Everything below was verified by real web research on Aug 17, 2026 — the same discipline this whole project applies to its own content — because recommending a dataset that turns out not to exist, or that isn't what it claims to be, would be exactly the kind of unverified claim this app exists to avoid making.*
+
+### The core finding that shapes everything below
+
+**There is no clean, individual-level, real-outcome, publicly available dataset for U.S. undergraduate admissions — and that absence is itself real, checkable, and the best material in the whole project.** Confirmed three ways in this session:
+
+1. The commonly-used Kaggle "Graduate Admission 2" dataset (Mohan S Acharya) is confirmed row-per-applicant with GRE, TOEFL, University Rating, SOP, LOR, CGPA, Research and a continuous "Chance of Admit" — but it is graduate-school data for an international-applicant population, not U.S. undergrad. Already correctly flagged in §16K; nothing new here except confirming it's real and usable as data.
+2. The U.S. Department of Education's own College Scorecard API — the most authoritative public source there is — was checked directly: it "provides aggregate data, not individual student-level records," explicitly limited to institution- and field-of-study-level rows. No accept/reject label exists at the applicant level, by design (privacy).
+3. The best-regarded academic dataset in this space, Raj Chetty's team's **"Mobility Report Cards"** (Opportunity Insights, Harvard/NBER), links IRS tax records and Department of Education data for over 30 million students from 1999–2013 — real, rigorous, peer-reviewed research. Even this, with resources no side project can match, publishes results at the **college × parental-income-bracket level**, not the individual applicant level. The version packaged on Kaggle (`samsonqian/college-admissions`) confirms this concretely: 1,946 rows, each one a college-by-income-decile cell, not a student.
+
+The honest conclusion, and the one the project's write-up should state directly: **if a team with IRS-linked records on 30 million students still can't publish individual-level admissions data, a hobby project built on a Kaggle CSV cannot either.** That's not a weakness to hide — stated plainly, with these three citations, it's a more sophisticated and better-evidenced argument than most professional chancing tools ever make about their own data.
+
+### Recommended structure — two datasets, two different jobs
+
+**1. The modeling dataset — Kaggle "Graduate Admission 2" (Acharya).** Use this for the actual machine learning. It's real, clean, appropriately small for a learning project (~500 rows, 7 features, a continuous target), and lets the project demonstrate genuine technique without pretending to be bigger than it is:
+- Multiple model types compared head-to-head: linear/logistic regression as a baseline, a random forest, a gradient-boosted model (XGBoost or LightGBM), optionally a small neural net. The comparison itself — not any single model's score — is the demonstration of understanding.
+- Proper methodology: a held-out test set, k-fold cross-validation, and metrics that match the target (RMSE/MAE/R² if predicting the continuous "Chance of Admit"; accuracy/precision/recall/F1/ROC-AUC if binarized at a threshold).
+- **Feature importance via SHAP values.** This is the single highest-leverage addition available: it's a current, respected technique, produces an immediately readable plot, and turns "here's a number" into "here's what's driving the number and whether that makes sense" — which is exactly the kind of check the actual product avoids skipping.
+- **A calibration check.** If the model says "70% chance," do roughly 70% of students at that prediction actually get admitted in the held-out data? Calibration curves are a genuinely sophisticated, correct thing to run, and they connect directly to the real-world critique this whole project is built around — a miscalibrated chancing tool is precisely how a confidently-wrong number reaches a nervous applicant.
+
+**2. The evidence dataset — Opportunity Insights' Mobility Report Cards.** Use this NOT for prediction, but as the sourced evidence behind the limitations section — see the core finding above. A student can even run a small legitimate secondary analysis on it (e.g., relating a college's test-score range to its income-access and mobility rates) without ever pretending it substitutes for individual-applicant data. Real, citable, Harvard-caliber data used correctly is worth more here than a bigger dataset used to overclaim.
+
+### The limitations section — the project's actual intellectual content
+
+Per the existing §16K reasoning, this section is not an apology tacked onto the end — it is the most sophisticated part of the project, and should be written and weighted that way:
+1. **Domain mismatch, stated with specifics.** Different country, different population (international grad applicants vs. U.S. high schoolers), different scoring scales (GRE/CGPA vs. SAT/GPA), and a different admissions process (numbers-driven graduate admissions vs. holistic U.S. undergraduate review, where files with identical stats routinely get different outcomes).
+2. **Self-report and survivorship bias**, with the honest note that CollegeVine's and Scoir's own data science teams — with years of head start and far more data than this project will ever have — haven't fully solved it either.
+3. **The data-availability argument above**, with all three citations. This is the part most comparable student projects skip entirely, and it's the part that survives a technical interviewer's follow-up questions rather than folding under them.
+4. **What would actually be required to do this responsibly** — a large individual-level dataset with genuine (not self-reported) outcomes, regular retraining as admissions criteria shift year to year, and a lot more validation than any side project can provide. Naming the real bar, and stating plainly that this project doesn't clear it, is the move that separates a research-minded student from one who's only trying to ship a demo.
+
+### Naming it honestly
+
+Per the already-RESOLVED framing fix in §16K: **"Predicting Graduate Admission Likelihood, and Why It Doesn't Generalize to U.S. Undergraduate Admissions"** (or equivalent) — not "College Chancing Predictor." Same code, same models, same learning; the only change is that the title now matches what the project actually demonstrates, which is the difference between surviving a technical reviewer's first question and not.
+
+### Repo presentation — what actually reads as polished
+
+Content is most of the value, but a scrappy repo undersells real work. Cheap to get right:
+- A README with, in order: an honest one-line problem statement, links to both data sources with attribution, the modeling approach, a results table comparing every model tried (not just the best one — showing the comparison is the point), the SHAP and calibration findings, and the limitations section given equal visual weight to the results — not buried at the bottom in six-point font.
+- One command to reproduce the whole thing (`requirements.txt` or a `conda`/`uv` environment file, a single notebook or script that runs end to end).
+- Visualizations worth the five minutes they take: a model-comparison bar chart, a SHAP summary plot, a calibration curve, a correlation heatmap of the input features. These are the images a recruiter or reader actually looks at before reading a word of text.
+- **Optional stretch, genuinely high-value if there's time: a small Streamlit or Gradio demo** where a visitor enters GRE/CGPA-style inputs and sees the model's output — with a large, un-missable banner stating it's a grad-school/international model being shown for demonstration, not a college chancing tool. A live, clickable demo is one of the highest-impact things a student project can have, specifically because almost no other student project bothers to ship one.
+
+### How this reads on an actual resume
+
+A single strong bullet, built from everything above, reads roughly like: *"Built and evaluated four ML models (logistic regression, random forest, XGBoost, neural network) predicting graduate admission likelihood on a public Kaggle dataset; performed SHAP-based feature-importance and calibration analysis; authored a sourced case study — citing Opportunity Insights' Mobility Report Cards and the U.S. Department of Education's College Scorecard — explaining why individual-applicant prediction doesn't generalize to U.S. undergraduate admissions, and why no public dataset currently allows it to."* That sentence signals real technical range (four model types, SHAP, calibration — not a single `.fit()` call) and real research judgment (a sourced, checkable argument, not an assumption) in one line, which is what separates this from the large number of "predict admission with ML" tutorial-clone projects that already exist.
+
+---
+
+## 17. Handoff Notes for Any New Claude Session
+
+If you're a new Claude session picking this up: read `CLAUDE.md` first (fast-load summary, current status, design warning), then Sections 1–9 here for full mission/scope context, Section 15 for exactly where the build stands, Section 16 for the build order, and the Decisions Log (Section 14) for reasoning behind past choices — don't re-litigate settled decisions without a real reason. Update Sections 14 and 15 (and 16 if the order changes) after every meaningful step — standing instruction from the user. `pathfinder-app.jsx` holds the final, ready-to-use V1 content (roadmap + parent guide articles) — don't regenerate or rewrite it, port it into the real app as-is. If the user asks about the brother's ML project, its full build plan (verified datasets, methodology, limitations-section content, repo presentation, resume framing) is Section 16O — read it before improvising any of that, the dataset claims in it were verified by live web research and shouldn't be re-guessed from training data.
