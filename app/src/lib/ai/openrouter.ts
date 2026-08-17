@@ -28,13 +28,36 @@
  * silent switch to a paid variant cannot happen by accident — an unexpected
  * bill on a free student app is a real failure, not a rounding error.
  *
- * Order is best-first by instruction-following in this task shape. If one is
- * retired, the chain moves on rather than failing.
+ * ⚠️ VERIFIED LIVE against `GET https://openrouter.ai/api/v1/models` on
+ * 2026-08-17 — fetched the raw JSON directly rather than trusting a
+ * WebFetch summary, since that response is 400+ models and got silently
+ * truncated on the first two attempts. This is worth stating plainly: an
+ * EARLIER version of this file shipped three model ids invented from
+ * training-data memory (`llama-3.3-70b-instruct:free`,
+ * `gemma-3-27b-it:free`, `mistral-small-3.2-24b-instruct:free`) — **none
+ * of which exist on OpenRouter's live catalog.** Every one would have 404'd,
+ * so the whole chain would have silently fallen through to Gemini on every
+ * single call. Invisible today only because `OPENROUTER_API_KEY` was never
+ * set — this is exactly the kind of bug that stays hidden until the day you
+ * flip the key on.
+ *
+ * Free-tier availability churns fast (providers add and retire `:free`
+ * variants regularly) — re-verify against the live endpoint above before
+ * trusting this list again after any real gap, rather than assuming it
+ * still matches.
+ *
+ * Order is best-first by general instruction-following for this task shape
+ * (rewriting prose against a detailed system prompt). Reasoning-only,
+ * code-only, vision-only and moderation-only free models were deliberately
+ * excluded even though they were in the live list — wrong shape for this
+ * job. If one is retired, the chain moves on rather than failing.
  */
 export const OPENROUTER_CHAIN = [
-  "meta-llama/llama-3.3-70b-instruct:free",
-  "google/gemma-3-27b-it:free",
-  "mistralai/mistral-small-3.2-24b-instruct:free",
+  "google/gemma-4-31b-it:free",
+  "z-ai/glm-5.2:free",
+  "openai/gpt-oss-20b:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "nvidia/nemotron-nano-9b-v2:free",
 ] as const;
 
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
