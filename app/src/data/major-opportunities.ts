@@ -369,6 +369,19 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         timing: "Winter application deadline for the following summer.",
         url: "https://www.cee.org/programs/research-science-institute",
       },
+      {
+        name: "Youth Conservation Corps (YCC)",
+        kind: "internship",
+        org: "U.S. Forest Service, National Park Service, and U.S. Fish & Wildlife Service",
+        what: "A genuinely paid summer job, not a stipend — a crew doing real conservation work (trail building, habitat restoration, invasive species removal) on national forests, parks and wildlife refuges. Unlike most entries on this list, this is a real job with a paycheck, not a competitive academic placement.",
+        cost:
+          "Paid — federal or state minimum wage, whichever is higher, plus a 15% pay bump for youth who return as a crew leader.",
+        eligibility:
+          "Age 15 at enrollment, no older than 18 on the last day of the program. U.S. citizen or permanent resident with a valid Social Security Number, and you'll need a state work permit.",
+        timing:
+          "Runs 1–3 months each summer. There's no single national application — most positions are filled through conservation-corps partner organizations (search corpsnetwork.org) or by contacting your nearest national forest, park or wildlife refuge office directly. This decentralization is real, not a gap in this listing — start local.",
+        url: "https://www.fs.usda.gov/working-with-us/careers/youth-conservation-corps",
+      },
     ],
   },
 };
