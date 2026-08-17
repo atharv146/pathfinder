@@ -322,7 +322,7 @@ The user decided explicitly: **the trained model stays the brother's side projec
 1. Onboarding still only collects grade + major-family (both skippable) — doesn't capture the fuller Section 4 profile model, and there's no UI path to register as a parent account despite `LanguageAndRole` existing (it's a settings toggle, not part of signup). Deliberate-light-onboarding vs. expand is still an open call.
 2. Mobile has real fixes, not a full documented responsive audit.
 3. Design not explicitly signed off as final.
-4. Guide articles haven't had the *systematic* depth pass the roadmap got. **Note the wording — verified Aug 17, 2026 by reading the file:** the Aug 15 corrections ARE applied (sibling discount dated 2024–25, FAFSA at 2027–28 opening Oct 1 2026, Ivy-testing fact added). These are 6 real authored articles of ~6.5k–12k characters each, not a raw port. The gap is depth and new material, not accuracy.
+4. ~~Guide articles haven't had the systematic depth pass~~ — **DONE Aug 17, 2026, see §16U.** +45% researched content across all six, every figure verified against a primary source, all six now freshness-stamped.
 
 **Immediate next action (rewritten Aug 17, 2026, later session — §16K items 1–7 are now ALL BUILT; see §16L, §16M, §16N, §16P, §16Q):** there is no queued §16K work left. The open items are the ones under "Known smaller open items" below, plus: re-check **Golden Door Scholars** and **Ron Brown** for the scholarships directory (both were verified-but-unlistable on Aug 17 — see the note at the foot of `data/scholarships.ts`), the guide-articles depth pass, and adding `ANTHROPIC_API_KEY` / `OPENROUTER_API_KEY` if the AI paths should stop running on the Gemini free tier. *(Historic note, kept because it was the previous instruction:* run migration 0008 in the Supabase dashboard — `/stats` ships with a visible "run migration 0008" panel until they do, — **the user confirmed on Aug 17, 2026 that this has been run**, so `/stats` is live.)*
 
@@ -977,6 +977,65 @@ Measuring the box would have proved nothing, since the whole point is that the b
 ### Note on the audit method itself
 
 The sweep over-reports: it measures element bounding boxes, so any control that already had a pseudo-element hit-area expansion looks like a violation. The roadmap's completion dot was flagged for exactly this reason and needed no change. Any future run of this audit should treat the touch-target list as candidates to check, not a defect list.
+
+---
+
+## 16U. Content Depth, Automation Hardening, and the Last Open Items (Aug 17, 2026)
+
+*Final session of the day. The user's instruction was to work the remaining list end to end without checking in, so this covers six items and records what was deliberately NOT done and why.*
+
+### Guide articles — the depth pass, +45% content
+
+The systematic deepening the roadmap got in August and the guides never had. **Every figure added was verified against a primary source that day**, not recalled:
+
+| Claim | Source |
+| --- | --- |
+| Pell max $7,395 / min $740, 2026–27 | ED Dear Colleague Letter GEN-26-01 |
+| Direct Loan limits $5,500 / $6,500 / $7,500, $31,000 aggregate | Federal Student Aid Handbook, Vol 8 Ch 4 |
+| CSS Profile free under $100,000 | cssprofile.collegeboard.org |
+| FERPA rights transfer at 18 or on enrolment | studentprivacy.ed.gov |
+
+New material targets what this audience specifically gets caught by, rather than adding generic length: **Early Decision being legally binding** and what that costs a family who must compare aid offers; that not every college uses the Common App (UC, CSU, ApplyTexas run their own); articulation agreements making community college a real path rather than a gamble; verification not being an accusation; **priority aid deadlines that fall before admissions deadlines**; colleges recalculating GPA against the school profile; senior grades still arriving after decisions; the actual shape of the activities form; pay-to-attend summer programs; and how in-state residency is decided.
+
+**The residency section states no state policy as settled fact.** It explains the mechanism, names who decides (the university's residency office, not admissions, and not the same question as immigration status), and refers status questions to a licensed attorney. Same rule the AI prompt carries: never reassure anyone about enforcement risk.
+
+All six articles now carry freshness stamps naming exactly what was checked and what to watch — including an explicit ⚠️ on the immigrant-families entry never to add enforcement reassurance.
+
+### Opportunities — 2 scholarships resolved, 3 programmes added
+
+**Ron Brown resolved on re-check**: two official pages now agree on the award, eligibility and the December 1 / December 15 deadlines. Its own contradictory cycle labelling is stated on the card rather than resolved by guessing.
+
+**Golden Door is listed despite still being unresolved**, with the gap visible on the card. Its official page publishes no eligibility criteria and no next cycle; third-party summaries do carry details and we deliberately do not repeat them, because second-hand eligibility is not good enough for an award whose entire audience is status-dependent. The card says exactly that and points at the programme's own email. **Omitting it would have left the highest-value award for undocumented students invisible, which serves them worse than an honest gap.**
+
+Added: Scholastic Art & Writing Awards (arts-design — grades 7–12, so it reaches middle schoolers, and its fee waiver requires no proof of need), DECA (business), Educators Rising (education). Each states honestly that cost is set locally by the chapter.
+
+**Bank of America Student Leaders was researched and deliberately NOT added** — its official FAQ describes eligibility that conflicts with every secondary source, and the posted cycle had passed. Rule 1 working as intended.
+
+### Mobile audit — see §16T
+
+17 routes at 375px. No overflow, no iOS zoom triggers. Touch targets fixed via a hit-area utility rather than a restyle.
+
+### AI spend — a real uncapped hole, closed
+
+`/api/analysis/resume` called `guardAiRequest()`, which enforces the daily cap by **counting rows in `chat_messages`** — but the route never wrote one. Resume generations passed the check without counting toward it, so "Write them again" was effectively unlimited while being **the most expensive call in the app** (it processes a student's entire activities list, not one message). Invisible with one test user; the first thing to exhaust the free tier under real traffic.
+
+Fixed by recording a usage row *before* the model call — a failed or abandoned generation still cost the request, and counting only successes would make the cap avoidable by retrying. Migration **0009** allows `kind = 'analysis'`; until it runs the insert degrades to an un-kinded row, which still counts.
+
+**Two levers added, both settable from the Vercel dashboard with no deploy**, because needing a code push to pull them is needing them too late: `AI_DAILY_CAP` and `AI_DISABLED=1` (hard off switch, honest message, rest of the app unaffected). Junk env values fall back to the default rather than becoming `0` (locks everyone out) or `NaN` (**removes the cap entirely**) — both covered by tests.
+
+### Lint debt — 30 → 26, by fixing a real duplication
+
+Four components carried a byte-identical motion-gate + WebGL-probe effect. Now one hook, `lib/useWebglGate.ts`, on `useSyncExternalStore` — the correct API for external state that can change while the page is open. Verified the gate still works (5 canvases on the homepage, no hydration errors). **This was a duplication fix that happened to clear warnings, not a change made to satisfy the linter.**
+
+The remaining 26 are Three.js mutation inside `useFrame` and localStorage reads on mount — correct code that the React Compiler rules flag. They stay warnings with the reasoning in `eslint.config.mjs`.
+
+### A bug this session introduced and then caught
+
+The guide depth pass added `CSS Profile` and `Credential evaluation` key terms that **already existed**, producing duplicate React keys that could silently drop a term from the page. Same class as the opportunities duplicate-id bug found the same day, in a different file. `guide-articles.test.ts` now covers it. Hand-edited content grows duplicates; a test is the only reliable defence.
+
+**One test was written and deleted**: it asserted typographic apostrophes and failed against 83 paragraphs of authored copy that has always used straight quotes. It was inventing a convention rather than enforcing one. Recorded in the file so it doesn't get re-added as an oversight.
+
+### Test suite: 0 → 53
 
 ---
 
