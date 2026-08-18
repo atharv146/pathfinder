@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       supabase
         .from("profiles")
         .select(
-          `${PROFILE_COLUMNS}, school_ap_offered, school_offers_ib, school_offers_dual_enrollment, school_course_limits`
+          `${PROFILE_COLUMNS}, school_ap_offered, school_offers_ib, school_offers_dual_enrollment, school_course_limits, goals_notes`
         )
         .eq("id", user.id)
         .maybeSingle(),
@@ -177,6 +177,7 @@ export async function POST(request: Request) {
     schoolOffersIb: profile?.school_offers_ib ?? null,
     schoolOffersDualEnrollment: profile?.school_offers_dual_enrollment ?? null,
     schoolCourseLimits: profile?.school_course_limits ?? null,
+    goalsNotes: profile?.goals_notes ?? null,
   });
 
   // Gemini names the assistant role "model", not "assistant".

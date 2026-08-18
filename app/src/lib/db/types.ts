@@ -72,6 +72,8 @@ export type Profile = {
   school_offers_ib: boolean | null;
   school_offers_dual_enrollment: boolean | null;
   school_course_limits: string | null;
+  /** Migration 0011 — the student's own goals/ideas, free text. */
+  goals_notes: string | null;
 };
 
 /**

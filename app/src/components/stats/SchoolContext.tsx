@@ -50,6 +50,7 @@ function normalize(p: Profile): Profile {
     school_offers_ib: p.school_offers_ib ?? null,
     school_offers_dual_enrollment: p.school_offers_dual_enrollment ?? null,
     school_course_limits: p.school_course_limits ?? null,
+    goals_notes: p.goals_notes ?? null,
   };
 }
 
@@ -195,6 +196,34 @@ export function SchoolContext({ profile: initial }: { profile: Profile }) {
           recommendation, or lock the math track back in 8th grade. Without
           that context a capped schedule reads as an unambitious one, which
           isn&rsquo;t true and isn&rsquo;t fair.
+        </p>
+      </div>
+
+      {/* Migration 0011. The only free-form box on the profile that isn't
+          about constraints — everything else here asks what's in the way.
+          This asks what they actually want, which is what the analyzer and
+          Ask AI should be reasoning against. */}
+      <div className="mt-8 border-t border-line pt-6">
+        <label className="micro mb-2 block text-smoke" htmlFor="goals-notes">
+          What do you actually want? Ideas welcome, half-formed is fine
+        </label>
+        <textarea
+          id="goals-notes"
+          rows={5}
+          maxLength={1500}
+          defaultValue={profile.goals_notes ?? ""}
+          onBlur={(e) => save({ goals_notes: e.target.value.trim() || null })}
+          placeholder="e.g. something with computers and healthcare, not sure what · want to stay close to home · I help run my family's shop and want that to count · thinking about nursing but scared of the science · I want to build something of my own"
+          className={`${fieldClass} resize-y leading-relaxed`}
+        />
+        <p className="mt-2 max-w-2xl text-[0.8rem] leading-relaxed text-smoke">
+          Everything else on this page is a number or a checkbox. This is the
+          part that isn&rsquo;t. Write it however it comes out — an idea you
+          haven&rsquo;t told anyone, something you already do that you
+          don&rsquo;t think counts, a worry, a constraint on where you can go.
+          Ask AI and Profile Analysis read this and work from what you wrote,
+          rather than assuming a default plan for you. Nobody else sees it: it
+          is not included in a counselor share link.
         </p>
       </div>
     </div>

@@ -131,6 +131,8 @@ export function ProfileAnalysis() {
         activityCount={activities.length}
       />
 
+      <YourGoals notes={profile.goals_notes ?? null} />
+
       <CoursePath reading={reading} grade={profile.grade} />
 
       {/* ---------------------------------------------------------------- */}
@@ -280,6 +282,59 @@ export function ProfileAnalysis() {
 }
 
 /* ------------------------------------------------------------------------ */
+
+/**
+ * Their own words (migration 0011), shown back to them near the top.
+ *
+ * Deliberately NOT run through a model here. This page's one AI call rewrites
+ * activity text; adding a second that "evaluates your goals" would be both new
+ * spend on every page load and exactly the kind of judgement this tool refuses
+ * to make. What it does instead is anchor the page visibly to what the student
+ * said they want, and hand them the surface that CAN discuss it — Ask AI,
+ * which already receives this text as context.
+ */
+function YourGoals({ notes }: { notes: string | null }) {
+  return (
+    <section>
+      <h2 className="display-md text-2xl text-chalk">What you said you want</h2>
+      {notes ? (
+        <>
+          <blockquote className="mt-4 rounded-xl border border-line bg-panel p-5">
+            <p className="whitespace-pre-line text-[0.95rem] leading-relaxed text-chalk">
+              {notes}
+            </p>
+          </blockquote>
+          <p className="mt-4 max-w-2xl text-[0.9rem] leading-relaxed text-ash">
+            Everything below is read against this, not against a default plan
+            for someone your age. Nothing on this page scores it — if you want
+            it pushed on properly, including where it might conflict with your
+            current schedule, ask about it directly.{" "}
+            <Link
+              href="/ask-ai"
+              className="text-chalk underline underline-offset-4 transition-colors hover:text-accent"
+            >
+              Take it to Ask AI &rarr;
+            </Link>
+          </p>
+        </>
+      ) : (
+        <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed text-ash">
+          You haven&rsquo;t written anything here yet, so this page can only
+          work from numbers and course names — which is the thinnest possible
+          version of you.{" "}
+          <Link
+            href="/stats"
+            className="text-chalk underline underline-offset-4 transition-colors hover:text-accent"
+          >
+            Say what you actually want on your stats page
+          </Link>{" "}
+          — half-formed is genuinely fine, and it changes what this page and
+          Ask AI can tell you.
+        </p>
+      )}
+    </section>
+  );
+}
 
 function Snapshot({
   profile,

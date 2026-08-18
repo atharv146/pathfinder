@@ -100,6 +100,7 @@ export type ChatProfile = {
   schoolOffersIb?: boolean | null;
   schoolOffersDualEnrollment?: boolean | null;
   schoolCourseLimits?: string | null;
+  goalsNotes?: string | null;
 };
 
 const RIGOR_LABEL: Record<string, string> = {
@@ -244,6 +245,21 @@ export function buildContextBlock(profile: ChatProfile): string {
   if (profile.schoolCourseLimits) {
     lines.push(
       `Rules their school places on what they can take, in their own words: "${profile.schoolCourseLimits}". Treat these as real constraints, not excuses — do not suggest courses these rules block, and never imply they should have taken something they were not allowed to take.`
+    );
+  }
+
+  // ---------------------------------------------------------------------
+  // Their own words (migration 0011).
+  // ---------------------------------------------------------------------
+  // This is the only field on the profile the student wrote freely rather
+  // than picked, so it carries what no form anticipated — a half-formed
+  // interest, an obligation at home, a constraint on where they can go. The
+  // instruction matters as much as the text: a model given "ideas" will
+  // reliably either flatter them or quietly replace them with a more
+  // conventional plan, and both are failures. Anchor to what they wrote.
+  if (profile.goalsNotes) {
+    lines.push(
+      `What they said they want, in their own words: "${profile.goalsNotes}". This is the most important context on this page — it is the only part they wrote freely rather than selected. Anchor your answer to what they actually said they want. You may point out a real conflict, a missing prerequisite, or a step they'd need to take, and you should — that is useful. But do not substitute a more conventional goal for theirs, do not praise the plan just because they wrote it down, and do not treat anything here as a commitment they are locked into. If something they mention is unfamiliar or unclear, ask instead of guessing at what they meant.`
     );
   }
 
