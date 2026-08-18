@@ -1,6 +1,12 @@
 import guideJson from "./guide-articles.json";
+import type { GuideVisualData } from "@/components/guide/GuideVisual";
 
-export type GuideSection = { heading?: string; paragraphs: string[] };
+export type GuideSection = {
+  heading?: string;
+  paragraphs: string[];
+  /** Optional table / bars / steps / worked example. See GuideVisual. */
+  visual?: GuideVisualData;
+};
 
 export type GuideArticle = {
   title: string;
@@ -11,7 +17,7 @@ export type GuideArticle = {
   badge?: string;
 };
 
-export const guideArticles = guideJson as GuideArticle[];
+export const guideArticles = guideJson as unknown as GuideArticle[];
 
 export function slugify(title: string): string {
   return title

@@ -462,7 +462,67 @@
           "There are three different ways to take a harder-than-normal class, and they are genuinely different things that families often hear used interchangeably. An AP class is a high school class, taught at your high school, that ends in a national exam in May — the college credit depends entirely on that exam score and on each college's own policy about what score it accepts. Dual enrollment usually means a college course you take that also counts for high school credit, often arranged through your school. And you can simply enroll at a community college yourself and take a class there, independently of your high school entirely.",
           "That last option surprises a lot of families, so it's worth stating plainly: community colleges in most states have open enrollment, and high school students are generally allowed to take classes there while still in high school. You don't need to be referred, you don't need a special program, and you don't need to be struggling or exceptional. You register, like anyone else. Cost is often far lower than people expect, but it is set locally rather than nationally, so it genuinely has to be checked rather than assumed. In California, for instance, state law lets each community college district exempt high school students taking classes part-time from the per-unit enrollment fee — many districts do, but it is the district's decision, not an automatic statewide rule, and books or small campus fees can still apply. The two people who can give you a real answer are your school counselor and the community college's own admissions or outreach office, and contacting either is an ordinary request rather than an imposition.",
           "The practical difference that matters most: an AP score you don't like can simply be withheld from colleges. A community college grade cannot. It creates a permanent college transcript that follows you — you'll be asked to send it when you apply to college, and again later if you apply to graduate school. A weak grade there is far harder to undo than a weak grade in a high school class."
-        ]
+        ],
+        "visual": {
+          "kind": "table",
+          "title": "Three ways to take a harder class",
+          "columns": [
+            "AP class",
+            "Dual enrollment",
+            "Community college on your own"
+          ],
+          "rows": [
+            {
+              "label": "Where you take it",
+              "cells": [
+                "Your high school",
+                "Usually your high school or the college, arranged by your school",
+                "The college — you enroll yourself"
+              ]
+            },
+            {
+              "label": "How credit works",
+              "cells": [
+                "Depends on your May exam score and each college's policy",
+                "You earn college credit by passing the class",
+                "You earn college credit by passing the class"
+              ]
+            },
+            {
+              "label": "If you do badly",
+              "cells": [
+                "You can withhold the exam score entirely",
+                "The grade is on a permanent college transcript",
+                "The grade is on a permanent college transcript"
+              ]
+            },
+            {
+              "label": "Counts in your high school GPA?",
+              "cells": [
+                "Yes",
+                "Usually — ask your counselor",
+                "Only if your school accepts it back — ask first"
+              ]
+            },
+            {
+              "label": "UC honors point (CA residents)",
+              "cells": [
+                "Yes",
+                "Yes, if UC-transferable",
+                "Yes, if UC-transferable"
+              ]
+            },
+            {
+              "label": "Who to ask",
+              "cells": [
+                "Your counselor",
+                "Your counselor",
+                "The college's admissions or outreach office"
+              ]
+            }
+          ],
+          "note": "The row that surprises people most is the third one. An AP score you don't like can simply be withheld; a college grade cannot."
+        }
       },
       {
         "heading": "How community college classes affect your GPA — and the UC rules specifically",
@@ -472,14 +532,60 @@
           "Here is the part that matters for community college: for California residents, UC grants an extra honors point to AP courses, IB Higher Level and designated Standard Level courses, UC-certified honors courses — and **UC-transferable college courses**, which includes community college classes. So a transferable community college course can genuinely carry the same weight as an AP in the UC GPA. Two hard limits apply: no more than 8 honors points total, and no more than 4 of them from 10th grade. And a grade of D or F earns no bonus at all.",
           "Two cautions that follow directly from those rules. First, the honors cap means the boost is finite — once you've hit 8 points, an additional course adds no further weight, so \"take more college classes to raise the number\" stops working at a defined ceiling. Second, the course has to be UC-transferable to count; not every community college class is. California publishes exactly which courses transfer at ASSIST.org, and checking there before you register takes minutes and prevents the most common disappointment here. If you're applying from outside California, note that UC weights only AP and IB courses for nonresidents.",
           "One more thing that isn't obvious: because a community college grade lands on a real college transcript, a C in a transferable college course can pull down a GPA that a college later calculates, even while it technically earned an honors point in the UC formula. Taking a college class is a genuine opportunity and a genuine risk at the same time, and it's worth going in understanding both rather than only the upside."
-        ]
+        ],
+        "visual": {
+          "kind": "steps",
+          "title": "How UC actually builds your GPA",
+          "steps": [
+            {
+              "title": "Only a-g courses count",
+              "body": "And only those taken between the summer after 9th grade and the summer after 11th. Freshman-year and senior-year grades are not in this calculation."
+            },
+            {
+              "title": "Convert each grade",
+              "body": "A=4, B=3, C=2, D=1. Plus and minus signs are ignored entirely, so an A− and an A are worth exactly the same here."
+            },
+            {
+              "title": "Add one honors point per qualifying course",
+              "body": "For California residents: AP, IB HL and designated SL, UC-certified honors, and UC-transferable college courses — including community college. Nonresidents get weight only for AP and IB."
+            },
+            {
+              "title": "Stop at the cap",
+              "body": "A maximum of 8 honors points, and no more than 4 of them from 10th grade. Past that, extra honors courses add no further weight."
+            },
+            {
+              "title": "A D or F earns no bonus",
+              "body": "The honors point applies only to grades of C or better, so a hard class that goes badly is worse than a normal class that goes well."
+            }
+          ],
+          "note": "Checked against UC's own admissions site. Confirm before relying on it — this is policy and policy moves."
+        }
       },
       {
         "heading": "So should you take one?",
         "paragraphs": [
           "There's no universal answer, but there is a useful way to think about it. Dual enrollment and community college courses tend to be strongest when your high school doesn't offer the class you want — you've run out of math, your school has no computer science, you want a subject nobody teaches there. That's a case where the course genuinely extends what was available to you, which is exactly what colleges are looking at when they judge rigor relative to your school. Admissions offices evaluate what you did against what your school actually offered, not against a school with twenty-five APs.",
           "They tend to be weaker as a pure GPA maneuver — taking an easy college class hoping the weighting lifts a number. The honors cap limits the effect, the grade is permanent, and if it displaces a harder class at your own school it can read as less rigorous rather than more. A counselor who knows your transcript is the right person to ask, and it costs nothing to ask."
-        ]
+        ],
+        "visual": {
+          "kind": "bars",
+          "title": "Why the cost question comes up at all",
+          "unit": "Average published tuition and fees, 2025–26 (College Board)",
+          "items": [
+            {
+              "label": "Community college, in-district",
+              "value": 4150,
+              "display": "$4,150",
+              "emphasis": true
+            },
+            {
+              "label": "Public four-year, in-state",
+              "value": 11950,
+              "display": "$11,950"
+            }
+          ],
+          "note": "This gap is why a college class taken in high school, or a transfer pathway later, is worth understanding rather than dismissing."
+        }
       },
       {
         "heading": "A parent's role here",
@@ -944,7 +1050,67 @@
           "These are organised programs that place you with a mentor — the best-known ones are free and extremely competitive, like the Research Science Institute at MIT or the NIH's summer internship program, both of which are on this app's Opportunities page with their real costs and deadlines.",
           "Two honest things about this route. First, the acceptance rates are low enough that it belongs on a list of things you apply to, never a plan you count on. Second, the free ones are genuinely free — RSI covers housing and food, NIH pays a stipend — so if a program's main pitch is prestige and its price is several thousand dollars, that is a different kind of product and should be judged as one.",
           "Also look wider than the famous names. Many state universities run summer research programs for local high schoolers that are free or stipended and receive a fraction of the applications, precisely because nobody has heard of them. Searching your state's flagship university plus \"high school summer research\" is a five-minute exercise that most students never do."
-        ]
+        ],
+        "visual": {
+          "kind": "table",
+          "title": "The three routes, side by side",
+          "columns": [
+            "Structured program",
+            "Email a professor",
+            "Do it yourself"
+          ],
+          "rows": [
+            {
+              "label": "Who decides",
+              "cells": [
+                "An admissions committee",
+                "One professor",
+                "You"
+              ]
+            },
+            {
+              "label": "Realistic odds",
+              "cells": [
+                "Low — apply, don't plan around it",
+                "Maybe 1 reply in 10 emails, which is a success",
+                "Entirely up to you"
+              ]
+            },
+            {
+              "label": "Cost",
+              "cells": [
+                "The good ones are free or paid; be wary of expensive ones",
+                "Free",
+                "Free"
+              ]
+            },
+            {
+              "label": "Lead time",
+              "cells": [
+                "Apply 6–12 months ahead",
+                "Weeks",
+                "Start today"
+              ]
+            },
+            {
+              "label": "Needs a nearby university",
+              "cells": [
+                "No — many are residential",
+                "Usually yes, you have to get there",
+                "No"
+              ]
+            },
+            {
+              "label": "Best when",
+              "cells": [
+                "You have strong grades and time to apply early",
+                "There's a college near you doing work you care about",
+                "Nothing local exists, or you want to start now"
+              ]
+            }
+          ],
+          "note": "None of these is the 'real' one. The third is the one most students can start this week."
+        }
       },
       {
         "heading": "Route two: email a professor — the one almost nobody tries",
@@ -953,7 +1119,60 @@
           "What makes it work is specificity. A message that could have been sent to a hundred professors gets deleted; a message showing you read something they actually wrote gets read. Name the specific paper or project. Say what about it interested you and why. Say what you can honestly offer — hours, reliability, a skill you have — and be clear that you are a high school student, because pretending otherwise wastes everyone's time and ends badly.",
           "Be realistic about logistics before you send it: most lab work requires physically getting there, so proximity to home, a relative's house, or public transit is a genuine filter. And target sensibly — a professor at your regional state university or local community college is far more likely to have room, and time, than a famous name at a top-20 school fielding hundreds of these.",
           "Send politely, attach a short resume, and then let it go. Silence is not a verdict on you; professors are busy and many simply don't have capacity. Sending ten thoughtful, specific emails and getting one yes is a completely normal outcome, and one yes is all you needed."
-        ]
+        ],
+        "visual": {
+          "kind": "example",
+          "title": "What the email actually looks like",
+          "lines": [
+            {
+              "text": "Subject: Question about your work on urban heat islands",
+              "muted": true
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Dear Professor Alvarez,"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "I'm a junior at Kennedy High School in Fremont. I read your 2025 paper on surface temperature differences across neighbourhoods in San Jose, and the part I keep thinking about is that the gap tracked tree cover more closely than it tracked building density."
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "I'm interested in whether something similar shows up in my own city, and I'd like to learn how that kind of work is actually done. If you have any room in your lab this summer, I'd be glad to help with whatever is useful — data entry, cleaning spreadsheets, running samples. I can get to campus on BART two or three days a week, and I'm free from June 10."
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "I've attached a short resume. Thank you for your time either way."
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Aisha Rahman"
+            },
+            {
+              "text": "aisha.rahman@email.com · (510) 555-0142",
+              "muted": true
+            }
+          ],
+          "annotations": [
+            "The subject line names their actual work. A subject like \"Research opportunity?\" reads as a mass email and gets deleted unread.",
+            "It proves the paper was actually read — one specific finding, described in the student's own words. This is the single thing that separates a reply from silence.",
+            "It's honest about being a high school student. Hiding that wastes everyone's time and ends badly when it surfaces.",
+            "It offers real labour, including the unglamorous kind. Professors need someone to clean data far more often than they need another idea.",
+            "It answers the logistics question before it's asked: how you'd get there, which days, starting when.",
+            "It closes without pressure. \"Thank you either way\" makes a no cost them nothing, which makes a yes easier."
+          ],
+          "note": "Names and details here are invented for illustration — the structure is the point, not the specifics. Write yours about a real paper you actually read."
+        }
       },
       {
         "heading": "Route three: do it yourself",
@@ -970,7 +1189,29 @@
           "First, expensive \"research programs\" that guarantee a mentor and a finished paper. Some are legitimate; the price alone doesn't make something a scam. But be clear about what you'd be buying: paying several thousand dollars for a project does not make it more impressive to a reader than a modest project you organised yourself, and admissions offices are aware of which experiences money can buy. If the cost would strain your family, that is a sufficient reason not to do it, and you are not falling behind by declining.",
           "Second, and more serious: journals that charge a fee to publish student work. Being \"published\" sounds like a credential, but a journal that accepts anything for money is not a credential at all — and the people reading your application know the difference between a peer-reviewed venue and one that publishes whatever is paid for. If you want your work public, a well-written project posted somewhere permanent, or entered in an established competition, serves you better and costs nothing.",
           "The general test: legitimate research opportunities either cost nothing, pay you, or charge a modest fee they'll waive if you ask. Anything that requires substantial money to participate deserves genuine scrutiny before your family spends it."
-        ]
+        ],
+        "visual": {
+          "kind": "steps",
+          "title": "Before your family pays for anything",
+          "steps": [
+            {
+              "title": "Ask what the money buys",
+              "body": "Mentorship and lab access is a real service. A guaranteed 'publication' is not — no legitimate venue guarantees acceptance before seeing the work."
+            },
+            {
+              "title": "Check whether the journal reviews anything",
+              "body": "Search the journal's name plus 'peer review' and look for who the reviewers are. If you can't find out, that is your answer."
+            },
+            {
+              "title": "Apply the cost test",
+              "body": "Legitimate opportunities usually cost nothing, pay you, or charge a small fee they'll waive if you ask. Thousands of dollars up front deserves real scrutiny."
+            },
+            {
+              "title": "Ask what happens with no money at all",
+              "body": "Every route in this article except the paid ones is still open. Declining an expensive program does not put you behind."
+            }
+          ]
+        }
       },
       {
         "heading": "What to do with it afterwards",

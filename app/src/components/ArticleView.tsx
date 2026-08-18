@@ -1,9 +1,11 @@
 import { RevealText } from "@/components/RevealText";
 import { FadeIn } from "@/components/FadeIn";
+import { GuideVisual, type GuideVisualData } from "@/components/guide/GuideVisual";
 
 type Section = {
   heading?: string;
   paragraphs: string[];
+  visual?: GuideVisualData;
 };
 
 type KeyTerm = { term: string; definition: string };
@@ -69,6 +71,7 @@ export function ArticleView({ eyebrow, title, quickAnswer, sections, keyTerms }:
                 </p>
               ))}
             </div>
+            {section.visual && <GuideVisual data={section.visual} />}
           </FadeIn>
         ))}
       </div>
