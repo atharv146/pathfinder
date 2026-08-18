@@ -93,6 +93,18 @@ export const GUIDE_FRESHNESS: Record<string, Freshness> = {
       "⚠️ Never add reassurance about enforcement risk to this article. Explain mechanisms; refer status questions to a licensed immigration attorney.",
     ],
   },
+
+  "community-college-and-transfer-pathways": {
+    verified: "2026-08-17",
+    checked:
+      "Community college vs. public four-year tuition averages ($4,150 / $11,950) checked against the College Board's own Trends in College Pricing and Student Aid 2025 report. The Pell Grant lifetime limit (12 semesters / 600% of a Scheduled Award) checked against the Federal Student Aid Handbook. Florida's Statewide Articulation Agreement terms and the UC Transfer Admission Guarantee's participating-campus list and unit requirements were checked against the Florida DOE and University of California's own admissions pages, respectively.",
+    watch: [
+      "Tuition averages — set annually by the College Board's autumn report",
+      "Which UC campuses participate in TAG, and their specific unit/GPA thresholds",
+      "Other states' articulation systems — this article names Florida and California as concrete examples, not as the only two that exist; a future pass could add more states by name",
+      "The Pell Grant lifetime limit itself, under periodic legislative discussion",
+    ],
+  },
 };
 
 /**

@@ -390,6 +390,46 @@ export const SCHOLARSHIPS: Scholarship[] = [
     url: "https://roadtohire.org/golden-door-scholars",
     sensitive: true,
   },
+  {
+    id: "national-merit",
+    grades: [11],
+    tags: ["early"],
+    name: "National Merit Scholarship Program",
+    org: "National Merit Scholarship Corporation",
+    award:
+      "A one-time $2,500 scholarship for 2,500 of the roughly 15,000 National Merit Finalists nationally each year, allocated state by state. Separate corporate- and college-sponsored National Merit Scholarships also exist in varying amounts set by each sponsor — and becoming a Finalist is itself what many colleges use to trigger their own, often much larger, merit aid.",
+    whoItsFor:
+      "Every 11th grader taking the PSAT/NMSQT this fall. This isn't something you apply for — it's a scholarship track your test score can automatically enter you into, which makes it one of the only awards on this list with no separate application to remember.",
+    eligibility: [
+      "Take the PSAT/NMSQT specifically in 11th grade — a 9th or 10th grade PSAT does not count toward entry.",
+      "Enrolled as a high school student in the U.S. (including D.C. and U.S. commonwealths/territories), progressing normally toward graduation, and planning to enter college no later than the fall after graduating.",
+      "About the top 1% of scorers nationally are named Semifinalists in the fall of senior year; Semifinalists who complete further requirements (an application, an essay, a strong SAT/ACT score) become Finalists that winter.",
+    ],
+    cycle:
+      "The qualifying test is the PSAT/NMSQT taken in October 2026 for current 11th graders (the Class of 2028). Semifinalists are announced in fall 2027 (senior year); Finalist and Scholar announcements follow through winter and spring 2028. ⚠️ We could not load nationalmerit.org directly to re-verify against its own pages (the site blocked automated access) — this entry is corroborated instead via the College Board's own PSAT/NMSQT page and multiple independent college-guidance sources agreeing on the same mechanism and figures. Confirm specifics on nationalmerit.org, which loads fine in an ordinary browser.",
+    url: "https://www.nationalmerit.org/",
+  },
+  {
+    id: "burger-king-scholars",
+    grades: [12],
+    tags: ["need"],
+    name: "Burger King Scholars",
+    org: "Burger King Foundation (administered by Scholarship America)",
+    award:
+      "$1,000 to $60,000, based on the review committee's assessment — in 2025 the program distributed over $4.4 million across more than 4,000 recipients. A separate track, the James W. McLamore WHOPPER Scholarship, exists for students with a 3.5+ GPA and substantial leadership and work experience.",
+    whoItsFor:
+      "Graduating seniors with a genuinely accessible bar to clear — the general track only requires a 2.0 GPA, lower than most scholarships on this list — with financial need, work experience, extracurriculars and community service all weighed alongside grades, not GPA alone.",
+    eligibility: [
+      "Graduating high school senior (U.S., Puerto Rico, Guam or Canada) with a cumulative GPA of 2.0 or higher on a 4.0 scale.",
+      "U.S. or Canadian citizen or legal resident.",
+      "Planning to enroll full-time for the entire coming academic year at an accredited two- or four-year college, university, or vocational-technical school.",
+    ],
+    cycle:
+      "For the 2027–28 cycle: applications open October 15, 2026 and close December 15, 2026, or once 30,000 applications are received, whichever comes first — so applying early in the window matters more than the calendar date on its own.",
+    opensOn: "2026-10-15",
+    closesOn: "2026-12-15",
+    url: "https://burgerking.scholarsapply.org/",
+  },
 ];
 
 /**

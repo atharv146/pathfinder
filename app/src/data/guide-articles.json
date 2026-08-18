@@ -700,5 +700,74 @@
         "definition": "The lower price a public university charges residents of its own state — often tens of thousands less per year. Decided by the university's residency office under state rules, not by admissions."
       }
     ]
+  },
+  {
+    "title": "Community College and Transfer Pathways",
+    "teaser": "Two years at a fraction of the cost, then a real transfer into a four-year degree — if you plan the transfer from day one, not as an afterthought.",
+    "quickAnswer": [
+      "Community college tuition averages $4,150 a year nationally versus $11,950 at a public four-year school in-state — and the diploma you eventually earn says the four-year school's name, not the community college's",
+      "An articulation agreement is a real, specific guarantee that certain courses transfer — but only if you follow it. Enrolling without checking one first is how credits get lost",
+      "Financial aid, including the Pell Grant, works at community college too — but the Pell Grant has a lifetime limit of 12 semesters across your whole academic career, worth knowing before you plan a longer path",
+      "The exact system is state-by-state and school-by-school. The right first move is your community college's own transfer center, not a general guide — including this one"
+    ],
+    "sections": [
+      {
+        "paragraphs": [
+          "If the only advice you're hearing is \"just go straight to a four-year school,\" that advice is incomplete — and for a lot of families, it's the more expensive way to reach the exact same degree. Community college followed by a transfer isn't a consolation prize. Done with a real plan, it's a legitimate, common way to end up at the same four-year school, holding the same diploma, for a fraction of the cost."
+        ]
+      },
+      {
+        "heading": "Why the math actually works",
+        "paragraphs": [
+          "The gap is bigger than most people expect. In 2025–26, average tuition and fees at a community college were $4,150 a year for in-district students; at a public four-year school, in-state tuition and fees averaged $11,950 — before any scholarships or aid on either side. In California specifically, community college tuition averages just $1,440 a year, among the cheapest in the country.",
+          "The diploma at the end doesn't mention where you started. If you transfer into a university and finish your degree there, your diploma says that university's name — not \"transferred from community college.\" Employers and graduate schools see the degree you finished, not the path you took to get there."
+        ]
+      },
+      {
+        "heading": "How the transfer actually happens: articulation agreements",
+        "paragraphs": [
+          "The mechanism that makes this work is called an articulation agreement — a formal contract between a specific community college and a specific four-year university, spelling out exactly which courses transfer and how they count. This is what makes a \"2+2\" pathway (two years at community college, two at a university) a real, structured plan rather than a hope.",
+          "Florida shows what a strong statewide system looks like: its Statewide Articulation Agreement guarantees that a student who earns an Associate in Arts degree from any of its 28 public state colleges gets guaranteed admission to one of its 12 public universities, with at least 60 credit hours protected toward the bachelor's degree. That's guaranteed admission to a public university in the system — not necessarily your first-choice campus, which is a real distinction worth knowing going in.",
+          "California runs a narrower version through the University of California's Transfer Admission Guarantee (TAG): six of the nine UC undergraduate campuses participate (Berkeley, UCLA and San Diego do not), and it comes with real requirements — a minimum number of transferable units completed by specific deadlines, one TAG application submitted to only one campus, and a California community college as your most recent school. The application window is narrow, typically September 1–30 for the following fall.",
+          "The exact system is different in every state, and sometimes every school. This is one place in this guide where the honest answer is \"ask your community college's transfer or counseling office directly, in your first semester\" rather than a single rule that applies everywhere."
+        ]
+      },
+      {
+        "heading": "Check what actually transfers before you enroll in a class",
+        "paragraphs": [
+          "Articulation agreements are specific down to the individual course — \"Intro to Psychology\" at one community college might transfer as a general elective at one university, as a major requirement at another, or not transfer at all to a school with no agreement in place. Checking this before you register, not after, is what protects your credits and your time.",
+          "California publishes this information at ASSIST.org, the official state-run system showing exactly how a given course at a given California community college applies at a given UC or CSU campus. Not every state runs something this public and searchable — where one doesn't exist, the equivalent step is asking your target university's transfer-credit or admissions office directly, in writing, before you enroll in the class."
+        ]
+      },
+      {
+        "heading": "What doesn't change: financial aid still applies — with one real limit to know",
+        "paragraphs": [
+          "The FAFSA works exactly the same way at a community college as anywhere else, and community college students qualify for the same Pell Grant and state aid programs as students starting at a four-year school.",
+          "The one thing worth knowing before you plan a longer path: the Pell Grant has a lifetime limit of 12 semesters — or the equivalent, 600% of a student's \"Scheduled Award\" — counted across your entire academic career, not per school. Two years at community college plus a typical four-year transfer usually fits comfortably inside that limit, but if your plan involves extra semesters, a late major change, or a longer part-time timeline, it's worth checking your remaining eligibility (shown as \"Lifetime Eligibility Used\" when you log into your federal student aid account) rather than assuming the aid will always be there."
+        ]
+      }
+    ],
+    "keyTerms": [
+      {
+        "term": "Articulation agreement",
+        "definition": "A formal agreement between a specific community college and university guaranteeing that specific courses count toward a specific degree — the real mechanism behind a 2+2 pathway."
+      },
+      {
+        "term": "2+2 program",
+        "definition": "A transfer pathway structured around two years at a community college followed by two years at a four-year university to complete a bachelor's degree."
+      },
+      {
+        "term": "Transfer Admission Guarantee (TAG)",
+        "definition": "The University of California's guaranteed-admission program for California community college students who meet specific unit and GPA requirements at one of six participating UC campuses."
+      },
+      {
+        "term": "Pell Grant lifetime limit",
+        "definition": "The federal cap on how much Pell Grant a student can receive across their entire academic career — 12 semesters, or 600% of a \"Scheduled Award,\" whichever measure applies."
+      },
+      {
+        "term": "In-district tuition",
+        "definition": "The lowest community college tuition rate, charged to residents of the specific local district that funds the college through local taxes — often even less than the college's own rate for residents of the same state but a different district."
+      }
+    ]
   }
 ]
