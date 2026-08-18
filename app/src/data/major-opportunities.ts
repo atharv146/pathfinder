@@ -408,6 +408,19 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
           "Summer, around nine weeks nationally. Applications generally run in winter and early spring.",
         url: "https://breakthroughcollaborative.org/apply-fellow/",
       },
+      {
+        name: "Barbara Lotze Scholarship for Future Physics Teachers",
+        kind: "program",
+        org: "American Association of Physics Teachers (AAPT)",
+        what: "A scholarship for students who intend to become high school physics teachers specifically — up to $3,000 plus a year of AAPT student membership. Narrow on purpose: it exists because physics teaching is a documented shortage field, which is exactly why the money is there and the applicant pool is small.",
+        cost:
+          "Free to apply, and it pays you — up to $3,000, renewable for each of four years, so the full value can reach $12,000 rather than being a one-off cheque.",
+        eligibility:
+          "High school seniors who have been accepted into a physics teacher preparation program at an accredited two- or four-year college, plus undergraduates already in one. Must be a U.S. citizen attending a U.S. institution, and must declare an intent to prepare for and enter a career teaching physics at the high school level.",
+        timing:
+          "Applications complete with recommendation letters by December 1 are considered at the AAPT Board's winter meeting. Since it requires college acceptance into a teacher-prep program, this is a senior-year application, not an earlier one.",
+        url: "https://www.aapt.org/programs/grants/lotze.cfm",
+      },
     ],
   },
 

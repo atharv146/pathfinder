@@ -105,6 +105,18 @@ export const GUIDE_FRESHNESS: Record<string, Freshness> = {
       "The Pell Grant lifetime limit itself, under periodic legislative discussion",
     ],
   },
+
+  "after-the-decisions-arrive": {
+    verified: "2026-08-17",
+    checked:
+      "The May 1 reply date, the definition of double depositing, and the single recognized waitlist exception were checked against the College Board's own counselor-facing application-ethics guidance. The 'professional judgment' authority — including that the aid administrator's decision cannot be overruled by the college president or the Department of Education — was checked against federal student aid guidance on the Higher Education Act provision. Waitlist mechanics (opt-in required, movement only after the reply date) and the varying per-school stance on letters of continued interest were checked across multiple admissions sources, including schools that publish explicit instructions not to send additional materials.",
+    watch: [
+      "The May 1 national reply date — individual colleges set their own and occasionally extend",
+      "⚠️ Do NOT add a rescission frequency statistic here. The widely-quoted figures come from a NACAC survey that stopped being collected years ago; the article deliberately describes the mechanism and states the frequency is unknown. A stale percentage presented as current is exactly what this file exists to prevent.",
+      "Per-school letter-of-continued-interest policies, which change and directly contradict generic advice",
+      "NACAC's post-May-1 list of colleges still accepting applications, published each spring",
+    ],
+  },
 };
 
 /**
