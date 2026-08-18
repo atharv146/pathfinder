@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import type { RoadmapItem } from "@/data/roadmap";
 import { categoryMeta, categoryOrder, accentClasses } from "@/data/categories";
 import { FadeIn } from "@/components/FadeIn";
+import { GuideVisual } from "@/components/guide/GuideVisual";
 import { fetchProgress, setItemDone } from "@/lib/db/progress";
 import Link from "next/link";
 import { toolForItem } from "@/data/item-tools";
@@ -141,6 +142,7 @@ export function RoadmapGradeView({ grade, items }: { grade: number; items: Roadm
                               </p>
                             ))}
                           </div>
+                          {section.visual && <GuideVisual data={section.visual} />}
                         </div>
                       ))}
                     </div>

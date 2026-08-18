@@ -187,7 +187,53 @@
             "Go to the course-selection night if your school holds one, and bring a parent or guardian if you can. This is often where track decisions get made quietly, and it is far easier to start on a track than to move onto it later.",
             "Two things to ask about specifically. First, honors or accelerated options: which are available, what do they require, and can you request one if you were not recommended? Second, the math sequence — confirm which course you are placed into and what that means for what you can reach by senior year.",
             "If you are placed lower than you expected, ask what the path back up looks like. Some districts allow a summer course or a placement test to move over. That option usually exists but is rarely advertised."
-          ]
+          ],
+          "visual": {
+            "kind": "table",
+            "title": "Why the 8th-grade math placement matters more than it looks",
+            "columns": [
+              "Starting Algebra 1 in 8th grade",
+              "Starting Algebra 1 in 9th grade"
+            ],
+            "rows": [
+              {
+                "label": "Grade 8",
+                "cells": [
+                  "Algebra 1",
+                  "Pre-algebra"
+                ]
+              },
+              {
+                "label": "Grade 9",
+                "cells": [
+                  "Geometry",
+                  "Algebra 1"
+                ]
+              },
+              {
+                "label": "Grade 10",
+                "cells": [
+                  "Algebra 2",
+                  "Geometry"
+                ]
+              },
+              {
+                "label": "Grade 11",
+                "cells": [
+                  "Precalculus",
+                  "Algebra 2"
+                ]
+              },
+              {
+                "label": "Grade 12",
+                "cells": [
+                  "Calculus",
+                  "Precalculus"
+                ]
+              }
+            ],
+            "note": "A typical sequence — yours may be named or arranged differently, so confirm it with your counselor rather than assuming this one. The point is the shape: one placement decision, made in middle school, decides whether calculus is reachable by senior year. That matters for engineering and physical-science majors especially. It is not a verdict — summer courses and placement tests move students between tracks every year — but it is far easier to ask about now than to fix in 11th grade."
+          }
         }
       ]
     },
@@ -449,7 +495,39 @@
         {
           "paragraphs": [
             "A reach school is one where admission is a stretch given your profile. A target is a realistic, competitive fit. A safety should be a school you're confident you'd get into, and this is the part people skip, one you'd genuinely be happy to attend, not just a backup you'd resent. A list that's all reaches isn't a real list. A reasonable range for most students is somewhere around 6–10 schools total, spread across all three categories, though this varies by family circumstances. Cost alone can shrink or reshape the list, and that's a legitimate reason, not a compromise. Revisit the Net Price Calculator numbers from 10th grade for any school on this list. \"Can we afford it\" is a target/safety-defining question just as much as \"will I get in.\""
-          ]
+          ],
+          "visual": {
+            "kind": "table",
+            "title": "What the three categories actually mean",
+            "columns": [
+              "What it means",
+              "How many"
+            ],
+            "rows": [
+              {
+                "label": "Reach",
+                "cells": [
+                  "Admission would be a stretch given your profile. Any school admitting under roughly a quarter of applicants is a reach for everyone, however strong their record.",
+                  "2–4"
+                ]
+              },
+              {
+                "label": "Target",
+                "cells": [
+                  "Your profile sits comfortably inside the range the school actually admits. A realistic, competitive fit.",
+                  "2–4"
+                ]
+              },
+              {
+                "label": "Safety",
+                "cells": [
+                  "You are confident you would be admitted — and you would genuinely be happy to go. A school you would resent attending is not a safety.",
+                  "2–3"
+                ]
+              }
+            ],
+            "note": "Roughly 6–10 schools total. The category that gets skipped is the safety, and it is the one that determines whether you have a real choice in April. Check each school's own Common Data Set for the ranges it actually admitted, rather than guessing from reputation."
+          }
         }
       ]
     },
@@ -565,7 +643,81 @@
         {
           "paragraphs": [
             "By senior fall, a student applying to even 6–8 schools is juggling that many separate portals, each with its own login, its own supplemental essay prompts, its own document upload requirements, and its own deadline. Regular Decision, Early Action, and Early Decision dates can all be different even within the same list. A single tracking document (a spreadsheet, a notes app, anything that isn't memory) listing each school, its deadline, what's been submitted, and what's still outstanding is the single easiest way to avoid the specific failure mode that trips up organized, capable students most often: a small supplemental requirement, like a short-answer question, an extra recommendation, or a certification form, buried below the main essay and missed entirely, leaving an otherwise complete application incomplete."
-          ]
+          ],
+          "visual": {
+            "kind": "table",
+            "title": "The columns your tracker needs",
+            "columns": [
+              "Example",
+              "Why it's separate"
+            ],
+            "rows": [
+              {
+                "label": "School",
+                "cells": [
+                  "State University",
+                  "—"
+                ]
+              },
+              {
+                "label": "Application used",
+                "cells": [
+                  "Common App / own portal / UC / ApplyTexas",
+                  "Not every school takes the Common App, and finding out in December is a real problem."
+                ]
+              },
+              {
+                "label": "Deadline + type",
+                "cells": [
+                  "Nov 1 — Early Action",
+                  "ED, EA and RD dates differ within the same list, and only ED is binding."
+                ]
+              },
+              {
+                "label": "Supplements",
+                "cells": [
+                  "2 essays — 250 and 500 words",
+                  "This is the column that reveals the real workload. Six schools can mean fifteen essays."
+                ]
+              },
+              {
+                "label": "Test policy",
+                "cells": [
+                  "Test-optional — not sending",
+                  "Decided per school, and it changed recently at many."
+                ]
+              },
+              {
+                "label": "Aid forms + deadline",
+                "cells": [
+                  "FAFSA + CSS Profile — Nov 15",
+                  "⚠️ Aid deadlines are often EARLIER than admission deadlines, and missing one costs money rather than admission."
+                ]
+              },
+              {
+                "label": "Recommenders sent?",
+                "cells": [
+                  "Ms. Ruiz ✓ · Mr. Chen pending",
+                  "You are not in control of this one, which is exactly why it needs tracking."
+                ]
+              },
+              {
+                "label": "Portal login",
+                "cells": [
+                  "saved in password manager",
+                  "Every school makes a separate account. All of them email you."
+                ]
+              },
+              {
+                "label": "Submitted?",
+                "cells": [
+                  "✓ Nov 1",
+                  "Submitted is not the same as complete — check the portal afterwards for missing items."
+                ]
+              }
+            ],
+            "note": "A spreadsheet, a notes app, paper — the tool does not matter. Having one place does. Build it before the essays start, not once you are already behind."
+          }
         }
       ]
     },

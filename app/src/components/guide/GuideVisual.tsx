@@ -84,11 +84,21 @@ function VisualTable({
 }: {
   data: Extract<GuideVisualData, { kind: "table" }>;
 }) {
+  // Min-width is derived from column count rather than fixed. A fixed 520px
+  // meant a two-column comparison showed exactly ONE column on a phone, which
+  // defeats the entire purpose of a comparison — the reader has to hold one
+  // side in their head while scrolling to the other. Narrow tables now fit;
+  // genuinely wide ones still scroll rather than crushing their cells.
+  const minWidth = 96 + data.columns.length * 100;
+
   return (
     // Wide tables scroll inside their own container — the page body must never
     // scroll horizontally. Standing rule in this codebase.
     <div className="overflow-x-auto rounded-2xl border border-line bg-panel">
-      <table className="w-full min-w-[520px] border-collapse text-left">
+      <table
+        className="w-full border-collapse text-left"
+        style={{ minWidth: `${minWidth}px` }}
+      >
         <thead>
           <tr className="border-b border-line">
             <th className="px-4 py-3" />

@@ -1,10 +1,16 @@
+import type { GuideVisualData } from "@/components/guide/GuideVisual";
 import roadmapJson from "./roadmap.json";
 
 export type RoadmapItem = {
   id: string;
   category: string;
   title: string;
-  sections: { heading?: string; paragraphs: string[] }[];
+  sections: {
+    heading?: string;
+    paragraphs: string[];
+    /** Same visual system the guide articles use. See GuideVisual. */
+    visual?: GuideVisualData;
+  }[];
 };
 
 export type RoadmapData = Record<string, RoadmapItem[]>;
