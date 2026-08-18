@@ -37,7 +37,51 @@
           "Early Action means applying in the autumn and hearing back early. It is not binding: a student can still compare offers and say no. Some schools run a restricted or single-choice version, which limits applying early elsewhere — that restriction is a rule you agree to, so read what the specific school says.",
           "Early Decision is the one to understand properly. It is a binding commitment: if the college accepts you, you agree to attend and to withdraw your other applications. Students, parents, and a school counselor all sign it.",
           "That binding piece matters most for exactly the families this guide is for. Applying Early Decision means committing before you can compare financial aid offers side by side. Colleges will generally release a student who genuinely cannot afford the aid package, but you are negotiating from a much weaker position than a student holding three competing offers in April. If cost is going to decide where your child enrolls — and for most families it is — Early Decision is a real trade-off, not a free head start. Early Action carries no such catch."
-        ]
+        ],
+        "visual": {
+          "kind": "table",
+          "title": "The four deadline types",
+          "columns": [
+            "Binding?",
+            "Roughly when",
+            "What it costs you"
+          ],
+          "rows": [
+            {
+              "label": "Early Decision (ED)",
+              "cells": [
+                "Yes — you must attend if admitted",
+                "Apply Nov, hear back Dec",
+                "You commit before you can compare aid offers. Only use it if the school is affordable regardless of what else comes in."
+              ]
+            },
+            {
+              "label": "Early Action (EA)",
+              "cells": [
+                "No",
+                "Apply Nov, hear back Dec–Jan",
+                "Almost nothing. You hear early and can still compare everything in the spring."
+              ]
+            },
+            {
+              "label": "Restrictive / Single-Choice EA",
+              "cells": [
+                "No, but restricted",
+                "Apply Nov, hear back Dec",
+                "You may not apply early anywhere else. Not binding, but it uses up your early round."
+              ]
+            },
+            {
+              "label": "Regular Decision (RD)",
+              "cells": [
+                "No",
+                "Apply Jan, hear back Mar–Apr",
+                "Nothing. You get every offer at once and can compare them properly."
+              ]
+            }
+          ],
+          "note": "Only Early Decision is a commitment. For a family that needs to weigh aid offers against each other, that distinction is the most financially consequential thing on this page."
+        }
       },
       {
         "heading": "The different types of schools — and why none of them is \"lesser\"",
@@ -198,7 +242,36 @@
           "The Federal Pell Grant is the largest federal grant for undergraduates and does not have to be repaid. For the 2026–27 award year — July 1, 2026 through June 30, 2027 — the maximum award is $7,395 and the minimum is $740. Most students who receive it get somewhere between those figures, based on their Student Aid Index, cost of attendance, and whether they're enrolled full-time.",
           "Federal student loans are capped by year, and the caps are lower than most families expect. A dependent undergraduate can borrow $5,500 in first year, $6,500 in second year, and $7,500 in each year after that — with a lifetime cap of $31,000. Within those figures, only part can be subsidized (meaning the government covers the interest while the student is in school): up to $3,500, $4,500 and $5,500 respectively, with a $23,000 lifetime subsidized maximum.",
           "Read those two paragraphs together and something important falls out. Pell plus federal student loans does not add up to the sticker price of most four-year colleges. The gap is filled — or isn't — by the college's own grant aid, which is why the *institution's* aid offer matters more than the federal forms, and why a more expensive school with generous aid can genuinely cost a family less than a cheaper one without it."
-        ]
+        ],
+        "visual": {
+          "kind": "bars",
+          "title": "The federal ceiling, per year",
+          "unit": "Dependent undergraduate · 2026–27 · Pell maximum vs. annual loan caps",
+          "items": [
+            {
+              "label": "Pell Grant maximum (never repaid)",
+              "value": 7395,
+              "display": "$7,395",
+              "emphasis": true
+            },
+            {
+              "label": "Federal loan cap — first year",
+              "value": 5500,
+              "display": "$5,500"
+            },
+            {
+              "label": "Federal loan cap — second year",
+              "value": 6500,
+              "display": "$6,500"
+            },
+            {
+              "label": "Federal loan cap — third year onward",
+              "value": 7500,
+              "display": "$7,500"
+            }
+          ],
+          "note": "Add the largest two together and you are still well under the cost of most four-year colleges. That gap is exactly why the college's own grant aid decides affordability far more than the federal forms do."
+        }
       },
       {
         "heading": "If you're selected for verification, you are not in trouble",
@@ -212,7 +285,67 @@
         "paragraphs": [
           "When offer letters arrive, they'll list one total dollar amount of \"aid\" — but that total is made up of very different pieces, and treating them as interchangeable is the single most common, costly mistake families make. Grants and scholarships are free money that never has to be repaid. Work-study is a part-time job on campus a student works during the school year to earn money — it is not money handed over automatically, and a student has to actually work the hours to receive it. Loans are borrowed money that must be repaid later, with interest, just like a car loan or a mortgage.",
           "Two schools can offer the exact \"same\" total dollar amount of aid while one offer is mostly grants and the other is mostly loans — in real terms, those are very different offers, since one leaves the family with far more future debt than the other. Always read the breakdown by category, never just the single total number at the top of the letter."
-        ]
+        ],
+        "visual": {
+          "kind": "table",
+          "title": "Two offers with the same “total aid” — and a $16,000 difference",
+          "columns": [
+            "College A",
+            "College B"
+          ],
+          "rows": [
+            {
+              "label": "Cost of attendance",
+              "cells": [
+                "$40,000",
+                "$40,000"
+              ]
+            },
+            {
+              "label": "Grants & scholarships\n(never repaid)",
+              "cells": [
+                "$30,000",
+                "$14,000"
+              ]
+            },
+            {
+              "label": "Work-study\n(you work the hours)",
+              "cells": [
+                "$2,500",
+                "$3,000"
+              ]
+            },
+            {
+              "label": "Federal student loan\n(you repay, with interest)",
+              "cells": [
+                "$5,500",
+                "$5,500"
+              ]
+            },
+            {
+              "label": "Parent PLUS loan\n(your parent repays)",
+              "cells": [
+                "—",
+                "$15,500"
+              ]
+            },
+            {
+              "label": "“Total aid” printed at the top",
+              "cells": [
+                "$38,000",
+                "$38,000"
+              ]
+            },
+            {
+              "label": "What your family actually pays this year",
+              "cells": [
+                "$10,000",
+                "$26,000"
+              ]
+            }
+          ],
+          "note": "Illustrative arithmetic, not real colleges — the numbers are chosen to show the mechanism. Both letters announce $38,000 in aid. Only the grant row changes what anything costs. Note also that College B's package leans on a Parent PLUS loan, which is borrowing in a parent's name: it makes the aid total look larger while adding family debt, and it is not automatic — it requires a separate application and a credit check."
+        }
       },
       {
         "heading": "Special considerations for immigrant and mixed-status families",
@@ -673,7 +806,46 @@
         "paragraphs": [
           "Many families assume this category only means official school-sponsored clubs or sports teams. It doesn't. All of the following genuinely count as real extracurricular activities: a part-time paying job (fast food, retail, a family business); caring for younger siblings or relatives while a parent works; translating for parents at appointments or handling family paperwork; involvement in a religious or cultural community group (a choir, a youth group, a cultural association); an informal self-directed project (teaching yourself a skill, running a small side project, organizing something in the community); and volunteering, whether formal or informal.",
           "A part-time job or a real family caregiving responsibility is not \"less than\" a school club on an application — it often demonstrates a level of responsibility and maturity that stands out precisely because it's a genuine, unglamorous commitment. This matters specifically for many immigrant families, where students take on real household responsibilities that aren't traditionally thought of as \"extracurriculars\" but absolutely count and should be listed."
-        ]
+        ],
+        "visual": {
+          "kind": "table",
+          "title": "The same student, written two ways",
+          "columns": [
+            "How most people write it",
+            "What actually happened"
+          ],
+          "rows": [
+            {
+              "label": "Food pantry",
+              "cells": [
+                "Volunteered at a local food bank.",
+                "Sorted and packed roughly 200 food boxes a week; trained four new volunteers on the intake process."
+              ]
+            },
+            {
+              "label": "Family restaurant",
+              "cells": [
+                "(left off the application entirely)",
+                "20 hrs/week during the school year: took orders, handled cash and closing, translated between customers and suppliers."
+              ]
+            },
+            {
+              "label": "Science club",
+              "cells": [
+                "Member of science club.",
+                "Moved from member to outreach lead; organised three demo visits to elementary schools and recruited 12 new members."
+              ]
+            },
+            {
+              "label": "Caring for siblings",
+              "cells": [
+                "(assumed not to count)",
+                "Responsible for two younger siblings after school daily — school pickup, meals, homework — while both parents worked evenings."
+              ]
+            }
+          ],
+          "note": "Nothing in the right column is invented; it is the same activity described accurately instead of vaguely. That is the entire difference, and it is also the line you must not cross — never add a role, an hour count, or an achievement that did not happen."
+        }
       },
       {
         "heading": "Depth over breadth — and what a \"spike\" actually means",

@@ -108,7 +108,7 @@ function VisualTable({
             <tr key={r.label} className="border-b border-line last:border-0">
               <th
                 scope="row"
-                className="px-4 py-3.5 align-top text-[0.8rem] font-medium leading-relaxed text-smoke"
+                className="whitespace-pre-line px-4 py-3.5 align-top text-[0.8rem] font-medium leading-relaxed text-smoke"
               >
                 {r.label}
               </th>
