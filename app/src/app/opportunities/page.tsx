@@ -4,6 +4,7 @@ import { PageFrame } from "@/components/PageFrame";
 import { Backdrop } from "@/components/backdrop/Backdrop";
 import { KineticText } from "@/components/KineticText";
 import { OpportunityDirectory } from "@/components/opportunities/OpportunityDirectory";
+import { DeadlineTimeline } from "@/components/opportunities/DeadlineTimeline";
 import { allOpportunities } from "@/lib/opportunities";
 import { SCHOLARSHIPS_VERIFIED_ON } from "@/data/scholarships";
 
@@ -51,6 +52,12 @@ export default function OpportunitiesPage() {
               not a scraped list where half the deadlines are two years old.
             </p>
           </FadeIn>
+
+          {/* Time axis first, then the searchable list. The track answers
+              "what's next"; the directory answers "what exists". */}
+          <div className="mt-12">
+            <DeadlineTimeline />
+          </div>
 
           <div className="mt-12">
             <OpportunityDirectory />
