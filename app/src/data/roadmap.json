@@ -483,7 +483,34 @@
             "If any target schools require or recommend testing, plan for a first attempt by spring of junior year, leaving room for a retake in the fall of senior year if needed. If every school on your list is test-blind or genuinely test-optional and you'd rather not test, not testing is a completely legitimate path. This is a real strategic choice now, not a fallback.",
             "For students who do test: the PSAT taken in October of junior year is the one that actually counts for something. It's the qualifying score for National Merit recognition, a real distinction some colleges give scholarship money for. It's worth taking seriously, but it's not something to prep for separately from the SAT; the two tests overlap enough that general SAT/ACT prep covers it. Also worth knowing: most colleges \"superscore,\" meaning they take your best section scores across multiple test dates rather than just your best single sitting, which is part of why a spring junior-year attempt plus a fall senior-year retake is a common, low-stress pattern rather than treating any one test date as make-or-break. Free, high-quality prep exists (Khan Academy's SAT prep is built directly with the College Board and costs nothing), so a paid course is a choice, not a requirement.",
             "Either way, this is also the year course rigor really starts to matter for the transcript colleges will eventually see in full. Continuing to take the most challenging classes you can handle well remains the single best academic move available."
-          ]
+          ],
+          "visual": {
+            "kind": "steps",
+            "title": "The testing year, in order",
+            "steps": [
+              {
+                "title": "Autumn of 11th grade — take the PSAT",
+                "body": "October of junior year is the one that qualifies for National Merit. Don't prep for it separately; general SAT/ACT prep covers the same ground."
+              },
+              {
+                "title": "Check each school's actual policy first",
+                "body": "Required, test-optional, or test-blind is decided per school and several changed recently. This decides whether you need a score at all — do it before booking a test."
+              },
+              {
+                "title": "Spring of 11th grade — first real attempt",
+                "body": "Sitting it in spring leaves room for one retake. Sitting it for the first time in autumn of senior year leaves none."
+              },
+              {
+                "title": "Autumn of 12th grade — retake if it helps",
+                "body": "Most colleges superscore, taking your best section results across sittings, so a second attempt rarely hurts and often helps."
+              },
+              {
+                "title": "Or decide not to test at all",
+                "body": "If every school on your list is test-blind or genuinely test-optional, this is a legitimate strategy rather than a fallback. Decide it deliberately, not by running out of time."
+              }
+            ],
+            "note": "Registration fee waivers exist and are widely under-used — ask your counselor before paying for any of this."
+          }
         }
       ]
     },
@@ -540,7 +567,34 @@
           "paragraphs": [
             "Students should ask teachers at the end of junior year or the very start of senior year, not in the middle of application season when teachers are already juggling dozens of requests. Most schools want two teacher letters, usually from core academic subjects, ideally from teachers who've seen real growth or engagement, not just a high grade.",
             "The single most useful thing a student can do to get a stronger letter is give the teacher a \"brag sheet,\" a short, one-to-two-page document (not the letter itself, just material for the teacher to work from) covering which classes you took with them and when, a specific project or moment in that class you're proud of, why you chose them specifically to write for you, and a few things you'd want a college to understand about you that this teacher is positioned to speak to. This isn't bragging in the way it sounds. It's solving a real problem: a teacher with 150 students genuinely can't remember every specific detail about all of them, and a good brag sheet is the difference between a generic letter and a specific, convincing one. Hand it over at the same time you ask, not weeks later."
-          ]
+          ],
+          "visual": {
+            "kind": "steps",
+            "title": "What goes in a brag sheet",
+            "steps": [
+              {
+                "title": "Which class, and when",
+                "body": "\"AP Biology, junior year, period 3.\" A teacher may have taught 150 students since. Make it effortless to place you."
+              },
+              {
+                "title": "A specific moment you're proud of",
+                "body": "A project, a question you chased, a lab that went wrong and what you did. Concrete beats flattering — this is the raw material for the one detail that makes a letter memorable."
+              },
+              {
+                "title": "Why you asked them specifically",
+                "body": "Not flattery. What can this teacher say about you that no one else on your application can?"
+              },
+              {
+                "title": "What you'd want a college to understand",
+                "body": "Two or three things — an obstacle you worked through, a direction you're heading, something your transcript doesn't show."
+              },
+              {
+                "title": "Your deadlines and how to submit",
+                "body": "List every school, its date, and the portal. Then remind them once, politely, about two weeks out."
+              }
+            ],
+            "note": "One to two pages, and it is material for the teacher — never a draft of the letter itself. Ask at the end of junior year or the very start of senior year, before the queue forms."
+          }
         }
       ]
     },
@@ -765,7 +819,34 @@
         {
           "paragraphs": [
             "Award letters are written inconsistently on purpose. Different schools use different terms for the same things, and some list loans right alongside grants in a way that makes the \"total aid\" number misleading. One method that works: for each school, write down the full Cost of Attendance (tuition, fees, housing, food, the real total, not just tuition), then subtract only the grants and scholarships, never the loans, to get the actual out-of-pocket cost before borrowing. A school that looks cheaper only because it offered more loans isn't actually cheaper. It's the same cost, deferred, with interest added. Comparing that one number, Cost of Attendance minus real gift aid, across every offer is the closest thing to an apples-to-apples comparison, and it's worth doing before any conversation about which school \"feels\" more affordable."
-          ]
+          ],
+          "visual": {
+            "kind": "steps",
+            "title": "The comparison, step by step",
+            "steps": [
+              {
+                "title": "Write down the full cost of attendance",
+                "body": "Tuition, fees, housing, food, books, travel. The real total the school publishes — not the tuition line, which is always the smaller number."
+              },
+              {
+                "title": "Subtract grants and scholarships only",
+                "body": "Free money that is never repaid. Nothing else comes out at this step."
+              },
+              {
+                "title": "Stop. That number is what your family pays.",
+                "body": "Do this for every school and put the results next to each other. This is the only figure that compares across offers."
+              },
+              {
+                "title": "Now look at what's left in the package",
+                "body": "Work-study means hours you must actually work. Federal loans are yours to repay. A Parent PLUS loan is your parent borrowing — it inflates the 'total aid' figure while adding family debt."
+              },
+              {
+                "title": "Check whether the aid renews",
+                "body": "Ask directly whether a scholarship repeats all four years and what GPA keeps it. A one-year award presented as an annual figure is a costly surprise in sophomore year."
+              }
+            ],
+            "note": "Two schools can advertise the same total aid and differ by tens of thousands in what you actually pay. Only the grant line changes the cost."
+          }
         }
       ]
     },
