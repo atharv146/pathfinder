@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { FadeIn } from "@/components/FadeIn";
 import { allOpportunities, type EntryKind, type UnifiedEntry } from "@/lib/opportunities";
 import { useSavedOpportunities } from "@/lib/useSavedOpportunities";
@@ -240,14 +240,24 @@ export function OpportunityDirectory() {
         </div>
       ) : (
         <div className="mt-6 flex flex-col gap-4">
-          {ranked.map((e, i) => (
-            <FadeIn key={e.id} delay={Math.min(0.05 + i * 0.03, 0.4)}>
-              <EntryCard
-                e={e}
-                saved={saved.has(e.id)}
-                onToggleSave={savingUnavailable ? null : () => toggle(e.id)}
-              />
-            </FadeIn>
+          {/* ⚠️ PERF, measured — do not put FadeIn back around these.
+              Each card used to be wrapped in a framer-motion FadeIn whose
+              delay was computed from the card's index *in the filtered list*.
+              Filtering changes those indices, so every visible card
+              re-animated on every keystroke: 37–70ms of blocking work per
+              character typed, against a 16ms budget. Typing visibly stuttered.
+
+              A stable `key` plus a CSS keyframe fixes both halves — React
+              reuses the DOM node instead of remounting a motion component, and
+              `.swap-in` only replays when the key actually changes, so cards
+              animate once on arrival and stay still while you type. */}
+          {ranked.map((e) => (
+            <EntryCard
+              key={e.id}
+              e={e}
+              saved={saved.has(e.id)}
+              onToggleSave={savingUnavailable ? null : toggle}
+            />
           ))}
         </div>
       )}
@@ -255,21 +265,26 @@ export function OpportunityDirectory() {
   );
 }
 
-function EntryCard({
+const EntryCard = memo(function EntryCard({
   e,
   saved,
   onToggleSave,
 }: {
   e: UnifiedEntry;
   saved: boolean;
-  /** Null when saving is unavailable — the control is then not rendered. */
-  onToggleSave: (() => void) | null;
+  /**
+   * Null when saving is unavailable. Takes the id rather than a pre-bound
+   * closure so the prop is referentially stable across renders — an inline
+   * `() => toggle(e.id)` would change identity every render and defeat the
+   * memo entirely, which is the whole point of it.
+   */
+  onToggleSave: ((id: string) => void) | null;
 }) {
   const open = e.status?.kind === "open";
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border bg-panel p-6 sm:p-8 ${
+      className={`swap-in relative overflow-hidden rounded-2xl border bg-panel p-6 sm:p-8 ${
         open ? "border-accent/50" : "border-line"
       }`}
     >
@@ -288,7 +303,7 @@ function EntryCard({
         {onToggleSave && (
           <button
             type="button"
-            onClick={onToggleSave}
+            onClick={() => onToggleSave(e.id)}
             aria-pressed={saved}
             title={saved ? "Remove from saved" : "Save this"}
             className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border px-3.5 text-[0.78rem] transition-colors ${
@@ -384,7 +399,7 @@ function EntryCard({
       </a>
     </div>
   );
-}
+});
 
 function StatusBadge({ status }: { status: NonNullable<UnifiedEntry["status"]> }) {
   if (status.kind === "open") {

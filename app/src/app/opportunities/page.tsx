@@ -66,15 +66,13 @@ export default function OpportunitiesPage() {
           <FadeIn delay={0.5}>
             <div className="mt-12 border-t border-line pt-8">
               <p className="max-w-2xl text-[0.85rem] leading-relaxed text-smoke">
-                Checked against official sources on{" "}
+                Every entry checked on its own official site on{" "}
                 {new Date(`${SCHOLARSHIPS_VERIFIED_ON}T00:00:00Z`).toLocaleDateString(
                   "en-GB",
                   { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }
                 )}
-                . Deadlines and criteria change every cycle — the organisation&rsquo;s
-                own site is always right and we might not be. Short on purpose:
-                we&rsquo;d rather check thirty properly than list three hundred
-                we haven&rsquo;t.
+                . Deadlines move every cycle — confirm on the
+                organisation&rsquo;s own site before you apply.
               </p>
               <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
                 <Link

@@ -290,8 +290,8 @@ export function DeadlineTimeline() {
           {undated} more scholarship{undated === 1 ? "" : "s"} in the list below
           {undated === 1 ? " isn't" : " aren't"} on this track — either the
           organisation publishes no closing date, or this cycle has already
-          closed. {undated === 1 ? "It's" : "They're"}{" "}still real, and still
-          worth reading. We&rsquo;d rather leave a gap than invent a date.
+          closed. {undated === 1 ? "It's" : "They're"}{" "}still worth reading —
+          check the list below.
         </p>
       )}
     </section>

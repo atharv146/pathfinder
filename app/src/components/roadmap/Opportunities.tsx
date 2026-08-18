@@ -172,8 +172,8 @@ export function Opportunities({
           year: "numeric",
           timeZone: "UTC",
         })}
-        . Programs change their dates and criteria — the site is always right
-        and we might not be.
+        . Programs change their dates and criteria each cycle — confirm on the
+        program&rsquo;s own site.
       </p>
 
       {crossCutting}

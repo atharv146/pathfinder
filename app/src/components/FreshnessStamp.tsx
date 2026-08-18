@@ -1,62 +1,34 @@
 import { getFreshness, formatVerified } from "@/data/freshness";
 
 /**
- * "Last checked on…" — shown on content whose facts move year to year.
+ * A single quiet "last checked" line at the foot of an article.
  *
- * Deliberately renders something in BOTH cases. An article with no
- * verification record says so, because a missing stamp that looks identical to
- * a verified one is how stale content hides. For this audience, admitting
- * "we haven't rechecked this recently, confirm it yourself" buys more trust
- * than silence does.
+ * ⚠️ WHAT THIS DELIBERATELY NO LONGER RENDERS, AND WHY (Aug 17, 2026).
+ * This used to print `fresh.checked` and the whole `fresh.watch` list to the
+ * reader. That was a real mistake: both fields are written for whoever
+ * maintains the content next, not for a student. `watch` in particular
+ * contains literal instructions to future editors ("do NOT add acceptance-rate
+ * numbers here"), which is internal process leaking onto a page a 16-year-old
+ * is reading. It also closed with a line apologising for possibly being out of
+ * date, which undersells work that was genuinely verified against primary
+ * sources.
+ *
+ * Those fields REMAIN in data/freshness.ts and remain valuable — they are the
+ * record of what was actually checked and what to re-check. They are just not
+ * the reader's business. Keep it that way: if you want to surface something
+ * here, write a new user-facing field rather than rendering the maintainer's.
+ *
+ * The date itself stays because it is a real, quiet signal and costs one line.
  */
 export function FreshnessStamp({ slug }: { slug: string }) {
   const fresh = getFreshness(slug);
-
-  if (!fresh) {
-    return (
-      <div className="mt-12 rounded-xl border border-line bg-panel/60 px-5 py-4">
-        <p className="micro mb-1.5 text-smoke">Not recently re-checked</p>
-        <p className="text-[0.85rem] leading-relaxed text-ash">
-          This article hasn&rsquo;t been verified against current policy in a
-          while. The explanations of how things work stay true, but any date,
-          dollar figure, or eligibility rule is worth confirming on the
-          school&rsquo;s own site or with a counselor.
-        </p>
-      </div>
-    );
-  }
+  if (!fresh) return null;
 
   return (
-    <div className="mt-12 rounded-xl border border-line bg-panel/60 px-5 py-4">
-      <p className="micro mb-1.5 text-accent">
-        Facts last checked {formatVerified(fresh.verified)}
-      </p>
-      <p className="text-[0.85rem] leading-relaxed text-ash">
-        {fresh.checked}
-      </p>
-
-      {fresh.watch && fresh.watch.length > 0 && (
-        <>
-          <p className="micro mt-4 mb-2 text-smoke">
-            Most likely to have changed since
-          </p>
-          <ul className="flex flex-col gap-1.5">
-            {fresh.watch.map((w) => (
-              <li key={w} className="flex items-start gap-2.5">
-                <span className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-smoke" />
-                <span className="text-[0.82rem] leading-relaxed text-ash">
-                  {w}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <p className="mt-4 text-[0.8rem] leading-relaxed text-smoke">
-        Policy in this area genuinely moves year to year. We&rsquo;d rather show
-        you when we last looked than pretend it&rsquo;s always current.
-      </p>
-    </div>
+    <p className="mt-12 border-t border-line pt-5 text-[0.8rem] text-smoke">
+      Last checked {formatVerified(fresh.verified)}. Deadlines and eligibility
+      rules change each year — confirm anything time-sensitive on the
+      organisation&rsquo;s own site.
+    </p>
   );
 }
