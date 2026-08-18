@@ -69,9 +69,12 @@ export const GUIDE_FRESHNESS: Record<string, Freshness> = {
   "understanding-grades-and-gpa": {
     verified: "2026-08-17",
     checked:
-      "Nothing numeric is claimed in this article by design. The added material describes mechanisms — GPA recalculation, the school profile, mid-year and final reports, rescinded offers — rather than figures, so it was written to stay true as policies shift.",
+      "The original material describes mechanisms — GPA recalculation, the school profile, mid-year and final reports — rather than figures, so it was written to stay true as policies shift. The AP/dual-enrollment/community-college material added later was checked against the University of California's own GPA requirement page: the summer-after-9th through summer-after-11th window, the A=4/B=3/C=2/D=1 conversion with plus and minus ignored, the 3.0 resident and 3.4 nonresident minimums, the list of what earns an honors point (including UC-transferable college courses for residents, AP/IB only for nonresidents), the 8-point cap, the 4-point limit from 10th grade, and that D and F grades earn no bonus. The California enrollment-fee point was corrected against Education Code 76300(f) — the statute PERMITS a district's governing board to exempt special part-time students, so this is a district-level decision and must never be written as an automatic statewide waiver.",
     watch: [
       "Whether recalculation practices are still commonly published by colleges",
+      "UC's honors-point cap and the 10th-grade sub-limit — these are policy and can be revised",
+      "UC resident vs nonresident honors weighting, which differs today and could converge",
+      "⚠️ California community college fee treatment for high school students is set per district under Ed Code 76300(f). Never restate it as a blanket statewide waiver.",
     ],
   },
   "what-are-extracurricular-activities-and-what-s-a-spike": {

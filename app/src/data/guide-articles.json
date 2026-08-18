@@ -457,6 +457,31 @@
         ]
       },
       {
+        "heading": "AP, dual enrollment, and community college classes — what the difference actually is",
+        "paragraphs": [
+          "There are three different ways to take a harder-than-normal class, and they are genuinely different things that families often hear used interchangeably. An AP class is a high school class, taught at your high school, that ends in a national exam in May — the college credit depends entirely on that exam score and on each college's own policy about what score it accepts. Dual enrollment usually means a college course you take that also counts for high school credit, often arranged through your school. And you can simply enroll at a community college yourself and take a class there, independently of your high school entirely.",
+          "That last option surprises a lot of families, so it's worth stating plainly: community colleges in most states have open enrollment, and high school students are generally allowed to take classes there while still in high school. You don't need to be referred, you don't need a special program, and you don't need to be struggling or exceptional. You register, like anyone else. Cost is often far lower than people expect, but it is set locally rather than nationally, so it genuinely has to be checked rather than assumed. In California, for instance, state law lets each community college district exempt high school students taking classes part-time from the per-unit enrollment fee — many districts do, but it is the district's decision, not an automatic statewide rule, and books or small campus fees can still apply. The two people who can give you a real answer are your school counselor and the community college's own admissions or outreach office, and contacting either is an ordinary request rather than an imposition.",
+          "The practical difference that matters most: an AP score you don't like can simply be withheld from colleges. A community college grade cannot. It creates a permanent college transcript that follows you — you'll be asked to send it when you apply to college, and again later if you apply to graduate school. A weak grade there is far harder to undo than a weak grade in a high school class."
+        ]
+      },
+      {
+        "heading": "How community college classes affect your GPA — and the UC rules specifically",
+        "paragraphs": [
+          "Whether a community college class helps your high school GPA depends on your high school. Many schools will accept the course back for high school credit, in which case it appears on your high school transcript and counts in that GPA — often with honors weighting. Some won't. This is a question to ask your counselor before you enroll, not after, because the answer changes whether the class does what you're hoping it does.",
+          "The University of California system is worth explaining separately, because its rules are specific, public, and frequently misunderstood — and because for California families this is often the actual question behind \"will this boost my GPA.\" UC calculates its own GPA from your a-g approved courses taken between the summer after 9th grade and the summer after 11th grade. Grades convert simply: A=4, B=3, C=2, D=1, and plus or minus signs are ignored entirely.",
+          "Here is the part that matters for community college: for California residents, UC grants an extra honors point to AP courses, IB Higher Level and designated Standard Level courses, UC-certified honors courses — and **UC-transferable college courses**, which includes community college classes. So a transferable community college course can genuinely carry the same weight as an AP in the UC GPA. Two hard limits apply: no more than 8 honors points total, and no more than 4 of them from 10th grade. And a grade of D or F earns no bonus at all.",
+          "Two cautions that follow directly from those rules. First, the honors cap means the boost is finite — once you've hit 8 points, an additional course adds no further weight, so \"take more college classes to raise the number\" stops working at a defined ceiling. Second, the course has to be UC-transferable to count; not every community college class is. California publishes exactly which courses transfer at ASSIST.org, and checking there before you register takes minutes and prevents the most common disappointment here. If you're applying from outside California, note that UC weights only AP and IB courses for nonresidents.",
+          "One more thing that isn't obvious: because a community college grade lands on a real college transcript, a C in a transferable college course can pull down a GPA that a college later calculates, even while it technically earned an honors point in the UC formula. Taking a college class is a genuine opportunity and a genuine risk at the same time, and it's worth going in understanding both rather than only the upside."
+        ]
+      },
+      {
+        "heading": "So should you take one?",
+        "paragraphs": [
+          "There's no universal answer, but there is a useful way to think about it. Dual enrollment and community college courses tend to be strongest when your high school doesn't offer the class you want — you've run out of math, your school has no computer science, you want a subject nobody teaches there. That's a case where the course genuinely extends what was available to you, which is exactly what colleges are looking at when they judge rigor relative to your school. Admissions offices evaluate what you did against what your school actually offered, not against a school with twenty-five APs.",
+          "They tend to be weaker as a pure GPA maneuver — taking an easy college class hoping the weighting lifts a number. The honors cap limits the effect, the grade is permanent, and if it displaces a harder class at your own school it can read as less rigorous rather than more. A counselor who knows your transcript is the right person to ask, and it costs nothing to ask."
+        ]
+      },
+      {
         "heading": "A parent's role here",
         "paragraphs": [
           "You don't need to track every individual assignment personally — building that habit is the student's own responsibility to develop. What genuinely helps: asking about the overall course schedule each year — is your child taking the most rigorous classes they're realistically ready for — rather than focusing only on each individual grade. If a grade does drop, asking what happened and whether extra help is available tends to be more useful than reacting to the number alone. And it's worth knowing that most schools now have an online parent portal where grades can be checked in real time throughout the semester — ask your child's school directly what that system is called and how to get access to it, since this isn't always obvious from the outside."
@@ -464,6 +489,22 @@
       }
     ],
     "keyTerms": [
+      {
+        "term": "Dual enrollment",
+        "definition": "Taking a college course that also counts for high school credit, usually arranged through your school. Distinct from AP, which is a high school class ending in a national exam."
+      },
+      {
+        "term": "UC-transferable course",
+        "definition": "A community college course the University of California accepts for credit. Only these earn a UC honors point — California publishes which ones at ASSIST.org."
+      },
+      {
+        "term": "a-g requirements",
+        "definition": "The specific subject areas the University of California and Cal State require, and the only courses counted in the UC GPA calculation."
+      },
+      {
+        "term": "Honors point cap",
+        "definition": "UC adds one point for approved honors, AP, IB, and UC-transferable college courses — but no more than 8 points total, and no more than 4 from 10th grade."
+      },
       {
         "term": "GPA",
         "definition": "Grade Point Average — letter grades converted to numbers and averaged across every class, usually on a 4.0 scale."

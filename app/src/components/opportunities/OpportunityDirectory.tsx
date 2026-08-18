@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { FadeIn } from "@/components/FadeIn";
 import { allOpportunities, type EntryKind, type UnifiedEntry } from "@/lib/opportunities";
+import { useSavedOpportunities } from "@/lib/useSavedOpportunities";
 import type { ScholarshipTag } from "@/data/scholarships";
 
 /**
@@ -52,6 +53,10 @@ export function OpportunityDirectory() {
   const [kinds, setKinds] = useState<EntryKind[]>([]);
   const [grade, setGrade] = useState<number | null>(null);
   const [openOnly, setOpenOnly] = useState(false);
+  const [savedOnly, setSavedOnly] = useState(false);
+
+  const { saved, toggle, unavailable: savingUnavailable } =
+    useSavedOpportunities();
 
   const toggleKind = (k: EntryKind) =>
     setKinds((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
@@ -60,6 +65,7 @@ export function OpportunityDirectory() {
     const q = query.trim().toLowerCase();
 
     const matches = all.filter((e) => {
+      if (savedOnly && !saved.has(e.id)) return false;
       if (kinds.length && !kinds.includes(e.kind)) return false;
       if (grade !== null && e.grades.length && !e.grades.includes(grade)) return false;
       if (openOnly) {
@@ -79,10 +85,15 @@ export function OpportunityDirectory() {
       const bv = b.status ? statusOrder[b.status.kind] : 2;
       return av - bv;
     });
-  }, [all, grade, kinds, openOnly, query]);
+  }, [all, grade, kinds, openOnly, query, saved, savedOnly]);
 
   const openCount = all.filter((e) => e.status?.kind === "open").length;
-  const filtering = kinds.length > 0 || grade !== null || openOnly || query.trim() !== "";
+  const filtering =
+    kinds.length > 0 ||
+    grade !== null ||
+    openOnly ||
+    savedOnly ||
+    query.trim() !== "";
 
   const chip = (active: boolean) =>
     `inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-[0.82rem] transition-colors ${
@@ -127,6 +138,19 @@ export function OpportunityDirectory() {
             >
               Open now ({openCount})
             </button>
+            {/* Hidden entirely when saving isn't available (migration 0010 not
+                run, or no session in local dev) rather than shown as a filter
+                that can only ever return nothing. */}
+            {!savingUnavailable && (
+              <button
+                type="button"
+                onClick={() => setSavedOnly((v) => !v)}
+                aria-pressed={savedOnly}
+                className={chip(savedOnly)}
+              >
+                ★ Saved ({saved.size})
+              </button>
+            )}
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -172,6 +196,7 @@ export function OpportunityDirectory() {
               setKinds([]);
               setGrade(null);
               setOpenOnly(false);
+              setSavedOnly(false);
             }}
             className="micro text-ash underline underline-offset-4 transition-colors hover:text-chalk"
           >
@@ -182,22 +207,46 @@ export function OpportunityDirectory() {
 
       {ranked.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-line bg-panel p-6 sm:p-8">
-          <p className="text-[0.95rem] leading-relaxed text-chalk">
-            Nothing in <em>this</em> list matches that.
-          </p>
-          <p className="mt-3 max-w-2xl text-[0.88rem] leading-relaxed text-ash">
-            That&rsquo;s a statement about our list, not about you. Every entry
-            here was checked by hand on its own site, which keeps the list
-            short — your counselor, your state&rsquo;s higher-education agency
-            and local community foundations all run awards and programs that
-            will never appear here.
-          </p>
+          {/* Two genuinely different empty states. "You haven't saved anything
+              yet" is a statement about the reader and must not be answered
+              with the copy below, which exists to make clear that an empty
+              FILTER result is a limitation of our list rather than of them. */}
+          {savedOnly && saved.size === 0 ? (
+            <>
+              <p className="text-[0.95rem] leading-relaxed text-chalk">
+                You haven&rsquo;t saved anything yet.
+              </p>
+              <p className="mt-3 max-w-2xl text-[0.88rem] leading-relaxed text-ash">
+                Tap <span className="text-chalk">Save</span> on anything worth
+                coming back to. Deadlines here cluster hard between September
+                and January — a short saved list is far easier to act on in
+                October than re-reading all {all.length} of these.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[0.95rem] leading-relaxed text-chalk">
+                Nothing in <em>this</em> list matches that.
+              </p>
+              <p className="mt-3 max-w-2xl text-[0.88rem] leading-relaxed text-ash">
+                That&rsquo;s a statement about our list, not about you. Every
+                entry here was checked by hand on its own site, which keeps the
+                list short — your counselor, your state&rsquo;s
+                higher-education agency and local community foundations all run
+                awards and programs that will never appear here.
+              </p>
+            </>
+          )}
         </div>
       ) : (
         <div className="mt-6 flex flex-col gap-4">
           {ranked.map((e, i) => (
             <FadeIn key={e.id} delay={Math.min(0.05 + i * 0.03, 0.4)}>
-              <EntryCard e={e} />
+              <EntryCard
+                e={e}
+                saved={saved.has(e.id)}
+                onToggleSave={savingUnavailable ? null : () => toggle(e.id)}
+              />
             </FadeIn>
           ))}
         </div>
@@ -206,7 +255,16 @@ export function OpportunityDirectory() {
   );
 }
 
-function EntryCard({ e }: { e: UnifiedEntry }) {
+function EntryCard({
+  e,
+  saved,
+  onToggleSave,
+}: {
+  e: UnifiedEntry;
+  saved: boolean;
+  /** Null when saving is unavailable — the control is then not rendered. */
+  onToggleSave: (() => void) | null;
+}) {
   const open = e.status?.kind === "open";
 
   return (
@@ -222,9 +280,29 @@ function EntryCard({ e }: { e: UnifiedEntry }) {
         />
       )}
 
-      <div className="relative flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h2 className="display-md text-2xl text-chalk">{e.name}</h2>
-        <span className="micro text-smoke">{e.org}</span>
+      <div className="relative flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h2 className="display-md text-2xl text-chalk">{e.name}</h2>
+          <span className="micro text-smoke">{e.org}</span>
+        </div>
+        {onToggleSave && (
+          <button
+            type="button"
+            onClick={onToggleSave}
+            aria-pressed={saved}
+            title={saved ? "Remove from saved" : "Save this"}
+            className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border px-3.5 text-[0.78rem] transition-colors ${
+              saved
+                ? "border-accent bg-accent/[0.12] text-chalk"
+                : "border-line text-ash hover:border-line-bright hover:text-chalk"
+            }`}
+          >
+            <span aria-hidden className="text-[0.95rem] leading-none">
+              {saved ? "★" : "☆"}
+            </span>
+            {saved ? "Saved" : "Save"}
+          </button>
+        )}
       </div>
 
       <div className="relative mt-3 flex flex-wrap items-center gap-2">
