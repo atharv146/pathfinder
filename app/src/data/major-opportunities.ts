@@ -21,6 +21,28 @@
  *
  * Deliberately NOT here: competition rankings, "students like you got in",
  * admissions odds, or any claim about what a program does for your chances.
+ *
+ * ── PROGRAMS CHECKED AND DELIBERATELY NOT LISTED ─────────────────────────
+ * Recorded so nobody re-researches these from scratch and reaches a different
+ * conclusion by trusting secondary sources over the official one.
+ *
+ *  • Bank of America Student Leaders — checked twice (Aug 17 and Aug 18,
+ *    2026). Every blog and scholarship aggregator describes this as a paid
+ *    internship for high school juniors and seniors. **Bank of America's own
+ *    FAQ for the current cycle does not.** It requires applicants to be at
+ *    least 18 at application, to hold a high school diploma earned within the
+ *    last two years, to have completed 12–18 credit hours of post-secondary
+ *    coursework, and to be in good standing at a post-secondary institution.
+ *    That is a college program, not a high school one. Listing it here on the
+ *    strength of secondary sources would send juniors to an application they
+ *    are ineligible for. Re-check the official FAQ before ever adding it.
+ *
+ *  • Student Conservation Association National Crews — its own site stated the
+ *    program was on hiatus (Aug 17, 2026).
+ *
+ *  • Foot Locker Scholar Athletes — the only reachable official-ish page
+ *    described an archived 2017–18 cycle and sources conflicted on current
+ *    dates (Aug 17, 2026).
  */
 
 /**
@@ -75,7 +97,7 @@ export type FamilyOpportunities = {
 
 export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   "engineering-cs": {
-    verifiedOn: "2026-08-16",
+    verifiedOn: "2026-08-18",
     items: [
       {
         name: "MITES Summer",
@@ -109,6 +131,19 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         eligibility: "High school students; no prior CS background needed.",
         timing: "Summer program; applications open in the spring.",
         url: "https://engineering.nyu.edu/academics/programs/k12-stem-education/high-school-programs",
+      },
+      {
+        name: "MIT THINK Scholars Program",
+        kind: "competition",
+        org: "MIT TechX (run by MIT undergraduates)",
+        what: "You submit a written proposal for a science, technology or engineering project you want to do — not a finished experiment. That distinction is the whole point: unlike a science fair, THINK is judged on the idea, so you do not need lab access, equipment, or an existing mentor to enter. Finalists get an all-expenses-paid trip to MIT plus ongoing mentorship and funding to actually build the thing, and are named THINK Scholars once they complete it.",
+        cost:
+          "Free to enter, and finalists receive funding to implement their project plus a covered trip to MIT. Secondary sources put the funding at up to $1,000 — that figure is not stated in the guidelines document we read, so confirm it on the site.",
+        eligibility:
+          "Open to all high school students with permanent residence in the United States. No GPA requirement and no completed research needed. International students are not eligible.",
+        timing:
+          "Applications have run roughly November to early January in recent cycles, with project work in the spring and Scholar designation the following May. ⚠️ We verified eligibility and structure against MIT's own program guidelines PDF, but the exact cycle dates were not legible in it — confirm the current deadline on think.mit.edu before planning around it.",
+        url: "https://think.mit.edu/",
       },
       {
         name: "Beaver Works Summer Institute (BWSI)",
