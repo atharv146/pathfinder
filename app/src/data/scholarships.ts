@@ -78,7 +78,7 @@ export type Scholarship = {
 };
 
 /** The most recent date on which this whole list was re-checked. */
-export const SCHOLARSHIPS_VERIFIED_ON = "2026-08-17";
+export const SCHOLARSHIPS_VERIFIED_ON = "2026-08-18";
 
 export const SCHOLARSHIPS: Scholarship[] = [
   {
@@ -389,6 +389,49 @@ export const SCHOLARSHIPS: Scholarship[] = [
       "The application was closed when we checked on August 17, 2026, and the site listed no dates for the next cycle. Ask the programme directly, or check back \u2014 we have not guessed at a deadline for this one.",
     url: "https://roadtohire.org/golden-door-scholars",
     sensitive: true,
+  },
+  {
+    id: "barron-prize",
+    grades: [7, 8, 9, 10, 11, 12],
+    tags: ["early"],
+    name: "Gloria Barron Prize for Young Heroes",
+    org: "Barron Prize",
+    award:
+      "$10,000 each to 25 winners annually, usable for service work or education, plus a plaque, a documentary film and a network of past winners.",
+    whoItsFor:
+      "Anyone 8 to 18 who has led a real service project of their own. One of the very few awards on this page open to middle schoolers, and one of the very few where what counts is something you did in your own community rather than a transcript.",
+    eligibility: [
+      "Between 8 and 18 years old (not yet 19) as of the April 15 deadline",
+      "Permanent legal resident of the U.S. or Canada with a valid tax ID, residing in the 50 states, D.C., or Canada",
+      "Must have organised and led an extraordinary service activity, initiated primarily by you, within the past 12 months",
+      "One lead reference letter plus two additional recommendations, submitted by the references themselves",
+      "Parental consent required if you are under 16",
+    ],
+    cycle:
+      "The organisation states these as fixed annual deadlines: a pre-application due March 15 and the full application due April 15, both at 5pm Mountain Time, with winners announced the following September. The 2026 round has passed, so the next one is March 15 and April 15, 2027. Those 2027 dates follow from the stated annual pattern rather than from a published 2027 calendar — confirm on the site before relying on them.",
+    closesOn: "2027-04-15",
+    url: "https://barronprize.org/apply/",
+  },
+  {
+    id: "davidson-fellows",
+    grades: [8, 9, 10, 11, 12],
+    tags: ["early"],
+    name: "Davidson Fellows Scholarship",
+    org: "Davidson Institute",
+    award:
+      "$100,000, $50,000 or $25,000, with the level set by the judges based on the significance of the work. Travel to the September awards reception in Washington, D.C. is covered.",
+    whoItsFor:
+      "Students who have already completed a substantial piece of work — a research project, a body of writing or music, something that doesn't fit a category. Age-based rather than grade-based, so a middle schooler with genuinely significant work can apply. Extremely selective; worth applying to, never worth planning around.",
+    eligibility: [
+      "18 or younger as of the application deadline. There is no minimum age and no grade requirement.",
+      "U.S. citizen or Permanent Resident residing in the U.S., or stationed overseas on active U.S. military duty",
+      "Categories are STEM, Humanities (music, literature, philosophy) and Outside the Box",
+      "⚠️ Community service projects are explicitly NOT eligible, and neither are visual arts, photography, dance, theatre or athletics",
+      "Two nominators required, and neither may be a family member",
+    ],
+    cycle:
+      "The 2026 cycle closed February 18, 2026 with results by July 15; the next application opens in autumn 2026. Confirm dates on the site rather than assuming the pattern repeats exactly.",
+    url: "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/",
   },
   {
     id: "national-merit",
