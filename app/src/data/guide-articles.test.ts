@@ -31,8 +31,8 @@ type Article = {
 const ARTICLES = articles as Article[];
 
 describe("guide articles", () => {
-  it("has the eight articles the guide index expects", () => {
-    expect(ARTICLES).toHaveLength(8);
+  it("has the nine articles the guide index expects", () => {
+    expect(ARTICLES).toHaveLength(9);
   });
 
   it("gives every article the fields the page renders", () => {

@@ -51,6 +51,8 @@ export type UnifiedEntry = {
   /** Grades known to be able to apply. Empty = not specified. */
   grades: number[];
   status: ReturnType<typeof cycleStatus> | null;
+  /** Published close date, when the organisation states one. Drives the timeline. */
+  closesOn?: string | null;
   sensitive?: boolean;
   /** Scholarship-only facet tags. Empty for internships/programs/competitions. */
   tags: ScholarshipTag[];
@@ -75,6 +77,7 @@ function fromScholarship(s: Scholarship, now: Date): UnifiedEntry {
     familyLabel: null,
     grades: s.grades,
     status: cycleStatus(s, now),
+    closesOn: s.closesOn ?? null,
     sensitive: s.sensitive,
     tags: s.tags,
   };
@@ -82,7 +85,8 @@ function fromScholarship(s: Scholarship, now: Date): UnifiedEntry {
 
 function fromOpportunity(
   o: Opportunity,
-  familyLabel: string | null
+  familyLabel: string | null,
+  now: Date
 ): UnifiedEntry {
   return {
     // familyLabel in the key, not just the name: RSI and NIH SIP are each
@@ -107,7 +111,18 @@ function fromOpportunity(
     // programme phrasing varies too much to force into a clean array without
     // guessing. The grade filter simply doesn't apply to these rows.
     grades: [],
-    status: null,
+    // Only the handful of entries whose organisation publishes a hard date
+    // carry these; everything else stays null and is simply absent from any
+    // time-based view rather than being placed by a guess. `cycleStatus`
+    // takes the same shape scholarships use.
+    status:
+      o.opensOn || o.closesOn
+        ? cycleStatus(
+            { opensOn: o.opensOn, closesOn: o.closesOn } as Scholarship,
+            now
+          )
+        : null,
+    closesOn: o.closesOn ?? null,
     tags: [],
   };
 }
@@ -118,11 +133,11 @@ export function allOpportunities(now = new Date()): UnifiedEntry[] {
 
   for (const [familyId, fam] of Object.entries(MAJOR_OPPORTUNITIES)) {
     for (const o of fam.items) {
-      entries.push(fromOpportunity(o, FAMILY_LABEL[familyId] ?? null));
+      entries.push(fromOpportunity(o, FAMILY_LABEL[familyId] ?? null, now));
     }
   }
   for (const o of CROSS_CUTTING.items) {
-    entries.push(fromOpportunity(o, null));
+    entries.push(fromOpportunity(o, null, now));
   }
 
   return entries;

@@ -109,6 +109,17 @@ export const GUIDE_FRESHNESS: Record<string, Freshness> = {
     ],
   },
 
+  "how-to-actually-do-research-in-high-school": {
+    verified: "2026-08-17",
+    checked:
+      "Deliberately built on mechanisms rather than figures, because acceptance rates and program costs move every cycle. The two named programs (RSI at MIT, the NIH Summer Internship Program) are the same entries already verified in data/major-opportunities.ts, including that both are genuinely free/stipended — no separate claim is made here about either. The cold-email guidance reflects consistent advice across multiple university and admissions sources on specificity, proximity, and targeting reachable institutions. No acceptance-rate statistic is quoted anywhere, on purpose.",
+    watch: [
+      "⚠️ Do not add acceptance-rate numbers for RSI or similar programs. They move yearly, are inconsistently reported, and the article's argument does not need them.",
+      "Whether RSI and NIH SIP remain fully free/stipended — if either changes, this article and the opportunities entry must change together",
+      "The paid-research and pay-to-publish sections are written as a general caution with a stated test rather than naming companies or journals. Keep it that way — naming a specific operator invites both staleness and a dispute.",
+    ],
+  },
+
   "after-the-decisions-arrive": {
     verified: "2026-08-17",
     checked:

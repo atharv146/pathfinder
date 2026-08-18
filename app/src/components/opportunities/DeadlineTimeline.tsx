@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { SCHOLARSHIPS, cycleStatus } from "@/data/scholarships";
+import { useMemo, useState } from "react";
+import { allOpportunities } from "@/lib/opportunities";
 
 /**
  * A twelve-month deadline track for the scholarships that publish real dates.
@@ -48,7 +48,23 @@ type Marker = {
   lane: number;
 };
 
+const GRADES = [9, 10, 11, 12];
+
+/**
+ * The close timestamp for any unified entry that has one.
+ *
+ * `status` already encodes whether a cycle is live, but not the date itself,
+ * so this re-parses from the source fields the merge layer copied through.
+ */
+function closeMsOf(e: { timing: string; closesOn?: string | null }): number | null {
+  if (!e.closesOn) return null;
+  const ms = Date.parse(`${e.closesOn}T00:00:00Z`);
+  return Number.isNaN(ms) ? null : ms;
+}
+
 export function DeadlineTimeline() {
+  const [grade, setGrade] = useState<number | null>(null);
+
   const { markers, months, undated, laneCount } = useMemo(() => {
     const now = new Date();
     const startMs = Date.UTC(
@@ -64,19 +80,35 @@ export function DeadlineTimeline() {
     const endMs = end.getTime();
     const span = endMs - startMs;
 
-    const dated = SCHOLARSHIPS.filter((s) => s.closesOn).map((s) => {
-      const closes = Date.parse(`${s.closesOn}T00:00:00Z`);
-      return { s, closes };
-    });
+    // Every entry that carries a real published close date — scholarships
+    // and, since Aug 17 2026, the handful of programmes/competitions whose
+    // organisations publish one too. Entries without a date are absent by
+    // design rather than estimated onto the axis.
+    const unified = allOpportunities(now);
+    const dated = unified
+      .filter((e) => e.status?.kind === "open" || e.status?.kind === "opens-soon")
+      .map((e) => ({ e, closes: closeMsOf(e) }))
+      .filter((x): x is { e: (typeof unified)[number]; closes: number } =>
+        x.closes !== null
+      );
 
     const inWindow = dated
       .filter(({ closes }) => closes >= startMs && closes <= endMs)
+      .filter(({ e }) => {
+        // Grade filter mirrors the directory's: it can only narrow entries
+        // that carry a structured grade list. Programmes state eligibility in
+        // prose, so they are never filtered OUT by grade — hiding a programme
+        // because we couldn't parse "rising seniors" would be the tool lying
+        // about what exists.
+        if (grade === null) return true;
+        return e.grades.length === 0 || e.grades.includes(grade);
+      })
       .sort((a, b) => a.closes - b.closes);
 
     // Lane packing: walk in date order and drop each marker in the first lane
     // whose last label ended far enough back to not collide with this one.
     const laneEnds: number[] = [];
-    const placed: Marker[] = inWindow.map(({ s, closes }) => {
+    const placed: Marker[] = inWindow.map(({ e: s, closes }) => {
       const pct = ((closes - startMs) / span) * 100;
       let lane = laneEnds.findIndex((endPct) => pct - endPct >= LABEL_WIDTH_PCT);
       if (lane === -1) {
@@ -112,11 +144,9 @@ export function DeadlineTimeline() {
       cursor.setUTCMonth(cursor.getUTCMonth() + 1);
     }
 
-    // Everything real that this track cannot honestly place.
-    const undatedCount = SCHOLARSHIPS.filter((s) => {
-      if (!s.closesOn) return true;
-      return cycleStatus(s, now).kind === "closed";
-    }).length;
+    // Everything real that this track cannot honestly place: no published
+    // close date at all, or a cycle that has already ended.
+    const undatedCount = unified.length - placed.length;
 
     return {
       markers: placed,
@@ -124,9 +154,9 @@ export function DeadlineTimeline() {
       undated: undatedCount,
       laneCount: Math.max(laneEnds.length, 1),
     };
-  }, []);
+  }, [grade]);
 
-  if (markers.length === 0) return null;
+  if (markers.length === 0 && grade === null) return null;
 
   const trackHeight = laneCount * 52 + 28;
 
@@ -147,11 +177,38 @@ export function DeadlineTimeline() {
         </p>
       </div>
 
-      <p className="mb-6 max-w-xl text-[0.85rem] leading-relaxed text-ash">
-        Only the awards whose organisations publish an actual closing date.
+      <p className="mb-4 max-w-xl text-[0.85rem] leading-relaxed text-ash">
+        Only the ones whose organisations publish an actual closing date.
         Notice where they bunch up — that clustering is the real reason to start
         early, and a sorted list hides it completely.
       </p>
+
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <span className="micro mr-1 text-smoke">Open to grade</span>
+        {[null, ...GRADES].map((g) => (
+          <button
+            key={g ?? "any"}
+            type="button"
+            onClick={() => setGrade(g)}
+            aria-pressed={grade === g}
+            className={`inline-flex min-h-[36px] items-center rounded-full border px-3 text-[0.78rem] transition-colors ${
+              grade === g
+                ? "border-accent bg-accent/[0.12] text-chalk"
+                : "border-line text-ash hover:border-line-bright hover:text-chalk"
+            }`}
+          >
+            {g ?? "Any"}
+          </button>
+        ))}
+      </div>
+
+      {markers.length === 0 && (
+        <p className="mb-6 text-[0.85rem] leading-relaxed text-ash">
+          Nothing with a published deadline is open to grade {grade} in the next
+          twelve months. That is a gap in what we can date, not a statement
+          about what you can apply to — the list below still applies.
+        </p>
+      )}
 
       {/* Wide content scrolls in its own container rather than pushing the
           page sideways — a hard rule in this codebase. min-w keeps the axis

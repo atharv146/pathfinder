@@ -383,6 +383,32 @@ export function MajorView() {
               <Opportunities familyId={family.id} familyLabel={family.label} />
             </div>
           </FadeIn>
+
+          {/* The programmes above are the competitive route. Most students
+              never learn there are two other routes into research that don't
+              require getting accepted to anything, which is what this points
+              at — it belongs here, next to the list that can otherwise read
+              as "these or nothing". */}
+          <FadeIn delay={0.15}>
+            <div className="mt-8 rounded-2xl border border-line bg-panel p-6">
+              <h3 className="display-md text-lg text-chalk">
+                Didn&rsquo;t get into one of those? You can still do research.
+              </h3>
+              <p className="mt-2 max-w-2xl text-[0.88rem] leading-relaxed text-ash">
+                Structured programmes are competitive enough that they belong on
+                a list of things you apply to, never a plan. The other two
+                routes — emailing a professor at a nearby university directly,
+                or running your own project — need nobody&rsquo;s permission and
+                cost nothing.
+              </p>
+              <Link
+                href="/guide/how-to-actually-do-research-in-high-school"
+                className="micro mt-4 inline-block text-chalk underline underline-offset-4 transition-colors hover:text-accent"
+              >
+                How to actually do research in high school &rarr;
+              </Link>
+            </div>
+          </FadeIn>
         </div>
       </section>
 

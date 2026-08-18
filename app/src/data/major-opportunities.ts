@@ -45,6 +45,19 @@ export type Opportunity = {
   timing: string;
   /** Official site, so nobody has to trust our summary. */
   url: string;
+  /**
+   * ISO dates, ONLY when the organisation publishes a hard one for the
+   * current cycle. Added Aug 17, 2026 so `DeadlineTimeline` can plot these
+   * alongside scholarships.
+   *
+   * ⚠️ Most entries in this file deliberately have neither. "Applications
+   * generally run in winter", "confirm on the site", or a pattern inferred
+   * from last cycle are NOT dates, and converting them into one here would
+   * put an invented deadline on a time axis where it reads as fact. Leave
+   * both undefined unless you are copying a published date.
+   */
+  opensOn?: string;
+  closesOn?: string;
 };
 
 export type FamilyOpportunities = {
@@ -222,6 +235,8 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
           "Ages 15–18 and in grades 10–12 as of December 1, 2026. U.S. citizens, permanent residents, or anyone legally able to receive taxable income in the U.S.",
         timing:
           "The 2027 competition opened July 21, 2026 and closes October 6, 2026 at 8pm ET — so unlike most things on this page, this one is open right now. Confirm on the site.",
+        opensOn: "2026-07-21",
+        closesOn: "2026-10-06",
         url: "https://youngarts.org/apply/",
       },
       {
@@ -278,6 +293,8 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
           "High school students worldwide, in teams of four to six from the same school. The team leader must be 16 by the competition's first day.",
         timing:
           "⚠️ A teacher has to register the team — you cannot register yourself — so the real first step is asking one, and that takes lead time. For 2026–27, registration opened August 10 and closes September 11, 2026, with the competition running September 28 to December 4. Confirm on the site.",
+        opensOn: "2026-08-10",
+        closesOn: "2026-09-11",
         url: "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/",
       },
       {
@@ -304,6 +321,8 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
           "Ages 14–18 at the submission deadline, in teams of 2–4 with one adult advisor (21+). Open worldwide, not just to U.S. students.",
         timing:
           "For the 2027 cycle: submissions open September 16, 2026 and close January 14, 2027; advancing teams are notified in February, finalists in March, and the Limitless World Summit runs April 29–30, 2027. Confirm on the site, as with anything a year out.",
+        opensOn: "2026-09-16",
+        closesOn: "2027-01-14",
         url: "https://diamondchallenge.org/competition/",
       },
     ],
