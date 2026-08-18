@@ -112,7 +112,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   "health-medicine": {
-    verifiedOn: "2026-08-16",
+    verifiedOn: "2026-08-17",
     items: [
       {
         name: "Stanford Institutes of Medicine Summer Research Program (SIMR)",
@@ -138,11 +138,24 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
           "Applications have closed in mid-February in recent cycles. Confirm on the site.",
         url: "https://www.training.nih.gov/programs/sip",
       },
+      {
+        name: "HOSA – Future Health Professionals",
+        kind: "program",
+        org: "HOSA",
+        what: "A career and technical student organisation for anyone interested in a health career — school-based chapters, a huge range of health-science competitive events (from medical terminology to sports medicine to nursing assessment), and a direct line into health-science coursework and clinical pathways at your school. Unlike the research placements above, this one doesn't require you to already be a top research candidate to get in the door.",
+        cost:
+          "Membership is exclusively through a school chapter — HOSA doesn't sell individual memberships. National dues combine with your state's own fee, and states set very different totals: recent examples range from about $10 to $25 a year. Ask your chapter advisor (usually a health-science or CTE teacher) what your school charges and whether it's covered.",
+        eligibility:
+          "Students at a school with a chapter, or working with a teacher to start one. Associate membership exists for students not formally enrolled in a health-science program.",
+        timing:
+          "Runs across the school year, with regional, state and international competition levels. Joining happens through your school, usually at the start of the year.",
+        url: "https://hosa.org/membership/",
+      },
     ],
   },
 
   humanities: {
-    verifiedOn: "2026-08-16",
+    verifiedOn: "2026-08-17",
     items: [
       {
         name: "Telluride Association Summer Seminar (TASS)",
@@ -165,6 +178,32 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         eligibility: "High school juniors from limited-income backgrounds.",
         timing: "Applications typically close in the spring of junior year.",
         url: "https://psjp.princeton.edu/",
+      },
+      {
+        name: "National History Day (NHD)",
+        kind: "competition",
+        org: "National History Day",
+        what: "A year-long historical research competition, not a one-day test — you pick a topic tied to an annual theme and build it into a paper, a performance, a documentary, an exhibit or a website, individually or in a small team. About 3,000 students reach the national contest each June, out of far more who start at the school level.",
+        cost:
+          "No national entry fee was found on NHD's own site. Some regional and state affiliates state their own policy explicitly — New York City History Day, for instance, says plainly it is free for all NYC students — but a regional coordinator could set a local materials or contest fee, so confirm with your specific state or regional affiliate rather than assuming the national default applies everywhere.",
+        eligibility:
+          "Open to all students, no audition or prior qualification needed to start. Two divisions: junior (grades 6–8) and senior (grades 9–12).",
+        timing:
+          "Starts at the school level, then regional/state, then the National Contest — for 2027, June 13–17 at the University of Maryland, College Park. Only the top two entries per category from each affiliate contest advance, so the real deadlines that matter are your own school's and region's, both earlier in the year.",
+        url: "https://nhd.org/en/contest/",
+      },
+      {
+        name: "Scholastic Art & Writing Awards",
+        kind: "competition",
+        org: "Alliance for Young Artists & Writers",
+        what: "The country's longest-running recognition programme for creative teens, across 29 categories spanning both art and writing. Work is judged regionally first, and regional award winners move on to national judging. Listed here for its writing categories specifically — poetry, personal essay, short story, journalism and more — which are as much a humanities credential as an arts one.",
+        cost:
+          "$15 per individual entry, $40 per portfolio (portfolios are seniors only). ⚠️ Fee waivers are available for teens who can't afford the fee, and the Awards state plainly that they trust you to be honest about financial need — you are not required to provide proof of it in the portal. That is unusually low-friction; do not let the fee stop a submission.",
+        eligibility:
+          "Teens in grades 7–12, ages 13 and up. One of the very few things on this page open to middle schoolers.",
+        timing:
+          "Entries open in the autumn. Deadlines are set by region and begin in December, so yours depends on where you live — find your region on the site rather than assuming a national date.",
+        url: "https://www.artandwriting.org/awards/how-to-enter/",
       },
     ],
   },
@@ -240,6 +279,32 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
         timing:
           "⚠️ A teacher has to register the team — you cannot register yourself — so the real first step is asking one, and that takes lead time. For 2026–27, registration opened August 10 and closes September 11, 2026, with the competition running September 28 to December 4. Confirm on the site.",
         url: "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/",
+      },
+      {
+        name: "FBLA (Future Business Leaders of America)",
+        kind: "program",
+        org: "FBLA",
+        what: "A career and technical student organisation for anyone interested in business — school-based chapters, competitive events across accounting, marketing, entrepreneurship, coding, public speaking and more, plus state and national conferences. The same shape as DECA above; many schools run one or the other, some run both.",
+        cost:
+          "National dues are $10 a year. State and local chapter dues are added on top and vary — ask your chapter's advisor what your school's total is and whether it's covered. The real cost most members actually notice is travel and lodging if your chapter goes to a state or national conference, which is optional.",
+        eligibility:
+          "High school students at a school with a chapter. If your school has none, a business teacher can help start one — same real-leadership-project logic as an absent DECA chapter.",
+        timing:
+          "Runs across the school year, with competitive events at chapter, state and national levels. Joining happens through your school, usually in the fall.",
+        url: "https://www.fbla.org/",
+      },
+      {
+        name: "Diamond Challenge",
+        kind: "competition",
+        org: "Horn Entrepreneurship, University of Delaware",
+        what: "A high school entrepreneurship competition — teams of 2–4 develop a real business or social-venture concept, submit a written plan and a short pitch video, and the strongest teams present live at a summit in Delaware. Genuinely large-scale: over 18,000 students from 120+ countries have entered since it started.",
+        cost:
+          "Free to enter — the university and its sponsors cover the costs. Total prize pool across both tracks (Business Innovation and Social Innovation) runs up to $100,000.",
+        eligibility:
+          "Ages 14–18 at the submission deadline, in teams of 2–4 with one adult advisor (21+). Open worldwide, not just to U.S. students.",
+        timing:
+          "For the 2027 cycle: submissions open September 16, 2026 and close January 14, 2027; advancing teams are notified in February, finalists in March, and the Limitless World Summit runs April 29–30, 2027. Confirm on the site, as with anything a year out.",
+        url: "https://diamondchallenge.org/competition/",
       },
     ],
   },
@@ -347,7 +412,7 @@ export const MAJOR_OPPORTUNITIES: Record<string, FamilyOpportunities> = {
   },
 
   "natural-sciences": {
-    verifiedOn: "2026-08-16",
+    verifiedOn: "2026-08-17",
     items: [
       {
         name: "NIH Summer Internship Program (SIP)",
